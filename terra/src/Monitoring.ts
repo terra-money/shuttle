@@ -74,9 +74,9 @@ export class Monitoring {
       (await this.LCDClient.tendermint.blockInfo()).block.header.height
     );
 
-
-    // skip when there is no new blocks
-    if (lastHeight >= latestHeight) return [latestHeight, []];
+    // skip when initial start or no new blocks generated
+    if (lastHeight === 0 || lastHeight >= latestHeight)
+      return [latestHeight, []];
 
     const targetHeight = lastHeight + 1;
     const limit = TERRA_TXS_LOAD_UNIT;
@@ -128,7 +128,9 @@ export class Monitoring {
           const data: MsgExecuteContract.Data = msgData as MsgExecuteContract.Data;
           if (data.value.contract in this.TerraAssetMapping) {
             const asset = this.TerraAssetMapping[data.value.contract];
-            const executeMsg = JSON.parse(Buffer.from(data.value.execute_msg, 'base64').toString());
+            const executeMsg = JSON.parse(
+              Buffer.from(data.value.execute_msg, 'base64').toString()
+            );
 
             // Check the msg is 'transfer'
             if ('transfer' in executeMsg) {

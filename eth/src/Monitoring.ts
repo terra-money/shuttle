@@ -52,8 +52,9 @@ export class Monitoring {
     const latestHeight =
       (await this.Web3.eth.getBlockNumber()) - BLOCK_CONFIRMATION;
 
-    // skip when there is no new blocks
-    if (lastHeight >= latestHeight) return [latestHeight, []];
+    // skip when initial start or no new blocks generated
+    if (lastHeight === 0 || lastHeight >= latestHeight)
+      return [latestHeight, []];
 
     const fromBlock = lastHeight + 1;
     const toBlock = Math.min(fromBlock + ETH_BLOCK_LOAD_UNIT, latestHeight);
