@@ -39,10 +39,8 @@ export class Monitoring {
 
       // Check terra asset info
       const info = terraAssetInfos[asset];
-      if (info.is_native && !info.denom)
-        throw 'Must provide denom for the native asset';
-      else if (!info.is_native && !info.contract_address)
-        throw 'Must provide contract address for the token asset';
+      if (!info.denom && !info.contract_address)
+        throw 'Must provide one of denom and contract_address';
 
       this.TerraAssetInfos[asset] = info;
     }
@@ -87,7 +85,6 @@ export class Monitoring {
 export type TerraAssetInfo = {
   contract_address?: string;
   denom?: string;
-  is_native: boolean;
 };
 
 export type MonitoringData = {

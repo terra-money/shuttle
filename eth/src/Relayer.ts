@@ -13,11 +13,12 @@ import { MonitoringData } from 'Monitoring';
 import bech32 from 'bech32';
 import { hexToBytes } from 'web3-utils';
 
+const DEV_MNEMONIC = process.env.DEV_MNEMONIC;
+
 const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID || 'tequila-0004';
 const TERRA_URL = process.env.TERRA_URL || 'http://tequila-lcd.terra.dev';
 const TERRA_GAS_PRICE = process.env.TERRA_GAS_PRICE || '0.00506uluna';
 const TERRA_GAS_ADJUSTMENT = process.env.TERRA_GAS_ADJUSTMENT;
-const TERRA_DEV_MNEMONIC = process.env.DEV_MNEMONIC;
 const TERRA_DONATION =
   process.env.TERRA_DONATION || 'terra1dp0taj85ruc299rkdvzp4z5pfg6z6swaed74e6';
 
@@ -36,7 +37,7 @@ class Relayer {
 
     this.Wallet = new Wallet(
       this.LCDClient,
-      new MnemonicKey({ mnemonic: TERRA_DEV_MNEMONIC })
+      new MnemonicKey({ mnemonic: DEV_MNEMONIC })
     );
   }
 
@@ -60,12 +61,12 @@ class Relayer {
         const amount = data.amount.slice(0, data.amount.length - 12);
 
         const info = data.terraAssetInfo;
-        if (info.is_native) {
-          const denom = info.denom || '';
+        if (info.denom) {
+          const denom = info.denom;
 
           msgs.push(new MsgSend(fromAddr, toAddr, [new Coin(denom, amount)]));
-        } else {
-          const contract_address = info.contract_address || '';
+        } else if (info.contract_address) {
+          const contract_address = info.contract_address;
 
           msgs.push(
             new MsgExecuteContract(
