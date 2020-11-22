@@ -4,13 +4,15 @@ import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 
-const ETH_BLOCK_LOAD_UNIT = parseInt(process.env.ETH_BLOCK_LOAD_UNIT || '10');
-const BLOCK_CONFIRMATION = parseInt(process.env.ETH_BLOCK_CONFIRMATION || '7');
+const ETH_BLOCK_LOAD_UNIT = parseInt(process.env.ETH_BLOCK_LOAD_UNIT as string);
+const BLOCK_CONFIRMATION = parseInt(
+  process.env.ETH_BLOCK_CONFIRMATION as string
+);
 
-const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID || 'ropsten';
-const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID || 'tequila-0004';
+const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
+const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
 
-const ETH_URL = process.env.ETH_URL || 'ws://localhost:8545';
+const ETH_URL = process.env.ETH_URL as string;
 
 export class Monitoring {
   Web3: Web3;
@@ -51,7 +53,7 @@ export class Monitoring {
       (await this.Web3.eth.getBlockNumber()) - BLOCK_CONFIRMATION;
 
     // skip when there is no new blocks
-    if (latestHeight == lastHeight) return [latestHeight, []];
+    if (lastHeight >= latestHeight) return [latestHeight, []];
 
     const fromBlock = lastHeight + 1;
     const toBlock = Math.min(fromBlock + ETH_BLOCK_LOAD_UNIT, latestHeight);
