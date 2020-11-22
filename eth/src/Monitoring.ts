@@ -1,54 +1,56 @@
 import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
 import EthContractInfos from './config/EthContractInfos';
+import TerraAssetInfos from './config/TerraAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 
 const LOAD_UNIT = parseInt(process.env.ETH_LOAD_UNIT || '10');
 const BLOCK_CONFIRMATION = parseInt(process.env.ETH_BLOCK_CONFIRMATION || '7');
 
+const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID || 'ropsten';
+const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID || 'tequila-0004';
+
+const ETH_URL = process.env.ETH_URL || 'ws://localhost:8545';
+
 export class Monitoring {
   Web3: Web3;
 
-  Network: 'ropsten' | 'mainnet';
-  EthContracts: Array<Contract>;
-  EthContractInfos: {
-    [contract_address: string]: {
-      meta_data: string;
-      is_native: boolean;
-    };
+  EthContracts: { [asset: string]: Contract };
+  TerraAssetInfos: {
+    [asset: string]: TerraAssetInfo;
   };
 
   constructor() {
-    if (
-      process.env.ETH_CHAIN_ID !== 'ropsten' &&
-      process.env.ETH_CHAIN_ID !== 'mainnet'
-    ) {
-      console.error('Must provide one of [ropsten, mainnet]');
-      process.exit(-1);
-    }
-
     // Register eth chain infos
-    this.Web3 = new Web3(process.env.ETH_URL || 'ws://localhost:8545');
-    this.Network = process.env.ETH_CHAIN_ID;
+    this.Web3 = new Web3(ETH_URL);
 
-    this.EthContracts = [];
-    this.EthContractInfos = {};
-    Object.values(EthContractInfos[this.Network]).forEach((info) => {
+    const ethContractInfos = EthContractInfos[ETH_CHAIN_ID];
+    const terraAssetInfos = TerraAssetInfos[TERRA_CHAIN_ID];
+
+    this.EthContracts = {};
+    this.TerraAssetInfos = {};
+    for (const [asset, value] of Object.entries(ethContractInfos)) {
       const contract = new this.Web3.eth.Contract(
         WrappedTokenAbi,
-        info.contract_address
+        value.contract_address
       );
 
-      this.EthContracts.push(contract);
-      this.EthContractInfos[info.contract_address] = {
-        meta_data: info.meta_data,
-        is_native: info.is_native
-      };
-    });
+      this.EthContracts[asset] = contract;
+
+      // Check terra asset info
+      const info = terraAssetInfos[asset];
+      if (info.is_native && !info.denom)
+        throw 'Must provide denom for the native asset';
+      else if (!info.is_native && !info.contract_address)
+        throw 'Must provide contract address for the token asset';
+
+      this.TerraAssetInfos[asset] = info;
+    }
   }
 
   async load(lastHeight: number): Promise<[number, Array<MonitoringData>]> {
-    const latestHeight = await this.Web3.eth.getBlockNumber() - BLOCK_CONFIRMATION;
+    const latestHeight =
+      (await this.Web3.eth.getBlockNumber()) - BLOCK_CONFIRMATION;
 
     // skip when there is no new blocks
     if (latestHeight == lastHeight) return [latestHeight, []];
@@ -57,8 +59,7 @@ export class Monitoring {
     const toBlock = Math.min(fromBlock + LOAD_UNIT, latestHeight);
 
     const monitoringDatas: Array<MonitoringData> = [];
-    for (let i = 0; i < this.EthContracts.length; i++) {
-      const contract = this.EthContracts[i];
+    for (const [asset, contract] of Object.entries(this.EthContracts)) {
       const events = await contract.getPastEvents('Burn', {
         fromBlock,
         toBlock
@@ -66,15 +67,14 @@ export class Monitoring {
 
       monitoringDatas.push(
         ...events.map((event) => {
-          const info = this.EthContractInfos[event.address];
+          const info = this.TerraAssetInfos[asset];
           return {
             blockNumber: event.blockNumber,
             txHash: event.transactionHash,
             sender: event.returnValues['_sender'],
             to: event.returnValues['_to'],
             amount: event.returnValues['amount'],
-            meta_data: info.meta_data,
-            is_native: info.is_native
+            terraAssetInfo: info
           };
         })
       );
@@ -84,13 +84,19 @@ export class Monitoring {
   }
 }
 
+export type TerraAssetInfo = {
+  contract_address?: string;
+  denom?: string;
+  is_native: boolean;
+};
+
 export type MonitoringData = {
   blockNumber: number;
   txHash: string;
   sender: string;
   to: string;
   amount: string;
+
   // terra side data for relayer
-  meta_data: string;
-  is_native: boolean;
+  terraAssetInfo: TerraAssetInfo;
 };

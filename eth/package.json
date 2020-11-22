@@ -1,7 +1,7 @@
 {
   "name": "@terra-money/shuttle-eth",
   "version": "1.0.0",
-  "description": "Ether side shuttle implementation to connect Terra Blockchain",
+  "description": "Ether side shuttle implementation to relay tx on the Terra Blockchain",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [

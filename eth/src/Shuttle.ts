@@ -5,7 +5,10 @@ import Relayer from './Relayer';
 
 const REDIS_PREFIX = 'eth_shuttle';
 const KEY_LAST_HEIGHT = 'last_height';
+
 const LOAD_UNIT = parseInt(process.env.ETH_LOAD_UNIT || '10');
+const ETH_BLOCK_SECOND = parseInt(process.env.ETH_BLOCK_SECOND || '10');
+const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 
 class Shuttle {
   monitoring: Monitoring;
@@ -15,10 +18,7 @@ class Shuttle {
 
   constructor() {
     // Redis setup
-    const redisClient = redis.createClient(
-      process.env.REDIS_URL || 'redis://127.0.0.1:6379',
-      { prefix: REDIS_PREFIX }
-    );
+    const redisClient = redis.createClient(REDIS_URL, { prefix: REDIS_PREFIX });
 
     this.getAsync = promisify(redisClient.get).bind(redisClient);
     this.setAsync = promisify(redisClient.set).bind(redisClient);
@@ -57,7 +57,7 @@ class Shuttle {
     // Relay to terra chain
     if (monitoringDatas.length > 0) {
       const txhash = await this.relayer.relay(monitoringDatas);
-      console.log(`Relay Success: ${txhash}`);
+      if (txhash.length !== 0) console.log(`Relay Success: ${txhash}`);
     }
 
     // Update last_height
@@ -66,7 +66,7 @@ class Shuttle {
 
     // When catched the block height, wait 10 second
     if (newLastHeight - lastHeight < LOAD_UNIT) {
-      await this.sleep(10 * 1000);
+      await this.sleep(ETH_BLOCK_SECOND * 1000);
     }
   }
 
