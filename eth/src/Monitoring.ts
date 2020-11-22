@@ -4,7 +4,7 @@ import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 
-const LOAD_UNIT = parseInt(process.env.ETH_LOAD_UNIT || '10');
+const ETH_BLOCK_LOAD_UNIT = parseInt(process.env.ETH_BLOCK_LOAD_UNIT || '10');
 const BLOCK_CONFIRMATION = parseInt(process.env.ETH_BLOCK_CONFIRMATION || '7');
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID || 'ropsten';
@@ -56,7 +56,7 @@ export class Monitoring {
     if (latestHeight == lastHeight) return [latestHeight, []];
 
     const fromBlock = lastHeight + 1;
-    const toBlock = Math.min(fromBlock + LOAD_UNIT, latestHeight);
+    const toBlock = Math.min(fromBlock + ETH_BLOCK_LOAD_UNIT, latestHeight);
 
     const monitoringDatas: Array<MonitoringData> = [];
     for (const [asset, contract] of Object.entries(this.EthContracts)) {

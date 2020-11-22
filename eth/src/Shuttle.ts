@@ -6,7 +6,7 @@ import Relayer from './Relayer';
 const REDIS_PREFIX = 'eth_shuttle';
 const KEY_LAST_HEIGHT = 'last_height';
 
-const LOAD_UNIT = parseInt(process.env.ETH_LOAD_UNIT || '10');
+const ETH_BLOCK_LOAD_UNIT = parseInt(process.env.ETH_BLOCK_LOAD_UNIT || '10');
 const ETH_BLOCK_SECOND = parseInt(process.env.ETH_BLOCK_SECOND || '10');
 const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 
@@ -65,7 +65,7 @@ class Shuttle {
     console.log(`HEIGHT: ${newLastHeight}`);
 
     // When catched the block height, wait 10 second
-    if (newLastHeight - lastHeight < LOAD_UNIT) {
+    if (newLastHeight - lastHeight < ETH_BLOCK_LOAD_UNIT) {
       await this.sleep(ETH_BLOCK_SECOND * 1000);
     }
   }
