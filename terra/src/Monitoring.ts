@@ -98,10 +98,12 @@ export class Monitoring {
 
       txResult.txs.forEach((tx) => {
         // Skip when tx is failed
-        if (tx.code !== undefined) return;
+        if (tx.code !== undefined && tx.tx.msg.length > 0) return;
 
         // Only cares about first message
         const msg = tx.tx.msg[0];
+        if (msg === undefined) return;
+
         const msgData = msg.toData();
         const msgType = msgData.type;
 
