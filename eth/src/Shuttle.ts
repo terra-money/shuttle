@@ -60,6 +60,9 @@ class Shuttle {
 
           console.log(`Notify Error to Slack: ${data}`);
         }
+
+        // sleep 10s after error
+        await this.sleep(9500);
       });
 
       await this.sleep(500);
