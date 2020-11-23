@@ -1,7 +1,6 @@
 import Web3 from 'web3';
 import {
   LCDClient,
-  MnemonicKey,
   AccAddress,
   MsgSend,
   MsgExecuteContract
@@ -11,6 +10,7 @@ import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 import HDWalletProvider from '@truffle/hdwallet-provider';
+import NonceTrackerSubprovider from 'web3-provider-engine/subproviders/nonce-tracker';
 
 const ETH_MNEMONIC = process.env.ETH_MNEMONIC as string;
 
@@ -35,9 +35,13 @@ export class Monitoring {
   constructor() {
     // Register chain infos
     const provider = new HDWalletProvider(ETH_MNEMONIC, ETH_URL);
-    const web3 = new Web3(provider);
     const fromAddress = provider.getAddress();
+    
+    const nonceTracker = new NonceTrackerSubprovider()
+    provider.engine._providers.unshift(nonceTracker);
+    nonceTracker.setEngine(provider.engine);
 
+    const web3 = new Web3(provider);
     this.TerraTrackingAddress = TERRA_TRACKING_ADDR;
     this.LCDClient = new LCDClient({
       URL: TERRA_URL,
