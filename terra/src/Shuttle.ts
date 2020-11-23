@@ -1,4 +1,7 @@
 import redis from 'redis';
+import axios from 'axios';
+import * as http from 'http';
+import * as https from 'https';
 import { promisify } from 'util';
 import { Monitoring } from './Monitoring';
 import Relayer from './Relayer';
@@ -9,6 +12,13 @@ const KEY_LAST_TXHASH = 'last_txhash';
 
 const TERRA_BLOCK_SECOND = parseInt(process.env.TERRA_BLOCK_SECOND as string);
 const REDIS_URL = process.env.REDIS_URL as string;
+const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
+
+const ax = axios.create({
+  httpAgent: new http.Agent({ keepAlive: true }),
+  httpsAgent: new https.Agent({ keepAlive: true }),
+  timeout: 15000
+});
 
 class Shuttle {
   monitoring: Monitoring;
@@ -40,8 +50,17 @@ class Shuttle {
     });
 
     while (!shutdown) {
-      await this.process().catch((res) => {
+      await this.process().catch(async (res) => {
         console.error(`Process failed: ${res}`);
+
+        if (SLACK_WEB_HOOK !== undefined) {
+          const { data } = await ax.post(SLACK_WEB_HOOK, {
+            text: `Problem Happends: ${res}`,
+            username: `Shuttle-Terra`
+          });
+
+          console.log(`Notify Error to Slack: ${data}`);
+        }
       });
 
       await this.sleep(500);
@@ -57,9 +76,9 @@ class Shuttle {
       lastHeight
     );
 
-    console.log(monitoringDatas);
-
     // Relay to terra chain
+    // To prevent duplicate relay, set string KEY_LAST_TXHASH.
+    // When the KEY_LAST_TXHASH exists, skip relay util that txhash
     let relayFlag = false;
     const lastTxHash = await this.getAsync(KEY_LAST_TXHASH);
     for (let i = 0; i < monitoringDatas.length; i++) {
