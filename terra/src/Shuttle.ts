@@ -55,7 +55,7 @@ class Shuttle {
 
         if (SLACK_WEB_HOOK !== undefined) {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
-            text: `Problem Happends: ${res}`,
+            text: `Problem Happends: ${JSON.stringify(res)}`,
             username: `Shuttle-Terra`
           });
 
