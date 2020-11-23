@@ -12,7 +12,9 @@ import TerraAssetInfos from './config/TerraAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 import HDWalletProvider from '@truffle/hdwallet-provider';
 
-const DEV_MNEMONIC = process.env.DEV_MNEMONIC as string;
+const ETH_MNEMONIC = process.env.ETH_MNEMONIC as string;
+
+const TERRA_TRACKING_ADDR = process.env.TERRA_TRACKING_ADDR as string;
 const TERRA_TXS_LOAD_UNIT = parseInt(process.env.TERRA_TXS_LOAD_UNIT as string);
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
@@ -23,7 +25,7 @@ const TERRA_URL = process.env.TERRA_URL as string;
 
 export class Monitoring {
   LCDClient: LCDClient;
-  TerraAddress: AccAddress;
+  TerraTrackingAddress: AccAddress;
 
   EthContracts: { [asset: string]: Contract };
   TerraAssetMapping: {
@@ -32,11 +34,11 @@ export class Monitoring {
 
   constructor() {
     // Register chain infos
-    const provider = new HDWalletProvider(DEV_MNEMONIC, ETH_URL);
+    const provider = new HDWalletProvider(ETH_MNEMONIC, ETH_URL);
     const web3 = new Web3(provider);
     const fromAddress = provider.getAddress();
 
-    this.TerraAddress = new MnemonicKey({ mnemonic: DEV_MNEMONIC }).accAddress;
+    this.TerraTrackingAddress = TERRA_TRACKING_ADDR;
     this.LCDClient = new LCDClient({
       URL: TERRA_URL,
       chainID: TERRA_CHAIN_ID
@@ -102,8 +104,8 @@ export class Monitoring {
         if (msgType === 'bank/MsgSend') {
           const data: MsgSend.Data = msgData as MsgSend.Data;
 
-          // Check a recipient is TerraAddress
-          if (data.value.to_address === this.TerraAddress) {
+          // Check a recipient is TerraTrackingAddress
+          if (data.value.to_address === this.TerraTrackingAddress) {
             const blockNumber = tx.height;
             const txHash = tx.txhash;
             const sender = data.value.from_address;
@@ -134,11 +136,11 @@ export class Monitoring {
 
             // Check the msg is 'transfer'
             if ('transfer' in executeMsg) {
-              // Check the recipient is TerraAddress
+              // Check the recipient is TerraTrackingAddress
               const transferMsg = executeMsg['transfer'];
               const recipient = transferMsg['recipient'];
               const amount = transferMsg['amount'];
-              if (recipient === this.TerraAddress) {
+              if (recipient === this.TerraTrackingAddress) {
                 const blockNumber = tx.height;
                 const txHash = tx.txhash;
                 const sender = data.value.sender;

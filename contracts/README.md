@@ -1,6 +1,11 @@
 # Shuttle Ethereum Contracts
 
-# How to deploy
+## Setup Env
+```
+$ cp ./.env_example ./.env
+```
+
+## How to deploy
 ```
 $ npm install truffle -g
 $ npm install
@@ -9,7 +14,7 @@ $ npm install
 $ truffle migrate --network ropsten
 ```
 
-# How to interact
+## How to interact
 ```
 $ truffle console --network ropsten
 

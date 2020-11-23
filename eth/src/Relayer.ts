@@ -13,14 +13,12 @@ import { MonitoringData } from 'Monitoring';
 import bech32 from 'bech32';
 import { hexToBytes } from 'web3-utils';
 
-const DEV_MNEMONIC = process.env.DEV_MNEMONIC;
-
-const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID || 'tequila-0004';
-const TERRA_URL = process.env.TERRA_URL || 'http://tequila-lcd.terra.dev';
-const TERRA_GAS_PRICE = process.env.TERRA_GAS_PRICE || '0.00506uluna';
-const TERRA_GAS_ADJUSTMENT = process.env.TERRA_GAS_ADJUSTMENT;
-const TERRA_DONATION =
-  process.env.TERRA_DONATION || 'terra1dp0taj85ruc299rkdvzp4z5pfg6z6swaed74e6';
+const TERRA_MNEMONIC = process.env.TERRA_MNEMONIC as string;
+const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
+const TERRA_URL = process.env.TERRA_URL as string;
+const TERRA_GAS_PRICE = process.env.TERRA_GAS_PRICE as string;
+const TERRA_GAS_ADJUSTMENT = process.env.TERRA_GAS_ADJUSTMENT as string;
+const TERRA_DONATION = process.env.TERRA_DONATION as string;
 
 class Relayer {
   Wallet: Wallet;
@@ -37,7 +35,7 @@ class Relayer {
 
     this.Wallet = new Wallet(
       this.LCDClient,
-      new MnemonicKey({ mnemonic: DEV_MNEMONIC })
+      new MnemonicKey({ mnemonic: TERRA_MNEMONIC })
     );
   }
 
