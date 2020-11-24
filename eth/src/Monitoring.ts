@@ -5,7 +5,7 @@ import TerraAssetInfos from './config/TerraAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 
 const ETH_BLOCK_LOAD_UNIT = parseInt(process.env.ETH_BLOCK_LOAD_UNIT as string);
-const BLOCK_CONFIRMATION = parseInt(
+const ETH_BLOCK_CONFIRMATION = parseInt(
   process.env.ETH_BLOCK_CONFIRMATION as string
 );
 
@@ -50,13 +50,13 @@ export class Monitoring {
 
   async load(lastHeight: number): Promise<[number, Array<MonitoringData>]> {
     const latestHeight =
-      (await this.Web3.eth.getBlockNumber()) - BLOCK_CONFIRMATION;
+      (await this.Web3.eth.getBlockNumber()) - ETH_BLOCK_CONFIRMATION;
 
-    // skip when initial start or no new blocks generated
-    if (lastHeight === 0 || lastHeight >= latestHeight)
-      return [latestHeight, []];
+    // skip no new blocks generated
+    if (lastHeight >= latestHeight) return [latestHeight, []];
 
-    const fromBlock = lastHeight + 1;
+    // If initial state, we start sync from latest height
+    const fromBlock = lastHeight === 0 ? latestHeight : lastHeight + 1;
     const toBlock = Math.min(fromBlock + ETH_BLOCK_LOAD_UNIT, latestHeight);
 
     const monitoringDatas: Array<MonitoringData> = [];

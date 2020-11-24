@@ -16,6 +16,9 @@ const ETH_MNEMONIC = process.env.ETH_MNEMONIC as string;
 
 const TERRA_TRACKING_ADDR = process.env.TERRA_TRACKING_ADDR as string;
 const TERRA_TXS_LOAD_UNIT = parseInt(process.env.TERRA_TXS_LOAD_UNIT as string);
+const TERRA_BLOCK_CONFIRMATION = parseInt(
+  process.env.ETH_BLOCK_CONFIRMATION as string
+);
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
@@ -36,8 +39,8 @@ export class Monitoring {
     // Register chain infos
     const provider = new HDWalletProvider(ETH_MNEMONIC, ETH_URL);
     const fromAddress = provider.getAddress();
-    
-    const nonceTracker = new NonceTrackerSubprovider()
+
+    const nonceTracker = new NonceTrackerSubprovider();
     provider.engine._providers.unshift(nonceTracker);
     nonceTracker.setEngine(provider.engine);
 
@@ -76,15 +79,16 @@ export class Monitoring {
 
   // load and process a single block
   async load(lastHeight: number): Promise<[number, Array<MonitoringData>]> {
-    const latestHeight = parseInt(
-      (await this.LCDClient.tendermint.blockInfo()).block.header.height
-    );
+    const latestHeight =
+      parseInt(
+        (await this.LCDClient.tendermint.blockInfo()).block.header.height
+      ) - TERRA_BLOCK_CONFIRMATION;
 
-    // skip when initial start or no new blocks generated
-    if (lastHeight === 0 || lastHeight >= latestHeight)
-      return [latestHeight, []];
+    // skip no new blocks generated
+    if (lastHeight >= latestHeight) return [latestHeight, []];
 
-    const targetHeight = lastHeight + 1;
+    // If initial state, we start sync from latest height
+    const targetHeight = lastHeight === 0 ? latestHeight : lastHeight + 1;
     const limit = TERRA_TXS_LOAD_UNIT;
     const monitoringDatas: Array<MonitoringData> = [];
 
@@ -98,7 +102,7 @@ export class Monitoring {
 
       txResult.txs.forEach((tx) => {
         // Skip when tx is failed
-        if (tx.code !== undefined && tx.tx.msg.length > 0) return;
+        if (tx.code !== undefined) return;
 
         // Only cares about first message
         const msg = tx.tx.msg[0];

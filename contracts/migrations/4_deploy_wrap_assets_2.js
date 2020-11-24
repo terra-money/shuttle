@@ -1,17 +1,13 @@
-const WrappedMSFT = artifacts.require("WrappedMSFT");
-const WrappedAMZN = artifacts.require("WrappedAMZN");
-const WrappedBABA = artifacts.require("WrappedBABA");
-const WrappedIAU = artifacts.require("WrappedIAU");
-const WrappedSLV = artifacts.require("WrappedSLV");
-const WrappedUSO = artifacts.require("WrappedUSO");
-const WrappedVIXY = artifacts.require("WrappedVIXY");
+const WrappedmQQQ = artifacts.require("WrappedmQQQ");
+const WrappedmTWTR = artifacts.require("WrappedmTWTR");
+const WrappedmMSFT = artifacts.require("WrappedmMSFT");
+const WrappedmAMZN = artifacts.require("WrappedmAMZN");
+const WrappedmBABA = artifacts.require("WrappedmBABA");
 
 module.exports = function (deployer) {
-  deployer.deploy(WrappedMSFT);
-  deployer.deploy(WrappedAMZN);
-  deployer.deploy(WrappedBABA);
-  deployer.deploy(WrappedIAU);
-  deployer.deploy(WrappedSLV);
-  deployer.deploy(WrappedUSO);
-  deployer.deploy(WrappedVIXY);
+  deployer.deploy(WrappedmQQQ);
+  deployer.deploy(WrappedmTWTR);
+  deployer.deploy(WrappedmMSFT);
+  deployer.deploy(WrappedmAMZN);
+  deployer.deploy(WrappedmBABA);
 };

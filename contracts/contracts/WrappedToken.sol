@@ -24,77 +24,77 @@ contract WrappedToken is ERC20, Ownable {
 }
 
 contract WrappedLuna is WrappedToken {
-    constructor() public WrappedToken("Wrapped LUNA Token", "wluna") {}
+    constructor() public WrappedToken("Wrapped LUNA Token", "LUNA") {}
 }
 
 contract WrappedUST is WrappedToken {
-    constructor() public WrappedToken("Wrapped UST Token", "wust") {}
+    constructor() public WrappedToken("Wrapped UST Token", "UST") {}
 }
 
 contract WrappedKRT is WrappedToken {
-    constructor() public WrappedToken("Wrapped KRT Token", "wkrt") {}
+    constructor() public WrappedToken("Wrapped KRT Token", "KRT") {}
 }
 
 contract WrappedSDT is WrappedToken {
-    constructor() public WrappedToken("Wrapped SDT Token", "wsdt") {}
+    constructor() public WrappedToken("Wrapped SDT Token", "SDT") {}
 }
 
 contract WrappedMNT is WrappedToken {
-    constructor() public WrappedToken("Wrapped MNT Token", "wmnt") {}
+    constructor() public WrappedToken("Wrapped MNT Token", "MNT") {}
 }
 
 contract WrappedMIR is WrappedToken {
-    constructor() public WrappedToken("Wrapped MIR Token", "wmir") {}
+    constructor() public WrappedToken("Wrapped MIR Token", "MIR") {}
 }
 
-contract WrappedAAPL is WrappedToken {
-    constructor() public WrappedToken("Wrapped AAPL Token", "waapl") {}
+contract WrappedmAAPL is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror AAPL Token", "mAAPL") {}
 }
 
-contract WrappedGOOGL is WrappedToken {
-    constructor() public WrappedToken("Wrapped GOOGL Token", "wgoogl") {}
+contract WrappedmGOOGL is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror GOOGL Token", "mGOOGL") {}
 }
 
-contract WrappedTSLA is WrappedToken {
-    constructor() public WrappedToken("Wrapped TSLA Token", "wtsla") {}
+contract WrappedmTSLA is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror TSLA Token", "mTSLA") {}
 }
 
-contract WrappedNFLX is WrappedToken {
-    constructor() public WrappedToken("Wrapped NFLX Token", "wnflx") {}
+contract WrappedmNFLX is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror NFLX Token", "mNFLX") {}
 }
 
-contract WrappedQQQ is WrappedToken {
-    constructor() public WrappedToken("Wrapped QQQ Token", "wqqq") {}
+contract WrappedmQQQ is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror QQQ Token", "mQQQ") {}
 }
 
-contract WrappedTWTR is WrappedToken {
-    constructor() public WrappedToken("Wrapped TWTR Token", "wtwtr") {}
+contract WrappedmTWTR is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror TWTR Token", "mTWTR") {}
 }
 
-contract WrappedMSFT is WrappedToken {
-    constructor() public WrappedToken("Wrapped MSFT Token", "wmsft") {}
+contract WrappedmMSFT is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror MSFT Token", "mMSFT") {}
 }
 
-contract WrappedAMZN is WrappedToken {
-    constructor() public WrappedToken("Wrapped AMZN Token", "wamzn") {}
+contract WrappedmAMZN is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror AMZN Token", "mAMZN") {}
 }
 
-contract WrappedBABA is WrappedToken {
-    constructor() public WrappedToken("Wrapped BABA Token", "wbaba") {}
+contract WrappedmBABA is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror BABA Token", "mBABA") {}
 }
 
-contract WrappedIAU is WrappedToken {
-    constructor() public WrappedToken("Wrapped IAU Token", "wiau") {}
+contract WrappedmIAU is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror IAU Token", "mIAU") {}
 }
 
-contract WrappedSLV is WrappedToken {
-    constructor() public WrappedToken("Wrapped SLV Token", "wslv") {}
+contract WrappedmSLV is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror SLV Token", "mSLV") {}
 }
 
-contract WrappedUSO is WrappedToken {
-    constructor() public WrappedToken("Wrapped USO Token", "wuso") {}
+contract WrappedmUSO is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror USO Token", "mUSO") {}
 }
 
-contract WrappedVIXY is WrappedToken {
-    constructor() public WrappedToken("Wrapped VIXY Token", "wvixy") {}
+contract WrappedmVIXY is WrappedToken {
+    constructor() public WrappedToken("Wrapped Mirror VIXY Token", "mVIXY") {}
 }

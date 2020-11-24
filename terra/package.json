@@ -74,7 +74,7 @@
     "webpack-cli": "^4.2.0"
   },
   "dependencies": {
-    "@terra-money/terra.js": "^1.0.2",
+    "@terra-money/terra.js": "^1.2.1",
     "@truffle/hdwallet-provider": "^1.2.0",
     "axios": "^0.21.0",
     "bech32": "^1.1.4",

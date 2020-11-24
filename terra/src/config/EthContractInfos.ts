@@ -7,122 +7,64 @@ const contractInfos: {
 } = {
   ropsten: {
     LUNA: {
-      contract_address: '0xf44b2579deB34C972A3EE7A6C2a2e23AB56071b1'
+      contract_address: '0xc52fe3575F96A3cA9d4b032b4CED4683DD4Eb386'
     },
     UST: {
-      contract_address: '0xC140FC19296176862aac4e043A572675584c1e84'
+      contract_address: '0x449c38576BaA2802F13a17E20B19004526F24903'
     },
     KRT: {
-      contract_address: '0xad01D44ec74C79DC982fB0AbEfc8304fD2e18153'
+      contract_address: '0xb335c9cCC284951d7087A9F07884F02af09B17dB'
     },
     SDT: {
-      contract_address: '0xd8C303FBbC7ED408f1098b6bFc57A6BA9751d7fc'
+      contract_address: '0x72F56282d9d682879849C8b3a5C03C00997a5911'
     },
     MNT: {
-      contract_address: '0xfe1c710FeC6b62643EcBAf82B2C3b52c8CbDC86b'
+      contract_address: '0x346fE5b2f24cc4945A183C64915B091b67c04FF8'
     },
     MIR: {
-      contract_address: '0xFaf4ECc55677c6c7a72Efb3607B3b0dCA6BfAf8e'
+      contract_address: '0x6705bEc064ea895102Be0D6Df3547535bb258f59'
     },
-    AAPL: {
-      contract_address: '0x963677002B9Acf184E8538C90dBFB33C31F8B97E'
+    mAAPL: {
+      contract_address: '0x1eA5fA2Ff1f7d88275a7bD890470bBE0A79F51d1'
     },
-    GOOGL: {
-      contract_address: '0x5849769Ea6938f36dA05AfA5B9Fa8924a2E22d6E'
+    mGOOGL: {
+      contract_address: '0x448F0B49d486C365B7DCAD78D27336DfD7dAc16E'
     },
-    TSLA: {
-      contract_address: '0x4B3AEc1abd9d299428017C476aBB71E82718FFDD'
+    mTSLA: {
+      contract_address: '0xFa93675dd5814060f0DE5297bD895847D43F257C'
     },
-    NFLX: {
-      contract_address: '0x31553F051c57c89bf7E41AB4a25660F4186787E0'
+    mNFLX: {
+      contract_address: '0x41C28A57C3e32a56e80Ceec8910eA8B5316D9543'
     },
-    QQQ: {
-      contract_address: '0xC3A1c8646571FFf413A6E90e5bCE43E51112368D'
+    mQQQ: {
+      contract_address: '0xf81D30D44aE6FfC2a1E02fa08783aBBCd224147f'
     },
-    TWTR: {
-      contract_address: '0xc92452267a1586667D6E24449b06cEA263bfd579'
+    mTWTR: {
+      contract_address: '0x2bECEB69354c8bBA28c8D8cFa1FC601861dE3821'
     },
-    MSFT: {
-      contract_address: '0x208aDc16BB82F4D80d450061d7daF71775aA6b58'
+    mMSFT: {
+      contract_address: '0x741aDbdfFE13FDb97bfBF2353aA67Af696a1fE32'
     },
-    AMZN: {
-      contract_address: '0x3ADCB1C4406A01fa99B6C2ed5BefC58ad3628465'
+    mAMZN: {
+      contract_address: '0x630bdA81E7b76CAA6EF0ecC49bc48dC3F5E46E65'
     },
-    BABA: {
-      contract_address: '0x31317352a2bf1F499D5Ba12190c1e2f851fD815B'
+    mBABA: {
+      contract_address: '0xf20A4Bfdd525258389C3106B45A8bDE0cdef1396'
     },
-    IAU: {
-      contract_address: '0x12be454B8aB3f2259159515f3080C50bb9f4E8Fd'
+    mIAU: {
+      contract_address: '0x88f3aD3411031A3e5a342BCc9f353F6bb93D2824'
     },
-    SLV: {
-      contract_address: '0x97b2bf37Af911c946ADE94eC29bb2fe9505929b4'
+    mSLV: {
+      contract_address: '0x3eAFA8fbC7ebb7EDa384E3972bC0f53a5C0845De'
     },
-    USO: {
-      contract_address: '0xe31C5031F4e88425c2c644ba3740cb7Eb0C3E07A'
+    mUSO: {
+      contract_address: '0x35a2A7a4e73e493E76368551A464Bb92ae409aFf'
     },
-    VIXY: {
-      contract_address: '0x4F258915Db3B7995626dc3b696037D629a0A5d36'
+    mVIXY: {
+      contract_address: '0xf4923A601EFfb26c133837cEa9a3D6F0954630EE'
     }
   },
-  mainnet: {
-    LUNA: {
-      contract_address: '0xf44b2579deB34C972A3EE7A6C2a2e23AB56071b1'
-    },
-    UST: {
-      contract_address: '0xC140FC19296176862aac4e043A572675584c1e84'
-    },
-    KRT: {
-      contract_address: '0xad01D44ec74C79DC982fB0AbEfc8304fD2e18153'
-    },
-    SDT: {
-      contract_address: '0xd8C303FBbC7ED408f1098b6bFc57A6BA9751d7fc'
-    },
-    MNT: {
-      contract_address: '0xfe1c710FeC6b62643EcBAf82B2C3b52c8CbDC86b'
-    },
-    MIR: {
-      contract_address: '0xFaf4ECc55677c6c7a72Efb3607B3b0dCA6BfAf8e'
-    },
-    AAPL: {
-      contract_address: '0x963677002B9Acf184E8538C90dBFB33C31F8B97E'
-    },
-    GOOGL: {
-      contract_address: '0x5849769Ea6938f36dA05AfA5B9Fa8924a2E22d6E'
-    },
-    TSLA: {
-      contract_address: '0x4B3AEc1abd9d299428017C476aBB71E82718FFDD'
-    },
-    NFLX: {
-      contract_address: '0x31553F051c57c89bf7E41AB4a25660F4186787E0'
-    },
-    QQQ: {
-      contract_address: '0xC3A1c8646571FFf413A6E90e5bCE43E51112368D'
-    },
-    TWTR: {
-      contract_address: '0xc92452267a1586667D6E24449b06cEA263bfd579'
-    },
-    MSFT: {
-      contract_address: '0x208aDc16BB82F4D80d450061d7daF71775aA6b58'
-    },
-    AMZN: {
-      contract_address: '0x3ADCB1C4406A01fa99B6C2ed5BefC58ad3628465'
-    },
-    BABA: {
-      contract_address: '0x31317352a2bf1F499D5Ba12190c1e2f851fD815B'
-    },
-    IAU: {
-      contract_address: '0x12be454B8aB3f2259159515f3080C50bb9f4E8Fd'
-    },
-    SLV: {
-      contract_address: '0x97b2bf37Af911c946ADE94eC29bb2fe9505929b4'
-    },
-    USO: {
-      contract_address: '0xe31C5031F4e88425c2c644ba3740cb7Eb0C3E07A'
-    },
-    VIXY: {
-      contract_address: '0x4F258915Db3B7995626dc3b696037D629a0A5d36'
-    }
-  }
+  mainnet: {}
 };
 
 export = contractInfos;

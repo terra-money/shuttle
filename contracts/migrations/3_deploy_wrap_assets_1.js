@@ -1,17 +1,13 @@
 const WrappedMIR = artifacts.require("WrappedMIR");
-const WrappedAAPL = artifacts.require("WrappedAAPL");
-const WrappedGOOGL = artifacts.require("WrappedGOOGL");
-const WrappedTSLA = artifacts.require("WrappedTSLA");
-const WrappedNFLX = artifacts.require("WrappedNFLX");
-const WrappedQQQ = artifacts.require("WrappedQQQ");
-const WrappedTWTR = artifacts.require("WrappedTWTR");
+const WrappedmAAPL = artifacts.require("WrappedmAAPL");
+const WrappedmGOOGL = artifacts.require("WrappedmGOOGL");
+const WrappedmTSLA = artifacts.require("WrappedmTSLA");
+const WrappedmNFLX = artifacts.require("WrappedmNFLX");
 
 module.exports = function (deployer) {
   deployer.deploy(WrappedMIR);
-  deployer.deploy(WrappedAAPL);
-  deployer.deploy(WrappedGOOGL);
-  deployer.deploy(WrappedTSLA);
-  deployer.deploy(WrappedNFLX);
-  deployer.deploy(WrappedQQQ);
-  deployer.deploy(WrappedTWTR);
+  deployer.deploy(WrappedmAAPL);
+  deployer.deploy(WrappedmGOOGL);
+  deployer.deploy(WrappedmTSLA);
+  deployer.deploy(WrappedmNFLX);
 };

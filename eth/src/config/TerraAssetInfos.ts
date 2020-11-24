@@ -23,46 +23,46 @@ const assetInfos: {
       denom: 'umnt'
     },
     MIR: {
-      contract_address: 'terra1muhv6tskc2ecc3fn7cpkw5jgtwgu0kn7pefrgu'
+      contract_address: 'terra135uup8xwt6fec2jc664mcy0xnqjjh4y3efsqrh'
     },
-    AAPL: {
-      contract_address: 'terra106kvg2adz4fljfgasu3u3zgh5fksz5w5vxfawd'
+    mAAPL: {
+      contract_address: 'terra1y05wu4hsdzshsq9vtug2ttavtql6dcfrl0yv7s'
     },
-    GOOGL: {
-      contract_address: 'terra1ccdcw6yw6jvxajazwzcjns4qsxv8auahkyck4n'
+    mGOOGL: {
+      contract_address: 'terra1v0kd60lksznk482yh6yr8gu4ehfx298sq58w7y'
     },
-    TSLA: {
-      contract_address: 'terra1ccdcw6yw6jvxajazwzcjns4qsxv8auahkyck4n'
+    mTSLA: {
+      contract_address: 'terra17qm6jss8nq36cazclyvhz5j5kuc8nk8ygwcnps'
     },
-    NFLX: {
-      contract_address: 'terra1z0ngfqf95jpdg59ccdrq7ql8udt3t3m0rwygha'
+    mNFLX: {
+      contract_address: 'terra1qdp36cxzkddw8s88wyw2sdpmxgvhld5ar4m5mr'
     },
-    QQQ: {
-      contract_address: 'terra1qkzyt2xgy54yctmrfgak0xgqukfycexmu62v4a'
+    mQQQ: {
+      contract_address: 'terra19re2s49qgs3uc0fegfaxx8yqzlyl0f8r725qrs'
     },
-    TWTR: {
-      contract_address: 'terra15gqpp2nfkcyufzstwhmf47uqsfywtugxk4gpqv'
+    mTWTR: {
+      contract_address: 'terra1wjvwjuhkq99vh0wvxpx6ux0qj036mfsanlm34v'
     },
-    MSFT: {
-      contract_address: 'terra1lkqp5j4mamh9ys8fn47vqlpxjxc8upqadt8l0k'
+    mMSFT: {
+      contract_address: 'terra15e990g3huu0ayfneja43lpvec6hlygmpjrqs2u'
     },
-    AMZN: {
-      contract_address: 'terra1s9sc8wv066t2xeeq78d5l7m8ydse5m79xnmvq2'
+    mAMZN: {
+      contract_address: 'terra1tgmnj654p4nlcvfny7cm65v3kn5pgu8tx6lnpe'
     },
-    BABA: {
-      contract_address: 'terra1cxkjdq9pf0e5u7fqthwxth3qhfy6e9xrhfkgep'
+    mBABA: {
+      contract_address: 'terra1nff6yrcf3dnq57fn0c56ue8l86fs5eaf0l7uyh'
     },
-    IAU: {
-      contract_address: 'terra1usj4gu0jnlv39esz864j3zvqd3vehfxvf5f3lu'
+    mIAU: {
+      contract_address: 'terra10q9sksr0qy6ztz85yuyz65mndegwzlh3h706py'
     },
-    SLV: {
-      contract_address: 'terra17w8ukm8nrp3avzhjj7kwfqk2g8r2gx8vkp8evd'
+    mSLV: {
+      contract_address: 'terra1rk4kstfxvpwd3vh6ygy3r3uf72cllrvnsuj9qh'
     },
-    USO: {
-      contract_address: 'terra1zel5urcdtfhce06a8tuqrna24hz0s4rnxephet'
+    mUSO: {
+      contract_address: 'terra1ntzes35xr0gtexgkg3v2tt599w7eda4nrtxe4v'
     },
-    VIXY: {
-      contract_address: 'terra12p7fpf6qlxs9nmh9ea8lg2ydaleh5hzeta4qqg'
+    mVIXY: {
+      contract_address: 'terra150ec7cwlsne4xh6h2z88hkrkgf37s8un577xmx'
     }
   },
   'columbus-4': {
@@ -80,48 +80,6 @@ const assetInfos: {
     },
     MNT: {
       denom: 'umnt'
-    },
-    MIR: {
-      contract_address: 'terra1muhv6tskc2ecc3fn7cpkw5jgtwgu0kn7pefrgu'
-    },
-    AAPL: {
-      contract_address: 'terra106kvg2adz4fljfgasu3u3zgh5fksz5w5vxfawd'
-    },
-    GOOGL: {
-      contract_address: 'terra1ccdcw6yw6jvxajazwzcjns4qsxv8auahkyck4n'
-    },
-    TSLA: {
-      contract_address: 'terra1ccdcw6yw6jvxajazwzcjns4qsxv8auahkyck4n'
-    },
-    NFLX: {
-      contract_address: 'terra1z0ngfqf95jpdg59ccdrq7ql8udt3t3m0rwygha'
-    },
-    QQQ: {
-      contract_address: 'terra1qkzyt2xgy54yctmrfgak0xgqukfycexmu62v4a'
-    },
-    TWTR: {
-      contract_address: 'terra15gqpp2nfkcyufzstwhmf47uqsfywtugxk4gpqv'
-    },
-    MSFT: {
-      contract_address: 'terra1lkqp5j4mamh9ys8fn47vqlpxjxc8upqadt8l0k'
-    },
-    AMZN: {
-      contract_address: 'terra1s9sc8wv066t2xeeq78d5l7m8ydse5m79xnmvq2'
-    },
-    BABA: {
-      contract_address: 'terra1cxkjdq9pf0e5u7fqthwxth3qhfy6e9xrhfkgep'
-    },
-    IAU: {
-      contract_address: 'terra1usj4gu0jnlv39esz864j3zvqd3vehfxvf5f3lu'
-    },
-    SLV: {
-      contract_address: 'terra17w8ukm8nrp3avzhjj7kwfqk2g8r2gx8vkp8evd'
-    },
-    USO: {
-      contract_address: 'terra1zel5urcdtfhce06a8tuqrna24hz0s4rnxephet'
-    },
-    VIXY: {
-      contract_address: 'terra12p7fpf6qlxs9nmh9ea8lg2ydaleh5hzeta4qqg'
     }
   }
 };
