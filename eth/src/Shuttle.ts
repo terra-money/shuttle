@@ -49,13 +49,15 @@ class Shuttle {
     });
 
     while (!shutdown) {
-      await this.process().catch(async (res) => {
-        console.error(`Process failed: ${res}`);
+      await this.process().catch(async (err) => {
+        const errorMsg =
+          err instanceof Error ? err.toString() : JSON.stringify(err);
+        console.error(`Process failed: ${errorMsg}`);
 
         if (SLACK_WEB_HOOK !== undefined) {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
-            text: `Problem Happends: ${JSON.stringify(res)}`,
-            username: `Shuttle-Terra`
+            text: `Problem Happends: ${errorMsg}`,
+            username: `Shuttle-Eth`
           });
 
           console.log(`Notify Error to Slack: ${data}`);
