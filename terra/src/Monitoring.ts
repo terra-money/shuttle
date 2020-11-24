@@ -17,7 +17,7 @@ const ETH_MNEMONIC = process.env.ETH_MNEMONIC as string;
 const TERRA_TRACKING_ADDR = process.env.TERRA_TRACKING_ADDR as string;
 const TERRA_TXS_LOAD_UNIT = parseInt(process.env.TERRA_TXS_LOAD_UNIT as string);
 const TERRA_BLOCK_CONFIRMATION = parseInt(
-  process.env.ETH_BLOCK_CONFIRMATION as string
+  process.env.TERRA_BLOCK_CONFIRMATION as string
 );
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
