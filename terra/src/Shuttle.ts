@@ -127,6 +127,7 @@ class Shuttle {
     resultTxHash: string
   ): { text: string } {
     let notification = '```';
+    notification += `TERRA => ETH\n`;
     notification += `Sender: ${data.sender}\n`;
     notification += `To:     ${data.to}\n`;
     notification += `Amount: ${new BigNumber(data.amount)

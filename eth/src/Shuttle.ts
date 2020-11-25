@@ -113,6 +113,7 @@ class Shuttle {
     let notification = '';
     monitoringDatas.forEach((data) => {
       notification += '```';
+      notification += `ETH => TERRA\n`;
       notification += `Sender: ${data.sender}\n`;
       notification += `To:     ${data.to}\n`;
       notification += `Amount: ${new BigNumber(data.amount)
