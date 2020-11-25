@@ -79,7 +79,7 @@ export class Monitoring {
             to: bech32.encode(
               'terra',
               bech32.toWords(
-                hexToBytes(event.returnValues['_to'].to.slice(0, 42))
+                hexToBytes(event.returnValues['_to'].slice(0, 42))
               )
             ),
             amount: event.returnValues['amount'],
