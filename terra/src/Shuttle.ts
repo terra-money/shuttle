@@ -3,6 +3,8 @@ import axios from 'axios';
 import * as http from 'http';
 import * as https from 'https';
 import { promisify } from 'util';
+import BigNumber from "bignumber.js";
+
 import { Monitoring, MonitoringData } from './Monitoring';
 import Relayer from './Relayer';
 
@@ -127,7 +129,7 @@ class Shuttle {
     let notification = '```';
     notification += `Sender: ${data.sender}\n`;
     notification += `To:     ${data.to}\n`;
-    notification += `Amount: ${data.amount.padStart(16)} ${data.asset}\n`;
+    notification += `Amount: ${new BigNumber(data.amount).toFixed(6)} ${data.asset}\n`;
     notification += `\n`;
     notification += `Terra TxHash: ${data.txHash}\n`;
     notification += `Eth TxHash:   ${resultTxHash}\n`;
