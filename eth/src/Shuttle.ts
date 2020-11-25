@@ -61,7 +61,7 @@ class Shuttle {
             text: `Problem Happends: ${errorMsg}`
           });
 
-          console.log(`Notify Error to Slack: ${data}`);
+          console.log(`Notify Error to Slack: ${data} '<!channel>'`);
         }
 
         // sleep 10s after error
