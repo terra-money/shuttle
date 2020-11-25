@@ -24,6 +24,8 @@ class Relayer {
   Wallet: Wallet;
   LCDClient: LCDClient;
 
+  sequenceNumber: number;
+
   constructor() {
     // Register terra chain infos
     this.LCDClient = new LCDClient({
@@ -33,10 +35,19 @@ class Relayer {
       gasAdjustment: TERRA_GAS_ADJUSTMENT
     });
 
+    this.sequenceNumber = 0;
     this.Wallet = new Wallet(
       this.LCDClient,
       new MnemonicKey({ mnemonic: TERRA_MNEMONIC })
     );
+  }
+
+  async adjustSequenceNumber() {
+    let sequenceNumber = await this.Wallet.sequence();
+    this.sequenceNumber =
+      this.sequenceNumber > sequenceNumber
+        ? this.sequenceNumber
+        : sequenceNumber;
   }
 
   async relay(monitoringDatas: MonitoringData[]): Promise<string> {
@@ -93,8 +104,12 @@ class Relayer {
 
     if (msgs.length === 0) return '';
 
+    // Adjust sequence number between local and chain
+    await this.adjustSequenceNumber();
+
     const tx = await this.Wallet.createAndSignTx({
-      msgs
+      msgs,
+      sequence: this.sequenceNumber++
     });
 
     const result = await this.LCDClient.tx.broadcastSync(tx);
