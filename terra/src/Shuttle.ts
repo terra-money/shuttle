@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as http from 'http';
 import * as https from 'https';
 import { promisify } from 'util';
-import { Monitoring } from './Monitoring';
+import { Monitoring, MonitoringData } from './Monitoring';
 import Relayer from './Relayer';
 
 const REDIS_PREFIX = 'terra_shuttle';
@@ -57,8 +57,7 @@ class Shuttle {
 
         if (SLACK_WEB_HOOK !== undefined) {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
-            text: `Problem Happends: ${errorMsg}`,
-            username: `Shuttle-Terra`
+            text: `Problem Happends: ${errorMsg}`
           });
 
           console.log(`Notify Error to Slack: ${data}`);
@@ -87,16 +86,25 @@ class Shuttle {
     let relayFlag = false;
     const lastTxHash = await this.getAsync(KEY_LAST_TXHASH);
     for (let i = 0; i < monitoringDatas.length; i++) {
-      const data = monitoringDatas[i];
+      const monitoringData = monitoringDatas[i];
       if (!relayFlag && lastTxHash !== undefined) {
-        if (lastTxHash === data.txHash) {
+        if (lastTxHash === monitoringData.txHash) {
           relayFlag = true;
           continue;
         }
       }
 
-      const txhash = await this.relayer.relay(data);
+      const txhash = await this.relayer.relay(monitoringData);
       await this.setAsync(KEY_LAST_TXHASH, txhash);
+
+      // Notify to slack
+      if (SLACK_WEB_HOOK !== undefined) {
+        await ax.post(
+          SLACK_WEB_HOOK,
+          this.buildSlackNotification(monitoringData, txhash)
+        );
+      }
+
       console.log(`Relay Success: ${txhash}`);
     }
 
@@ -110,6 +118,25 @@ class Shuttle {
     if (newLastHeight === lastHeight) {
       await this.sleep(TERRA_BLOCK_SECOND * 1000);
     }
+  }
+
+  buildSlackNotification(
+    data: MonitoringData,
+    resultTxHash: string
+  ): { text: string } {
+    let notification = '```';
+    notification += `Sender: ${data.sender}\n`;
+    notification += `To:     ${data.to}\n`;
+    notification += `Amount: ${data.amount.padStart(16)} ${data.asset}\n`;
+    notification += `\n`;
+    notification += `Terra TxHash: ${data.txHash}\n`;
+    notification += `Eth TxHash:   ${resultTxHash}\n`;
+    notification += '```';
+    const text = `${notification}`;
+
+    return {
+      text
+    };
   }
 
   sleep(ms: number) {

@@ -10,8 +10,6 @@ import {
   Coin
 } from '@terra-money/terra.js';
 import { MonitoringData } from 'Monitoring';
-import bech32 from 'bech32';
-import { hexToBytes } from 'web3-utils';
 
 const TERRA_MNEMONIC = process.env.TERRA_MNEMONIC as string;
 const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
@@ -54,16 +52,10 @@ class Relayer {
     const msgs: Array<Msg> = monitoringDatas.reduce(
       (msgs: Array<Msg>, data: MonitoringData) => {
         const fromAddr = this.Wallet.key.accAddress;
-        let toAddr = bech32.encode(
-          'terra',
-          bech32.toWords(hexToBytes(data.to.slice(0, 42)))
-        );
 
-        // If the given address not proper address,
+        // If the given `to` address not proper address,
         // relayer send the funds to donation address
-        if (AccAddress.validate(toAddr)) {
-          toAddr = TERRA_DONATION;
-        }
+        const toAddr = AccAddress.validate(data.to) ? data.to : TERRA_DONATION;
 
         // 18 decimal to 6 decimal
         if (data.amount.length < 12) return msgs;

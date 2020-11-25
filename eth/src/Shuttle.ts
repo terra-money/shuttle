@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as http from 'http';
 import * as https from 'https';
 import { promisify } from 'util';
-import { Monitoring } from './Monitoring';
+import { Monitoring, MonitoringData } from './Monitoring';
 import Relayer from './Relayer';
 
 const REDIS_PREFIX = 'eth_shuttle';
@@ -56,8 +56,7 @@ class Shuttle {
 
         if (SLACK_WEB_HOOK !== undefined) {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
-            text: `Problem Happends: ${errorMsg}`,
-            username: `Shuttle-Eth`
+            text: `Problem Happends: ${errorMsg}`
           });
 
           console.log(`Notify Error to Slack: ${data}`);
@@ -83,6 +82,17 @@ class Shuttle {
     // Relay to terra chain
     if (monitoringDatas.length > 0) {
       const txhash = await this.relayer.relay(monitoringDatas);
+
+      // Notify to slack
+      if (SLACK_WEB_HOOK !== undefined) {
+        await ax.post(
+          SLACK_WEB_HOOK,
+          monitoringDatas.reduce((msg, monitoringData) => {
+            return msg + this.buildSlackNotification(monitoringData, txhash);
+          }, '')
+        );
+      }
+
       if (txhash.length !== 0) console.log(`Relay Success: ${txhash}`);
     }
 
@@ -94,6 +104,26 @@ class Shuttle {
     if (newLastHeight - lastHeight < ETH_BLOCK_LOAD_UNIT) {
       await this.sleep(ETH_BLOCK_SECOND * 1000);
     }
+  }
+
+  buildSlackNotification(
+    data: MonitoringData,
+    resultTxHash: string
+  ): { text: string } {
+    let notification = '```';
+    notification += `Sender: ${data.sender}\n`;
+    notification += `To:     ${data.to}\n`;
+    notification += `Amount: ${data.amount.padStart(16)} ${data.asset}\n`;
+    notification += `\n`;
+    notification += `Eth TxHash:   ${data.txHash}\n`;
+    notification += `Terra TxHash: ${resultTxHash}\n`;
+    notification += '```\n';
+
+    const text = `${notification}`;
+
+    return {
+      text
+    };
   }
 
   sleep(ms: number) {

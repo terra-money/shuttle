@@ -126,6 +126,7 @@ export class Monitoring {
                   sender,
                   to,
                   amount,
+                  asset,
                   contract: this.EthContracts[asset]
                 });
               }
@@ -157,6 +158,7 @@ export class Monitoring {
                   sender,
                   to,
                   amount,
+                  asset,
                   contract: this.EthContracts[asset]
                 });
               }
@@ -184,6 +186,7 @@ export type MonitoringData = {
   sender: string;
   to: string;
   amount: string;
+  asset: string;
 
   // eth side data for relayer
   contract: Contract;

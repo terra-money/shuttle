@@ -1,5 +1,8 @@
 import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
+import { hexToBytes } from 'web3-utils';
+import bech32 from 'bech32';
+
 import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
@@ -73,8 +76,14 @@ export class Monitoring {
             blockNumber: event.blockNumber,
             txHash: event.transactionHash,
             sender: event.returnValues['_sender'],
-            to: event.returnValues['_to'],
+            to: bech32.encode(
+              'terra',
+              bech32.toWords(
+                hexToBytes(event.returnValues['_to'].to.slice(0, 42))
+              )
+            ),
             amount: event.returnValues['amount'],
+            asset,
             terraAssetInfo: info
           };
         })
@@ -96,6 +105,7 @@ export type MonitoringData = {
   sender: string;
   to: string;
   amount: string;
+  asset: string;
 
   // terra side data for relayer
   terraAssetInfo: TerraAssetInfo;
