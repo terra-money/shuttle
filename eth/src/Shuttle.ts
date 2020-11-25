@@ -89,9 +89,7 @@ class Shuttle {
       if (SLACK_WEB_HOOK !== undefined) {
         await ax.post(
           SLACK_WEB_HOOK,
-          monitoringDatas.reduce((msg, monitoringData) => {
-            return msg + this.buildSlackNotification(monitoringData, txhash);
-          }, '')
+          this.buildSlackNotification(monitoringDatas, txhash)
         );
       }
 
@@ -109,19 +107,22 @@ class Shuttle {
   }
 
   buildSlackNotification(
-    data: MonitoringData,
+    monitoringDatas: Array<MonitoringData>,
     resultTxHash: string
   ): { text: string } {
-    let notification = '```';
-    notification += `Sender: ${data.sender}\n`;
-    notification += `To:     ${data.to}\n`;
-    notification += `Amount: ${new BigNumber(data.amount)
-      .div(1e18)
-      .toFixed(6)} ${data.asset}\n`;
-    notification += `\n`;
-    notification += `Eth TxHash:   ${data.txHash}\n`;
-    notification += `Terra TxHash: ${resultTxHash}\n`;
-    notification += '```\n';
+    let notification = '';
+    monitoringDatas.forEach((data) => {
+      notification += '```';
+      notification += `Sender: ${data.sender}\n`;
+      notification += `To:     ${data.to}\n`;
+      notification += `Amount: ${new BigNumber(data.amount)
+        .div(1e18)
+        .toFixed(6)} ${data.asset}\n`;
+      notification += `\n`;
+      notification += `Eth TxHash:   ${data.txHash}\n`;
+      notification += `Terra TxHash: ${resultTxHash}\n`;
+      notification += '```\n';
+    });
 
     const text = `${notification}`;
 
