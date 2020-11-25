@@ -116,7 +116,7 @@ class Shuttle {
     notification += `Sender: ${data.sender}\n`;
     notification += `To:     ${data.to}\n`;
     notification += `Amount: ${new BigNumber(data.amount)
-      .div(10e18)
+      .div(1e18)
       .toFixed(6)} ${data.asset}\n`;
     notification += `\n`;
     notification += `Eth TxHash:   ${data.txHash}\n`;
