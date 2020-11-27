@@ -10,7 +10,9 @@ import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 import HDWalletProvider from '@truffle/hdwallet-provider';
+import BigNumber from 'bignumber.js';
 
+const FEE_RATE = process.env.FEE_RATE as string;
 const ETH_MNEMONIC = process.env.ETH_MNEMONIC as string;
 
 const TERRA_TRACKING_ADDR = process.env.TERRA_TRACKING_ADDR as string;
@@ -119,13 +121,18 @@ export class Monitoring {
             data.value.amount.forEach((coin) => {
               if (coin.denom in this.TerraAssetMapping) {
                 const asset = this.TerraAssetMapping[coin.denom];
-                const amount = coin.amount;
+                const requested = new BigNumber(coin.amount);
+                const fee = requested.multipliedBy(FEE_RATE);
+                const amount = requested.minus(fee);
+
                 monitoringDatas.push({
                   blockNumber,
                   txHash,
                   sender,
                   to,
-                  amount,
+                  requested: requested.toFixed(0),
+                  amount: amount.toFixed(0),
+                  fee: fee.toFixed(0),
                   asset,
                   contract: this.EthContracts[asset]
                 });
@@ -145,19 +152,25 @@ export class Monitoring {
               // Check the recipient is TerraTrackingAddress
               const transferMsg = executeMsg['transfer'];
               const recipient = transferMsg['recipient'];
-              const amount = transferMsg['amount'];
+
               if (recipient === this.TerraTrackingAddress) {
                 const blockNumber = tx.height;
                 const txHash = tx.txhash;
                 const sender = data.value.sender;
                 const to = tx.tx.memo;
 
+                const requested = new BigNumber(transferMsg['amount']);
+                const fee = requested.multipliedBy(FEE_RATE);
+                const amount = requested.minus(fee);
+
                 monitoringDatas.push({
                   blockNumber,
                   txHash,
                   sender,
                   to,
-                  amount,
+                  requested: requested.toFixed(0),
+                  amount: amount.toFixed(0),
+                  fee: fee.toFixed(0),
                   asset,
                   contract: this.EthContracts[asset]
                 });
@@ -185,7 +198,10 @@ export type MonitoringData = {
   txHash: string;
   sender: string;
   to: string;
+
+  requested: string;
   amount: string;
+  fee: string;
   asset: string;
 
   // eth side data for relayer

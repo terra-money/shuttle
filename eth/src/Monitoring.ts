@@ -2,11 +2,13 @@ import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
 import { hexToBytes } from 'web3-utils';
 import bech32 from 'bech32';
+import BigNumber from 'bignumber.js';
 
 import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 
+const FEE_RATE = process.env.FEE_RATE as string;
 const ETH_BLOCK_LOAD_UNIT = parseInt(process.env.ETH_BLOCK_LOAD_UNIT as string);
 const ETH_BLOCK_CONFIRMATION = parseInt(
   process.env.ETH_BLOCK_CONFIRMATION as string
@@ -71,6 +73,10 @@ export class Monitoring {
 
       monitoringDatas.push(
         ...events.map((event) => {
+          const requested = new BigNumber(event.returnValues['amount']);
+          const fee = requested.multipliedBy(FEE_RATE);
+          const amount = requested.minus(fee);
+
           const info = this.TerraAssetInfos[asset];
           return {
             blockNumber: event.blockNumber,
@@ -82,7 +88,9 @@ export class Monitoring {
                 hexToBytes(event.returnValues['_to'].slice(0, 42))
               )
             ),
-            amount: event.returnValues['amount'],
+            requested: requested.toFixed(0),
+            amount: amount.toFixed(0),
+            fee: fee.toFixed(0),
             asset,
             terraAssetInfo: info
           };
@@ -104,7 +112,9 @@ export type MonitoringData = {
   txHash: string;
   sender: string;
   to: string;
+  requested: string;
   amount: string;
+  fee: string;
   asset: string;
 
   // terra side data for relayer

@@ -130,9 +130,16 @@ class Shuttle {
     notification += `TERRA => ETH\n`;
     notification += `Sender: ${data.sender}\n`;
     notification += `To:     ${data.to}\n`;
+    notification += `\n`;
+    notification += `Requested: ${new BigNumber(data.requested)
+      .div(1e6)
+      .toFixed(6)} ${data.asset}\n`;
     notification += `Amount: ${new BigNumber(data.amount)
       .div(1e6)
       .toFixed(6)} ${data.asset}\n`;
+    notification += `Fee: ${new BigNumber(data.fee).div(1e6).toFixed(6)} ${
+      data.asset
+    }\n`;
     notification += `\n`;
     notification += `Terra TxHash: ${data.txHash}\n`;
     notification += `Eth TxHash:   ${resultTxHash}\n`;
