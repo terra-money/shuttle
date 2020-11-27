@@ -118,12 +118,12 @@ class Shuttle {
       notification += `To:     ${data.to}\n`;
       notification += `\n`;
       notification += `Requested: ${new BigNumber(data.requested)
-        .div(1e6)
+        .div(1e18)
         .toFixed(6)} ${data.asset}\n`;
       notification += `Amount: ${new BigNumber(data.amount)
-        .div(1e6)
+        .div(1e18)
         .toFixed(6)} ${data.asset}\n`;
-      notification += `Fee: ${new BigNumber(data.fee).div(1e6).toFixed(6)} ${
+      notification += `Fee: ${new BigNumber(data.fee).div(1e18).toFixed(6)} ${
         data.asset
       }\n`;
       notification += `\n`;
