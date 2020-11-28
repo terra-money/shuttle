@@ -8,7 +8,8 @@
   },
   "devDependencies": {
     "@truffle/hdwallet-provider": "^1.2.0",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "truffle-plugin-verify": "^0.5.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
