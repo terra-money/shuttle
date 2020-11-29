@@ -60,7 +60,7 @@ class Shuttle {
 
         if (SLACK_WEB_HOOK !== undefined) {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
-            text: `Problem Happends: ${errorMsg}`
+            text: `${SLACK_NOTI_NETWORK}] Problem Happends: ${errorMsg}`
           });
 
           console.log(`Notify Error to Slack: ${data} '<!channel>'`);
