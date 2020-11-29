@@ -15,6 +15,8 @@ const ETH_BLOCK_LOAD_UNIT = parseInt(process.env.ETH_BLOCK_LOAD_UNIT as string);
 const ETH_BLOCK_SECOND = parseInt(process.env.ETH_BLOCK_SECOND as string);
 
 const REDIS_URL = process.env.REDIS_URL as string;
+
+const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 
 const ax = axios.create({
@@ -113,7 +115,7 @@ class Shuttle {
     let notification = '';
     monitoringDatas.forEach((data) => {
       notification += '```';
-      notification += `ETH => TERRA\n`;
+      notification += `[${SLACK_NOTI_NETWORK}] ETH => TERRA\n`;
       notification += `Sender: ${data.sender}\n`;
       notification += `To:     ${data.to}\n`;
       notification += `\n`;
