@@ -37,18 +37,20 @@ export class Monitoring {
     this.EthContracts = {};
     this.TerraAssetInfos = {};
     for (const [asset, value] of Object.entries(ethContractInfos)) {
+      const info = terraAssetInfos[asset];
+      if (info === undefined) continue;
+      if (
+        (info.denom === undefined && info.contract_address === undefined) ||
+        (info.denom !== undefined && info.contract_address !== undefined)
+      )
+        throw 'Must provide one of denom and contract_address';
+
       const contract = new this.Web3.eth.Contract(
         WrappedTokenAbi,
         value.contract_address
       );
 
       this.EthContracts[asset] = contract;
-
-      // Check terra asset info
-      const info = terraAssetInfos[asset];
-      if (!info.denom && !info.contract_address)
-        throw 'Must provide one of denom and contract_address';
-
       this.TerraAssetInfos[asset] = info;
     }
   }
@@ -84,9 +86,7 @@ export class Monitoring {
             sender: event.returnValues['_sender'],
             to: bech32.encode(
               'terra',
-              bech32.toWords(
-                hexToBytes(event.returnValues['_to'].slice(0, 42))
-              )
+              bech32.toWords(hexToBytes(event.returnValues['_to'].slice(0, 42)))
             ),
             requested: requested.toFixed(0),
             amount: amount.toFixed(0),
