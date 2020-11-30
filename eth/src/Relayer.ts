@@ -64,11 +64,6 @@ class Relayer {
         const info = data.terraAssetInfo;
         if (info.denom) {
           const denom = info.denom;
-          // TODO - charge fee for tax?
-          // const amoutAfterTax = (
-          //   (BigInt(amount) * BigInt(99)) /
-          //   BigInt(100)
-          // ).toString();
 
           msgs.push(new MsgSend(fromAddr, toAddr, [new Coin(denom, amount)]));
         } else if (info.contract_address) {

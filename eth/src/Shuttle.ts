@@ -58,7 +58,7 @@ class Shuttle {
           err instanceof Error ? err.toString() : JSON.stringify(err);
         console.error(`Process failed: ${errorMsg}`);
 
-        if (SLACK_WEB_HOOK !== undefined) {
+        if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
             text: `${SLACK_NOTI_NETWORK}] Problem Happends: ${errorMsg}`
           });
@@ -88,7 +88,7 @@ class Shuttle {
       const txhash = await this.relayer.relay(monitoringDatas);
 
       // Notify to slack
-      if (SLACK_WEB_HOOK !== undefined) {
+      if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
         await ax.post(
           SLACK_WEB_HOOK,
           this.buildSlackNotification(monitoringDatas, txhash)
@@ -122,12 +122,12 @@ class Shuttle {
       notification += `Requested: ${new BigNumber(data.requested)
         .div(1e18)
         .toFixed(6)} ${data.asset}\n`;
-      notification += `Amount: ${new BigNumber(data.amount)
+      notification += `Amount:    ${new BigNumber(data.amount)
         .div(1e18)
         .toFixed(6)} ${data.asset}\n`;
-      notification += `Fee: ${new BigNumber(data.fee).div(1e18).toFixed(6)} ${
-        data.asset
-      }\n`;
+      notification += `Fee:       ${new BigNumber(data.fee)
+        .div(1e18)
+        .toFixed(6)} ${data.asset}\n`;
       notification += `\n`;
       notification += `Eth TxHash:   ${data.txHash}\n`;
       notification += `Terra TxHash: ${resultTxHash}\n`;

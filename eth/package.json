@@ -2,22 +2,15 @@
   "name": "@terra-money/shuttle-eth",
   "version": "1.0.0",
   "description": "Ether side shuttle implementation to relay tx on the Terra Blockchain",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "engines": {
     "node": ">=12"
   },
   "scripts": {
     "start": "ts-node ./src/index.ts",
-    "build": "tsc --module commonjs && webpack --mode production",
     "test": "jest",
     "prettier": "prettier --write ./src/**/*.ts",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
-    "doc": "typedoc",
-    "prepublishOnly": "npm run build"
+    "doc": "typedoc"
   },
   "repository": {
     "type": "git",
@@ -29,18 +22,24 @@
       "eslint"
     ]
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "post-checkout": "npm i"
+    }
+  },
   "prettier": {
     "semi": true,
     "singleQuote": true,
     "trailingComma": "none",
     "arrowParens": "always"
   },
-  "author": "YunYeo",
+  "author": "Terraform Labs. PTE",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/terra-project/mirror-airdrop/issues"
+    "url": "https://github.com/terra-project/shuttle/issues"
   },
-  "homepage": "https://github.com/terra-project/mirror-airdrop#readme",
+  "homepage": "https://github.com/terra-project/shuttle#readme",
   "devDependencies": {
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.7",
@@ -68,19 +67,16 @@
     "tsconfig-paths-webpack-plugin": "^3.3.0",
     "typedoc": "^0.19.2",
     "typescript": "^4.0.5",
-    "webpack": "^4",
-    "webpack-bundle-analyzer": "^4.1.0",
-    "webpack-cli": "^4.2.0"
-  },
-  "dependencies": {
     "@terra-money/terra.js": "^1.2.1",
-    "axios": "^0.21.0",
     "node-fetch": ">=2.6.1",
     "bech32": "^1.1.4",
     "bignumber.js": "^9.0.1",
-    "redis": "^3.0.2",
     "web3": "^1.3.0",
     "web3-eth-contract": "^1.3.0",
     "web3-utils": "^1.3.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.0",
+    "redis": "^3.0.2"
   }
 }
