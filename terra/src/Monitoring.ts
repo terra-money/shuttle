@@ -3,7 +3,8 @@ import {
   LCDClient,
   AccAddress,
   MsgSend,
-  MsgExecuteContract
+  MsgExecuteContract,
+  TxInfo
 } from '@terra-money/terra.js';
 import { Contract } from 'web3-eth-contract';
 import EthContractInfos from './config/EthContractInfos';
@@ -37,10 +38,15 @@ export class Monitoring {
   };
 
   constructor() {
-    // Register chain infos
-    const provider = new HDWalletProvider(ETH_MNEMONIC, ETH_URL);
+    const web3 = new Web3();
+    const provider = new HDWalletProvider({
+      mnemonic: ETH_MNEMONIC,
+      providerOrUrl: ETH_URL
+    });
+
+    provider.engine.stop();
+    web3.setProvider(provider);
     const fromAddress = provider.getAddress();
-    const web3 = new Web3(provider);
 
     this.TerraTrackingAddress = TERRA_TRACKING_ADDR;
     this.LCDClient = new LCDClient({
@@ -96,94 +102,102 @@ export class Monitoring {
         limit
       });
 
-      txResult.txs.forEach((tx) => {
-        // Skip when tx is failed
-        if (tx.code !== undefined) return;
-
-        // Only cares about first message
-        const msg = tx.tx.msg[0];
-        if (msg === undefined) return;
-
-        const msgData = msg.toData();
-        const msgType = msgData.type;
-
-        if (msgType === 'bank/MsgSend') {
-          const data: MsgSend.Data = msgData as MsgSend.Data;
-
-          // Check a recipient is TerraTrackingAddress
-          if (data.value.to_address === this.TerraTrackingAddress) {
-            const blockNumber = tx.height;
-            const txHash = tx.txhash;
-            const sender = data.value.from_address;
-            const to = tx.tx.memo;
-
-            data.value.amount.forEach((coin) => {
-              if (coin.denom in this.TerraAssetMapping) {
-                const asset = this.TerraAssetMapping[coin.denom];
-                const requested = new BigNumber(coin.amount);
-                const fee = requested.multipliedBy(FEE_RATE);
-                const amount = requested.minus(fee);
-
-                monitoringDatas.push({
-                  blockNumber,
-                  txHash,
-                  sender,
-                  to,
-                  requested: requested.toFixed(0),
-                  amount: amount.toFixed(0),
-                  fee: fee.toFixed(0),
-                  asset,
-                  contract: this.EthContracts[asset]
-                });
-              }
-            });
-          }
-        } else if (msgType === 'wasm/MsgExecuteContract') {
-          const data: MsgExecuteContract.Data = msgData as MsgExecuteContract.Data;
-          if (data.value.contract in this.TerraAssetMapping) {
-            const asset = this.TerraAssetMapping[data.value.contract];
-            const executeMsg = JSON.parse(
-              Buffer.from(data.value.execute_msg, 'base64').toString()
-            );
-
-            // Check the msg is 'transfer'
-            if ('transfer' in executeMsg) {
-              // Check the recipient is TerraTrackingAddress
-              const transferMsg = executeMsg['transfer'];
-              const recipient = transferMsg['recipient'];
-
-              if (recipient === this.TerraTrackingAddress) {
-                const blockNumber = tx.height;
-                const txHash = tx.txhash;
-                const sender = data.value.sender;
-                const to = tx.tx.memo;
-
-                const requested = new BigNumber(transferMsg['amount']);
-                const fee = requested.multipliedBy(FEE_RATE);
-                const amount = requested.minus(fee);
-
-                monitoringDatas.push({
-                  blockNumber,
-                  txHash,
-                  sender,
-                  to,
-                  requested: requested.toFixed(0),
-                  amount: amount.toFixed(0),
-                  fee: fee.toFixed(0),
-                  asset,
-                  contract: this.EthContracts[asset]
-                });
-              }
-            }
-          }
-        }
-      });
+      monitoringDatas.push(
+        ...monitoringDatas.concat.apply([], txResult.txs.map(this.parseTx.bind(this)))
+      );
 
       if (txResult.page_number >= txResult.page_total) break;
       page = txResult.page_number + 1;
     }
 
     return [targetHeight, monitoringDatas];
+  }
+
+  parseTx(tx: TxInfo): Array<MonitoringData> {
+    const monitoringDatas: Array<MonitoringData> = [];
+
+    // Skip when tx is failed
+    if (tx.code !== undefined) return monitoringDatas;
+
+    // Only cares first message
+    const msg = tx.tx.msg[0];
+    if (msg === undefined) return monitoringDatas;
+
+    const msgData = msg.toData();
+    const msgType = msgData.type;
+
+    if (msgType === 'bank/MsgSend') {
+      const data: MsgSend.Data = msgData as MsgSend.Data;
+
+      // Check a recipient is TerraTrackingAddress
+      if (data.value.to_address === this.TerraTrackingAddress) {
+        const blockNumber = tx.height;
+        const txHash = tx.txhash;
+        const sender = data.value.from_address;
+        const to = tx.tx.memo;
+
+        data.value.amount.forEach((coin) => {
+          if (coin.denom in this.TerraAssetMapping) {
+            const asset = this.TerraAssetMapping[coin.denom];
+            const requested = new BigNumber(coin.amount);
+            const fee = requested.multipliedBy(FEE_RATE);
+            const amount = requested.minus(fee);
+
+            monitoringDatas.push({
+              blockNumber,
+              txHash,
+              sender,
+              to,
+              requested: requested.toFixed(0),
+              amount: amount.toFixed(0),
+              fee: fee.toFixed(0),
+              asset,
+              contract: this.EthContracts[asset]
+            });
+          }
+        });
+      }
+    } else if (msgType === 'wasm/MsgExecuteContract') {
+      const data: MsgExecuteContract.Data = msgData as MsgExecuteContract.Data;
+      if (data.value.contract in this.TerraAssetMapping) {
+        const asset = this.TerraAssetMapping[data.value.contract];
+        const executeMsg = JSON.parse(
+          Buffer.from(data.value.execute_msg, 'base64').toString()
+        );
+
+        // Check the msg is 'transfer'
+        if ('transfer' in executeMsg) {
+          // Check the recipient is TerraTrackingAddress
+          const transferMsg = executeMsg['transfer'];
+          const recipient = transferMsg['recipient'];
+
+          if (recipient === this.TerraTrackingAddress) {
+            const blockNumber = tx.height;
+            const txHash = tx.txhash;
+            const sender = data.value.sender;
+            const to = tx.tx.memo;
+
+            const requested = new BigNumber(transferMsg['amount']);
+            const fee = requested.multipliedBy(FEE_RATE);
+            const amount = requested.minus(fee);
+
+            monitoringDatas.push({
+              blockNumber,
+              txHash,
+              sender,
+              to,
+              requested: requested.toFixed(0),
+              amount: amount.toFixed(0),
+              fee: fee.toFixed(0),
+              asset,
+              contract: this.EthContracts[asset]
+            });
+          }
+        }
+      }
+    }
+
+    return monitoringDatas;
   }
 }
 

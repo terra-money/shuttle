@@ -15,7 +15,7 @@ const KEY_LAST_TXHASH = 'last_txhash';
 const TERRA_BLOCK_SECOND = parseInt(process.env.TERRA_BLOCK_SECOND as string);
 const REDIS_URL = process.env.REDIS_URL as string;
 
-const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK
+const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 
 const ax = axios.create({
@@ -59,7 +59,7 @@ class Shuttle {
           err instanceof Error ? err.toString() : JSON.stringify(err);
         console.error(`Process failed: ${errorMsg}`);
 
-        if (SLACK_WEB_HOOK !== undefined) {
+        if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
             text: `${SLACK_NOTI_NETWORK}] Problem Happends: ${errorMsg} '<!channel>'`
           });
@@ -102,7 +102,7 @@ class Shuttle {
       await this.setAsync(KEY_LAST_TXHASH, txhash);
 
       // Notify to slack
-      if (SLACK_WEB_HOOK !== undefined) {
+      if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
         await ax.post(
           SLACK_WEB_HOOK,
           this.buildSlackNotification(monitoringData, txhash)
@@ -136,12 +136,12 @@ class Shuttle {
     notification += `Requested: ${new BigNumber(data.requested)
       .div(1e6)
       .toFixed(6)} ${data.asset}\n`;
-    notification += `Amount: ${new BigNumber(data.amount)
+    notification += `Amount:    ${new BigNumber(data.amount)
       .div(1e6)
       .toFixed(6)} ${data.asset}\n`;
-    notification += `Fee: ${new BigNumber(data.fee).div(1e6).toFixed(6)} ${
-      data.asset
-    }\n`;
+    notification += `Fee:       ${new BigNumber(data.fee)
+      .div(1e6)
+      .toFixed(6)} ${data.asset}\n`;
     notification += `\n`;
     notification += `Terra TxHash: ${data.txHash}\n`;
     notification += `Eth TxHash:   ${resultTxHash}\n`;
