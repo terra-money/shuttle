@@ -68,10 +68,22 @@ export class Monitoring {
 
     const monitoringDatas: Array<MonitoringData> = [];
     for (const [asset, contract] of Object.entries(this.EthContracts)) {
-      const events = await contract.getPastEvents('Burn', {
-        fromBlock,
-        toBlock
-      });
+      const events = await contract
+        .getPastEvents('Burn', {
+          fromBlock,
+          toBlock
+        })
+        .catch((err) => {
+          // If timeout happens, retry
+          if (err['code'] === -32005) {
+            return contract.getPastEvents('Burn', {
+              fromBlock,
+              toBlock
+            });
+          }
+
+          throw err;
+        });
 
       monitoringDatas.push(
         ...events.map((event) => {
