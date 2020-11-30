@@ -95,7 +95,8 @@ export class Monitoring {
     const monitoringDatas: Array<MonitoringData> = [];
 
     let page = 1;
-    while (true) {
+    let totalPage = 1;
+    do {
       const txResult = await this.LCDClient.tx.search({
         'tx.height': targetHeight,
         page,
@@ -103,12 +104,14 @@ export class Monitoring {
       });
 
       monitoringDatas.push(
-        ...monitoringDatas.concat.apply([], txResult.txs.map(this.parseTx.bind(this)))
+        ...monitoringDatas.concat.apply(
+          [],
+          txResult.txs.map(this.parseTx.bind(this))
+        )
       );
 
-      if (txResult.page_number >= txResult.page_total) break;
-      page = txResult.page_number + 1;
-    }
+      totalPage = txResult.page_total;
+    } while (page++ < totalPage);
 
     return [targetHeight, monitoringDatas];
   }

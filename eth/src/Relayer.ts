@@ -41,7 +41,7 @@ class Relayer {
   }
 
   async adjustSequenceNumber() {
-    let sequenceNumber = await this.Wallet.sequence();
+    const sequenceNumber = await this.Wallet.sequence();
     this.sequenceNumber =
       this.sequenceNumber > sequenceNumber
         ? this.sequenceNumber

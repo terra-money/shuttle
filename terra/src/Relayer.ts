@@ -3,8 +3,6 @@ import Web3 from 'web3';
 
 const ETH_DONATION = process.env.ETH_DONATION as string;
 class Relayer {
-  constructor() {}
-
   async relay(monitoringData: MonitoringData): Promise<string> {
     // Check the address is valid
     let recipient = monitoringData.to;
