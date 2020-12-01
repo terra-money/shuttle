@@ -1,4 +1,4 @@
-# Shuttle
+# Shuttle Ethereum
 
 # How to use
   * Udpate src/config
