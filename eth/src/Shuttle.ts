@@ -51,6 +51,7 @@ class Shuttle {
 
     while (!shutdown) {
       await this.process().catch(async (err) => {
+        console.log(err);
         const errorMsg =
           err instanceof Error ? err.toString() : JSON.stringify(err);
         console.error(`Process failed: ${errorMsg}`);

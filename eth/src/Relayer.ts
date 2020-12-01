@@ -58,7 +58,8 @@ class Relayer {
         const toAddr = AccAddress.validate(data.to) ? data.to : TERRA_DONATION;
 
         // 18 decimal to 6 decimal
-        if (data.amount.length < 12) return msgs;
+        // it must bigger than 1,000,000,000,000
+        if (data.amount.length < 13) return msgs;
 
         const amount = data.amount.slice(0, data.amount.length - 12);
         const info = data.terraAssetInfo;

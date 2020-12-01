@@ -9,6 +9,8 @@ import TerraAssetInfos from './config/TerraAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 
 const FEE_RATE = process.env.FEE_RATE as string;
+
+const ETH_URL = process.env.ETH_URL as string;
 const ETH_BLOCK_LOAD_UNIT = parseInt(process.env.ETH_BLOCK_LOAD_UNIT as string);
 const ETH_BLOCK_CONFIRMATION = parseInt(
   process.env.ETH_BLOCK_CONFIRMATION as string
@@ -17,8 +19,7 @@ const ETH_BLOCK_CONFIRMATION = parseInt(
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
 
-const ETH_URL = process.env.ETH_URL as string;
-
+const MAX_RETRY = 5;
 export class Monitoring {
   Web3: Web3;
 
@@ -66,36 +67,54 @@ export class Monitoring {
     const fromBlock = lastHeight === 0 ? latestHeight : lastHeight + 1;
     const toBlock = Math.min(fromBlock + ETH_BLOCK_LOAD_UNIT, latestHeight);
 
-    const monitoringDatas: Array<MonitoringData> = [];
+    const promises: Array<Promise<Array<MonitoringData>>> = [];
     for (const [asset, contract] of Object.entries(this.EthContracts)) {
-      const events = await getPastEvents(contract, fromBlock, toBlock, 5);
-
-      monitoringDatas.push(
-        ...events.map((event) => {
-          const requested = new BigNumber(event.returnValues['amount']);
-          const fee = requested.multipliedBy(FEE_RATE);
-          const amount = requested.minus(fee);
-
-          const info = this.TerraAssetInfos[asset];
-          return {
-            blockNumber: event.blockNumber,
-            txHash: event.transactionHash,
-            sender: event.returnValues['_sender'],
-            to: bech32.encode(
-              'terra',
-              bech32.toWords(hexToBytes(event.returnValues['_to'].slice(0, 42)))
-            ),
-            requested: requested.toFixed(0),
-            amount: amount.toFixed(0),
-            fee: fee.toFixed(0),
-            asset,
-            terraAssetInfo: info
-          };
-        })
+      promises.push(
+        this.getMonitoringDatas(contract, fromBlock, toBlock, asset)
       );
     }
 
+    const monitoringDatas: Array<MonitoringData> = [];
+    monitoringDatas.push(
+      ...monitoringDatas.concat.apply([], await Promise.all(promises))
+    );
+
     return [toBlock, monitoringDatas];
+  }
+
+  async getMonitoringDatas(
+    contract: Contract,
+    fromBlock: number,
+    toBlock: number,
+    asset: string
+  ): Promise<Array<MonitoringData>> {
+    const events = await getPastEvents(contract, fromBlock, toBlock, MAX_RETRY);
+    const monitoringDatas: Array<MonitoringData> = [];
+    monitoringDatas.push(
+      ...events.map((event) => {
+        const requested = new BigNumber(event.returnValues['amount']);
+        const fee = requested.multipliedBy(FEE_RATE);
+        const amount = requested.minus(fee);
+
+        const info = this.TerraAssetInfos[asset];
+        return {
+          blockNumber: event.blockNumber,
+          txHash: event.transactionHash,
+          sender: event.returnValues['_sender'],
+          to: bech32.encode(
+            'terra',
+            bech32.toWords(hexToBytes(event.returnValues['_to'].slice(0, 42)))
+          ),
+          requested: requested.toFixed(0),
+          amount: amount.toFixed(0),
+          fee: fee.toFixed(0),
+          asset,
+          terraAssetInfo: info
+        };
+      })
+    );
+
+    return monitoringDatas;
   }
 }
 
