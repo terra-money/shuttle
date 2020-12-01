@@ -2,7 +2,7 @@
 
 ![Shuttle Banner](/resources/banner.png)
 
-Need Description Here
+Shuttle is a Terra to Ethereum bridge. Currently unidirectional (Terra assets to Ethereum only), and only supports the transfer of [whitelisted](#erc20-contracts) assets.   
 
 ## Table of Contents
 - [Shuttle Bridge](#shuttle-bridge)
@@ -70,9 +70,9 @@ Need Description Here
 ## How it works
 
 ### Terra => Ethereum
-Transfer KRT to TerraShuttle with memo(=`0xEthereumAddress`)
+Transfer KRT to the TerraShuttle address with memo(=`0xEthereumAddress`)
 
-TerraShuttle:
+TerraShuttle addresses:
    * [mainnet] `terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc`
    * [tequila-0004] `terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3`
 
@@ -84,23 +84,23 @@ Ex)
 
    https://tequila-lcd.terra.dev/txs/F265D79EB847ED76A7BEB467990EDCAB07D2A4F706767E36CFF5AEFB3427AAAC
 
-* Ether Tx: 
+* Ethereum Tx: 
 
    https://ropsten.etherscan.io/tx/0xe396fcf652429d6909d87057494b7836c5bbd7a7fed998d5e1b43f82eff0c80b
  
 
 ### Ethereum => Terra
 
-> Shuttle Bridge wait `7 blocks` confirmation before relaying a tx.
+> Shuttle waits 7 block confirmations before relaying a tx.
 
-Execute `burn(uint256 amount, bytes32 to)` with bech32 decoded terra address like
+Execute `burn(uint256 amount, bytes32 to)` with bech32 decoded terra address 
  `burn('1000000000000000000', '0x890d71d9e7031a9a09b82c214dba08a413e133a5000000000000000000000000')`.
 
 Terra address has 20bytes constant length, so it implies `burn('amount', 'unbech32(TerraAddress)' + '0' * 24)`. 
 
 Ex) 
 
-* Ether Tx: 
+* Ethereum Tx: 
 
    https://ropsten.etherscan.io/tx/0xfb81d0b8dbd7742a516a7b8c2ac3b146c1c43b2992a64cb33b006b7c66eafa85
 
