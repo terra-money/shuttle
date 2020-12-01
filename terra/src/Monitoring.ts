@@ -13,6 +13,8 @@ import WrappedTokenAbi from './config/WrappedTokenAbi';
 import HDWalletProvider from '@truffle/hdwallet-provider';
 import BigNumber from 'bignumber.js';
 
+BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
+
 const FEE_RATE = process.env.FEE_RATE as string;
 const ETH_MNEMONIC = process.env.ETH_MNEMONIC as string;
 

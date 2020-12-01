@@ -4,6 +4,8 @@ import { hexToBytes } from 'web3-utils';
 import bech32 from 'bech32';
 import BigNumber from 'bignumber.js';
 
+BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
+
 import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';

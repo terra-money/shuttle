@@ -5,6 +5,8 @@ import * as https from 'https';
 import { promisify } from 'util';
 import BigNumber from 'bignumber.js';
 
+BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
+
 import { Monitoring, MonitoringData } from './Monitoring';
 import Relayer from './Relayer';
 
