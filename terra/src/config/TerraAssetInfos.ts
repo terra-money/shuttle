@@ -23,46 +23,46 @@ const assetInfos: {
       denom: 'umnt'
     },
     MIR: {
-      contract_address: 'terra135uup8xwt6fec2jc664mcy0xnqjjh4y3efsqrh'
+      contract_address: 'terra10llyp6v3j3her8u3ce66ragytu45kcmd9asj3u'
     },
     mAAPL: {
-      contract_address: 'terra1y05wu4hsdzshsq9vtug2ttavtql6dcfrl0yv7s'
+      contract_address: 'terra16vfxm98rxlc8erj4g0sj5932dvylgmdufnugk0'
     },
     mGOOGL: {
-      contract_address: 'terra1v0kd60lksznk482yh6yr8gu4ehfx298sq58w7y'
+      contract_address: 'terra1qg9ugndl25567u03jrr79xur2yk9d632fke3h2'
     },
     mTSLA: {
-      contract_address: 'terra17qm6jss8nq36cazclyvhz5j5kuc8nk8ygwcnps'
+      contract_address: 'terra1nslem9lgwx53rvgqwd8hgq7pepsry6yr3wsen4'
     },
     mNFLX: {
-      contract_address: 'terra1qdp36cxzkddw8s88wyw2sdpmxgvhld5ar4m5mr'
+      contract_address: 'terra1djnlav60utj06kk9dl7defsv8xql5qpryzvm3h'
     },
     mQQQ: {
-      contract_address: 'terra19re2s49qgs3uc0fegfaxx8yqzlyl0f8r725qrs'
+      contract_address: 'terra18yx7ff8knc98p07pdkhm3u36wufaeacv47fuha'
     },
     mTWTR: {
-      contract_address: 'terra1wjvwjuhkq99vh0wvxpx6ux0qj036mfsanlm34v'
+      contract_address: 'terra1ax7mhqahj6vcqnnl675nqq2g9wghzuecy923vy'
     },
     mMSFT: {
-      contract_address: 'terra15e990g3huu0ayfneja43lpvec6hlygmpjrqs2u'
+      contract_address: 'terra12s2h8vlztjwu440khpc0063p34vm7nhu25w4p9'
     },
     mAMZN: {
-      contract_address: 'terra1tgmnj654p4nlcvfny7cm65v3kn5pgu8tx6lnpe'
+      contract_address: 'terra12saaecsqwxj04fn0jsv4jmdyp6gylptf5tksge'
     },
     mBABA: {
-      contract_address: 'terra1nff6yrcf3dnq57fn0c56ue8l86fs5eaf0l7uyh'
+      contract_address: 'terra15dr4ah3kha68kam7a907pje9w6z2lpjpnrkd06'
     },
     mIAU: {
-      contract_address: 'terra10q9sksr0qy6ztz85yuyz65mndegwzlh3h706py'
+      contract_address: 'terra19dl29dpykvzej8rg86mjqg8h63s9cqvkknpclr'
     },
     mSLV: {
-      contract_address: 'terra1rk4kstfxvpwd3vh6ygy3r3uf72cllrvnsuj9qh'
+      contract_address: 'terra1fdkfhgk433tar72t4edh6p6y9rmjulzc83ljuw'
     },
     mUSO: {
-      contract_address: 'terra1ntzes35xr0gtexgkg3v2tt599w7eda4nrtxe4v'
+      contract_address: 'terra1fucmfp8x4mpzsydjaxyv26hrkdg4vpdzdvf647'
     },
     mVIXY: {
-      contract_address: 'terra150ec7cwlsne4xh6h2z88hkrkgf37s8un577xmx'
+      contract_address: 'terra1z0k7nx0vl85hwpv3e3hu2cyfkwq07fl7nqchvd'
     }
   },
   'columbus-4': {

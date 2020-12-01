@@ -7,61 +7,61 @@ const contractInfos: {
 } = {
   ropsten: {
     LUNA: {
-      contract_address: '0xc52fe3575F96A3cA9d4b032b4CED4683DD4Eb386'
+      contract_address: '0xbf51453468771D14cEbdF8856cC5D5145364Cd6F'
     },
     UST: {
-      contract_address: '0x449c38576BaA2802F13a17E20B19004526F24903'
+      contract_address: '0x6cA13a4ab78dd7D657226b155873A04DB929A3A4'
     },
     KRT: {
-      contract_address: '0xb335c9cCC284951d7087A9F07884F02af09B17dB'
+      contract_address: '0xF0b0fB87017b644eC76644Ea0FA704BFA5f20F0E'
     },
     SDT: {
-      contract_address: '0x72F56282d9d682879849C8b3a5C03C00997a5911'
+      contract_address: '0x1d805d8660Ae73E3624AECAa34ca5FcF8E26E0a5'
     },
     MNT: {
-      contract_address: '0x346fE5b2f24cc4945A183C64915B091b67c04FF8'
+      contract_address: '0x51e7f3ED326719a1469EbD7E68B8AB963d64eBA6'
     },
     MIR: {
-      contract_address: '0x6705bEc064ea895102Be0D6Df3547535bb258f59'
+      contract_address: '0xDAdC10D2dAC9E111835d4423670573Ae45714e7C'
     },
     mAAPL: {
-      contract_address: '0x1eA5fA2Ff1f7d88275a7bD890470bBE0A79F51d1'
+      contract_address: '0xDAE57D13b42325562963C1E47E615eE25924635C'
     },
     mGOOGL: {
-      contract_address: '0x448F0B49d486C365B7DCAD78D27336DfD7dAc16E'
+      contract_address: '0x58E3ba48E036341EF8Bbe0bF49caA9731Cc5C42B'
     },
     mTSLA: {
-      contract_address: '0xFa93675dd5814060f0DE5297bD895847D43F257C'
+      contract_address: '0x2a445f4dA6Ea8845c594446b250ad535373bb7e4'
     },
     mNFLX: {
-      contract_address: '0x41C28A57C3e32a56e80Ceec8910eA8B5316D9543'
+      contract_address: '0x1EA12ca0Ac017EfFE87ddF4c648a1a5359E850FA'
     },
     mQQQ: {
-      contract_address: '0xf81D30D44aE6FfC2a1E02fa08783aBBCd224147f'
+      contract_address: '0xE1d4509C539D9C3f1E01CeE22e7a79BF77348Ef3'
     },
     mTWTR: {
-      contract_address: '0x2bECEB69354c8bBA28c8D8cFa1FC601861dE3821'
+      contract_address: '0x0c9149d38AD1eBE71c50Bd04E0Ba4F999884C961'
     },
     mMSFT: {
-      contract_address: '0x741aDbdfFE13FDb97bfBF2353aA67Af696a1fE32'
+      contract_address: '0x0736644C0257048861bAa72b6b234514c6b52655'
     },
     mAMZN: {
-      contract_address: '0x630bdA81E7b76CAA6EF0ecC49bc48dC3F5E46E65'
+      contract_address: '0x3210BC26eB5427D0FC19dE7AB272b3BB3e4bC4b0'
     },
     mBABA: {
-      contract_address: '0xf20A4Bfdd525258389C3106B45A8bDE0cdef1396'
+      contract_address: '0xF44c4C095E586B5a7Ba8AA0B2A8Dfad693d396b6'
     },
     mIAU: {
-      contract_address: '0x88f3aD3411031A3e5a342BCc9f353F6bb93D2824'
+      contract_address: '0x51eD1489e3D311496592056608dD6cf025C03525'
     },
     mSLV: {
-      contract_address: '0x3eAFA8fbC7ebb7EDa384E3972bC0f53a5C0845De'
+      contract_address: '0xECBe84E79bb26a7FF2474AA1b58d2696A9b5F58F'
     },
     mUSO: {
-      contract_address: '0x35a2A7a4e73e493E76368551A464Bb92ae409aFf'
+      contract_address: '0xDF00833C87bEfA3aF5634d81BE18E9DEf2F9C7c0'
     },
     mVIXY: {
-      contract_address: '0xf4923A601EFfb26c133837cEa9a3D6F0954630EE'
+      contract_address: '0xC1629641Cdb2D636Ae220fb759264306902c4AC0'
     }
   },
   mainnet: {

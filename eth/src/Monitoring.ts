@@ -134,7 +134,7 @@ async function getPastEvents(
 
     return events;
   } catch (err) {
-    // In ropstan network, sometimes happens unrelated error.
+    // In ropsten network, sometimes happens unrelated error.
     // Total Burn event is definitely smaller than 10000.
     if (
       retry > 0 &&
