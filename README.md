@@ -88,7 +88,7 @@ Ex)
 
 ### Ethereum => Terra
 
-> Shuttle Brige wait `7 blocks` confirmation before relaying a tx.
+> Shuttle Bridge wait `7 blocks` confirmation before relaying a tx.
 
 Execute `burn(uint256 amount, bytes32 to)` with bech32 decoded terra address like
  `burn('1000000000000000000', '0x890d71d9e7031a9a09b82c214dba08a413e133a5000000000000000000000000')`.
