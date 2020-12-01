@@ -1,9 +1,9 @@
 # Shuttle Bridge
 Need Description Here
 
-## Table
+## Table of Contents
 - [Shuttle Bridge](#shuttle-bridge)
-  - [Table](#table)
+  - [Table of Contents](#table-of-contents)
   - [Components](#components)
   - [ERC20 Contracts](#erc20-contracts)
   - [Terra Denoms and Contracts](#terra-denoms-and-contracts)
