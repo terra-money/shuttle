@@ -18,7 +18,7 @@ Need Description Here
   
 ## ERC20 Contracts
 
-|        | mainnet                                    | ropsten                                    |
+| asset  | mainnet                                    | ropsten                                    |
 | ------ | ------------------------------------------ | ------------------------------------------ |
 | LUNA   | 0xd2877702675e6cEb975b4A1dFf9fb7BAF4C91ea9 | 0xc52fe3575F96A3cA9d4b032b4CED4683DD4Eb386 |
 | UST    | 0xa47c8bf37f92aBed4A126BDA807A7b7498661acD | 0x449c38576BaA2802F13a17E20B19004526F24903 |
@@ -42,7 +42,7 @@ Need Description Here
 
 ## Terra Denoms and Contracts
 
-|        | mainnet                                      | ropsten      |
+| asset  | mainnet                                      | ropsten      |
 | ------ | -------------------------------------------- | ------------ |
 | LUNA   | uluna                                        | uluna        |
 | UST    | uusd                                         | uusd         |
