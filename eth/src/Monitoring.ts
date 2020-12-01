@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import { Contract } from 'web3-eth-contract';
+import { Contract, EventData } from 'web3-eth-contract';
 import { hexToBytes } from 'web3-utils';
 import bech32 from 'bech32';
 import BigNumber from 'bignumber.js';
@@ -68,22 +68,7 @@ export class Monitoring {
 
     const monitoringDatas: Array<MonitoringData> = [];
     for (const [asset, contract] of Object.entries(this.EthContracts)) {
-      const events = await contract
-        .getPastEvents('Burn', {
-          fromBlock,
-          toBlock
-        })
-        .catch((err) => {
-          // If timeout happens, retry
-          if (err['code'] === -32005) {
-            return contract.getPastEvents('Burn', {
-              fromBlock,
-              toBlock
-            });
-          }
-
-          throw err;
-        });
+      const events = await getPastEvents(contract, fromBlock, toBlock, 5);
 
       monitoringDatas.push(
         ...events.map((event) => {
@@ -112,6 +97,40 @@ export class Monitoring {
 
     return [toBlock, monitoringDatas];
   }
+}
+
+async function getPastEvents(
+  contract: Contract,
+  fromBlock: number,
+  toBlock: number,
+  retry: number
+): Promise<Array<EventData>> {
+  try {
+    const events = await contract.getPastEvents('Burn', {
+      fromBlock,
+      toBlock
+    });
+
+    return events;
+  } catch (err) {
+    // In ropstan network, sometimes happens unrelated error.
+    // Total Burn event is definitely smaller than 10000.
+    if (
+      retry > 0 &&
+      err.message === 'Returned error: query returned more than 10000 results'
+    ) {
+      console.log('infura errors happened. retry getPastEvents');
+
+      await sleep(500);
+      return getPastEvents(contract, fromBlock, toBlock, retry - 1);
+    }
+
+    throw err;
+  }
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export type TerraAssetInfo = {

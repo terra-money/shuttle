@@ -61,17 +61,17 @@ class Shuttle {
 
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
-            text: `[${SLACK_NOTI_NETWORK}] Problem Happens: ${errorMsg} '<!channel>'`
+            text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`
           });
 
           console.log(`Notify Error to Slack: ${data}`);
         }
 
         // sleep 10s after error
-        await this.sleep(9500);
+        await sleep(9500);
       });
 
-      await this.sleep(500);
+      await sleep(500);
     }
 
     console.log('##### Graceful Shutdown #####');
@@ -105,7 +105,7 @@ class Shuttle {
       if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
         await ax.post(
           SLACK_WEB_HOOK,
-          this.buildSlackNotification(monitoringData, txhash)
+          buildSlackNotification(monitoringData, txhash)
         );
       }
 
@@ -120,42 +120,42 @@ class Shuttle {
 
     // When catched the block height, wait blocktime
     if (newLastHeight === lastHeight) {
-      await this.sleep(TERRA_BLOCK_SECOND * 1000);
+      await sleep(TERRA_BLOCK_SECOND * 1000);
     }
   }
+}
 
-  buildSlackNotification(
-    data: MonitoringData,
-    resultTxHash: string
-  ): { text: string } {
-    let notification = '```';
-    notification += `[${SLACK_NOTI_NETWORK}] TERRA => ETH\n`;
-    notification += `Sender: ${data.sender}\n`;
-    notification += `To:     ${data.to}\n`;
-    notification += `\n`;
-    notification += `Requested: ${new BigNumber(data.requested)
-      .div(1e6)
-      .toFixed(6)} ${data.asset}\n`;
-    notification += `Amount:    ${new BigNumber(data.amount)
-      .div(1e6)
-      .toFixed(6)} ${data.asset}\n`;
-    notification += `Fee:       ${new BigNumber(data.fee)
-      .div(1e6)
-      .toFixed(6)} ${data.asset}\n`;
-    notification += `\n`;
-    notification += `Terra TxHash: ${data.txHash}\n`;
-    notification += `Eth TxHash:   ${resultTxHash}\n`;
-    notification += '```';
-    const text = `${notification}`;
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-    return {
-      text
-    };
-  }
+function buildSlackNotification(
+  data: MonitoringData,
+  resultTxHash: string
+): { text: string } {
+  let notification = '```';
+  notification += `[${SLACK_NOTI_NETWORK}] TERRA => ETH\n`;
+  notification += `Sender: ${data.sender}\n`;
+  notification += `To:     ${data.to}\n`;
+  notification += `\n`;
+  notification += `Requested: ${new BigNumber(data.requested)
+    .div(1e6)
+    .toFixed(6)} ${data.asset}\n`;
+  notification += `Amount:    ${new BigNumber(data.amount)
+    .div(1e6)
+    .toFixed(6)} ${data.asset}\n`;
+  notification += `Fee:       ${new BigNumber(data.fee).div(1e6).toFixed(6)} ${
+    data.asset
+  }\n`;
+  notification += `\n`;
+  notification += `Terra TxHash: ${data.txHash}\n`;
+  notification += `Eth TxHash:   ${resultTxHash}\n`;
+  notification += '```';
+  const text = `${notification}`;
 
-  sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+  return {
+    text
+  };
 }
 
 export = Shuttle;

@@ -11,11 +11,8 @@ import Relayer from './Relayer';
 const REDIS_PREFIX = 'eth_shuttle';
 const KEY_LAST_HEIGHT = 'last_height';
 
-const ETH_BLOCK_LOAD_UNIT = parseInt(process.env.ETH_BLOCK_LOAD_UNIT as string);
-const ETH_BLOCK_SECOND = parseInt(process.env.ETH_BLOCK_SECOND as string);
-
 const REDIS_URL = process.env.REDIS_URL as string;
-
+const ETH_BLOCK_SECOND = parseInt(process.env.ETH_BLOCK_SECOND as string);
 const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 
@@ -60,17 +57,17 @@ class Shuttle {
 
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
-            text: `[${SLACK_NOTI_NETWORK}] Problem Happens: ${errorMsg} '<!channel>'`
+            text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`
           });
 
           console.log(`Notify Error to Slack: ${data}`);
         }
 
-        // sleep 10s after error
-        await this.sleep(9500);
+        // sleep 1 minute after error
+        await sleep(60 * 1000);
       });
 
-      await this.sleep(500);
+      await sleep(500);
     }
 
     console.log('##### Graceful Shutdown #####');
@@ -103,8 +100,8 @@ class Shuttle {
     console.log(`HEIGHT: ${newLastHeight}`);
 
     // When catched the block height, wait 10 second
-    if (newLastHeight - lastHeight < ETH_BLOCK_LOAD_UNIT) {
-      await this.sleep(ETH_BLOCK_SECOND * 1000);
+    if (newLastHeight === lastHeight) {
+      await sleep(ETH_BLOCK_SECOND * 1000);
     }
   }
 
@@ -140,10 +137,10 @@ class Shuttle {
       text
     };
   }
+}
 
-  sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export = Shuttle;
