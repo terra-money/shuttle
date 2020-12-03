@@ -22,11 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Audit
-        run: npm audit
-        working-directory: eth
+      # - name: Audit
+      #   run: npm audit
+      #   working-directory: eth
 
-      - name: Run a multi-line script
+      - name: Test
         run: npm run test
         working-directory: eth
 
@@ -37,10 +37,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Audit
-        run: npm audit
-        working-directory: terra
+      # - name: Audit
+      #   run: npm audit
+      #   working-directory: terra
 
-      - name: Run a multi-line script
+      - name: Test
         run: npm run test
         working-directory: terra
