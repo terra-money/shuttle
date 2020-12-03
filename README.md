@@ -45,27 +45,27 @@ Shuttle is a Terra to Ethereum bridge. Currently unidirectional (Terra assets to
 
 ## Terra Denoms and Contracts
 
-| asset  | mainnet      | tequila-0004                                 |
-| ------ | ------------ | -------------------------------------------- |
-| LUNA   | uluna        | uluna                                        |
-| UST    | uusd         | uusd                                         |
-| KRT    | ukrw         | ukrw                                         |
-| SDT    | usdr         | usdr                                         |
-| MNT    | umnt         | umnt                                         |
-| MIR    | not deployed | terra10llyp6v3j3her8u3ce66ragytu45kcmd9asj3u |
-| mAAPL  | not deployed | terra16vfxm98rxlc8erj4g0sj5932dvylgmdufnugk0 |
-| mGOOGL | not deployed | terra1qg9ugndl25567u03jrr79xur2yk9d632fke3h2 |
-| mTSLA  | not deployed | terra1nslem9lgwx53rvgqwd8hgq7pepsry6yr3wsen4 |
-| mNFLX  | not deployed | terra1djnlav60utj06kk9dl7defsv8xql5qpryzvm3h |
-| mQQQ   | not deployed | terra18yx7ff8knc98p07pdkhm3u36wufaeacv47fuha |
-| mTWTR  | not deployed | terra1ax7mhqahj6vcqnnl675nqq2g9wghzuecy923vy |
-| mMSFT  | not deployed | terra12s2h8vlztjwu440khpc0063p34vm7nhu25w4p9 |
-| mAMZN  | not deployed | terra12saaecsqwxj04fn0jsv4jmdyp6gylptf5tksge |
-| mBABA  | not deployed | terra15dr4ah3kha68kam7a907pje9w6z2lpjpnrkd06 |
-| mIAU   | not deployed | terra19dl29dpykvzej8rg86mjqg8h63s9cqvkknpclr |
-| mSLV   | not deployed | terra1fdkfhgk433tar72t4edh6p6y9rmjulzc83ljuw |
-| mUSO   | not deployed | terra1fucmfp8x4mpzsydjaxyv26hrkdg4vpdzdvf647 |
-| mVIXY  | not deployed | terra1z0k7nx0vl85hwpv3e3hu2cyfkwq07fl7nqchvd |
+| asset  | mainnet                                      | tequila-0004                                 |
+| ------ | -------------------------------------------- | -------------------------------------------- |
+| LUNA   | uluna                                        | uluna                                        |
+| UST    | uusd                                         | uusd                                         |
+| KRT    | ukrw                                         | ukrw                                         |
+| SDT    | usdr                                         | usdr                                         |
+| MNT    | umnt                                         | umnt                                         |
+| MIR    | terra15gwkyepfc6xgca5t5zefzwy42uts8l2m4g40k6 | terra10llyp6v3j3her8u3ce66ragytu45kcmd9asj3u |
+| mAAPL  | terra1vxtwu4ehgzz77mnfwrntyrmgl64qjs75mpwqaz | terra16vfxm98rxlc8erj4g0sj5932dvylgmdufnugk0 |
+| mGOOGL | terra1h8arz2k547uvmpxctuwush3jzc8fun4s96qgwt | terra1qg9ugndl25567u03jrr79xur2yk9d632fke3h2 |
+| mTSLA  | terra14y5affaarufk3uscy2vr6pe6w6zqf2wpjzn5sh | terra1nslem9lgwx53rvgqwd8hgq7pepsry6yr3wsen4 |
+| mNFLX  | terra1jsxngqasf2zynj5kyh0tgq9mj3zksa5gk35j4k | terra1djnlav60utj06kk9dl7defsv8xql5qpryzvm3h |
+| mQQQ   | terra1csk6tc7pdmpr782w527hwhez6gfv632tyf72cp | terra18yx7ff8knc98p07pdkhm3u36wufaeacv47fuha |
+| mTWTR  | terra1cc3enj9qgchlrj34cnzhwuclc4vl2z3jl7tkqg | terra1ax7mhqahj6vcqnnl675nqq2g9wghzuecy923vy |
+| mMSFT  | terra1227ppwxxj3jxz8cfgq00jgnxqcny7ryenvkwj6 | terra12s2h8vlztjwu440khpc0063p34vm7nhu25w4p9 |
+| mAMZN  | terra165nd2qmrtszehcfrntlplzern7zl4ahtlhd5t2 | terra12saaecsqwxj04fn0jsv4jmdyp6gylptf5tksge |
+| mBABA  | terra1w7zgkcyt7y4zpct9dw8mw362ywvdlydnum2awa | terra15dr4ah3kha68kam7a907pje9w6z2lpjpnrkd06 |
+| mIAU   | terra15hp9pr8y4qsvqvxf3m4xeptlk7l8h60634gqec | terra19dl29dpykvzej8rg86mjqg8h63s9cqvkknpclr |
+| mSLV   | terra1kscs6uhrqwy6rx5kuw5lwpuqvm3t6j2d6uf2lp | terra1fdkfhgk433tar72t4edh6p6y9rmjulzc83ljuw |
+| mUSO   | terra1lvmx8fsagy70tv0fhmfzdw9h6s3sy4prz38ugf | terra1fucmfp8x4mpzsydjaxyv26hrkdg4vpdzdvf647 |
+| mVIXY  | terra1zp3a6q6q4953cz376906g5qfmxnlg77hx3te45 | terra1z0k7nx0vl85hwpv3e3hu2cyfkwq07fl7nqchvd |
 
 ## How it works
 
