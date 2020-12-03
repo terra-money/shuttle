@@ -15,17 +15,17 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build_eth:
-    runs-on: ubuntu-latest
-    container: "node:14"
+  # build_eth:
+  #   runs-on: ubuntu-latest
+  #   container: "node:14"
 
-    steps:
-      - name: Test
-        uses: actions/checkout@v2
-      - run: npm install
-        working-directory: eth
-      - run: npm run test
-        working-directory: eth
+  #   steps:
+  #     - name: Test
+  #       uses: actions/checkout@v2
+  #     - run: npm install
+  #       working-directory: eth
+  #     - run: npm run test
+  #       working-directory: eth
 
   build_terra:
     runs-on: ubuntu-latest
@@ -35,6 +35,6 @@ jobs:
       - name: Test
         uses: actions/checkout@v2
       - run: npm install
-        working-directory: eth
+        working-directory: terra
       - run: npm run test
-        working-directory: eth
+        working-directory: terra
