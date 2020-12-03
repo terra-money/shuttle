@@ -41,12 +41,16 @@ export class Monitoring {
     this.TerraAssetInfos = {};
     for (const [asset, value] of Object.entries(ethContractInfos)) {
       const info = terraAssetInfos[asset];
-      if (info === undefined) continue;
+      if (info === undefined) {
+        continue;
+      }
+
       if (
         (info.denom === undefined && info.contract_address === undefined) ||
         (info.denom !== undefined && info.contract_address !== undefined)
-      )
+      ) {
         throw 'Must provide one of denom and contract_address';
+      }
 
       const contract = new this.Web3.eth.Contract(
         WrappedTokenAbi,
@@ -58,28 +62,27 @@ export class Monitoring {
     }
   }
 
-  async load(lastHeight: number): Promise<[number, Array<MonitoringData>]> {
+  async load(lastHeight: number): Promise<[number, MonitoringData[]]> {
     const latestHeight =
       (await this.Web3.eth.getBlockNumber()) - ETH_BLOCK_CONFIRMATION;
 
     // skip no new blocks generated
-    if (lastHeight >= latestHeight) return [latestHeight, []];
+    if (lastHeight >= latestHeight) {
+      return [latestHeight, []];
+    }
 
     // If initial state, we start sync from latest height
     const fromBlock = lastHeight === 0 ? latestHeight : lastHeight + 1;
     const toBlock = Math.min(fromBlock + ETH_BLOCK_LOAD_UNIT, latestHeight);
+    const promises: Promise<MonitoringData[]>[] = [];
 
-    const promises: Array<Promise<Array<MonitoringData>>> = [];
     for (const [asset, contract] of Object.entries(this.EthContracts)) {
       promises.push(
         this.getMonitoringDatas(contract, fromBlock, toBlock, asset)
       );
     }
 
-    const monitoringDatas: Array<MonitoringData> = [];
-    monitoringDatas.push(
-      ...monitoringDatas.concat.apply([], await Promise.all(promises))
-    );
+    const monitoringDatas = (await Promise.all(promises)).flat();
 
     return [toBlock, monitoringDatas];
   }
@@ -89,32 +92,29 @@ export class Monitoring {
     fromBlock: number,
     toBlock: number,
     asset: string
-  ): Promise<Array<MonitoringData>> {
+  ): Promise<MonitoringData[]> {
     const events = await getPastEvents(contract, fromBlock, toBlock, MAX_RETRY);
-    const monitoringDatas: Array<MonitoringData> = [];
-    monitoringDatas.push(
-      ...events.map((event) => {
-        const requested = new BigNumber(event.returnValues['amount']);
-        const fee = requested.multipliedBy(FEE_RATE);
-        const amount = requested.minus(fee);
+    const monitoringDatas: MonitoringData[] = events.map((event) => {
+      const requested = new BigNumber(event.returnValues['amount']);
+      const fee = requested.multipliedBy(FEE_RATE);
+      const amount = requested.minus(fee);
 
-        const info = this.TerraAssetInfos[asset];
-        return {
-          blockNumber: event.blockNumber,
-          txHash: event.transactionHash,
-          sender: event.returnValues['_sender'],
-          to: bech32.encode(
-            'terra',
-            bech32.toWords(hexToBytes(event.returnValues['_to'].slice(0, 42)))
-          ),
-          requested: requested.toFixed(0),
-          amount: amount.toFixed(0),
-          fee: fee.toFixed(0),
-          asset,
-          terraAssetInfo: info
-        };
-      })
-    );
+      const info = this.TerraAssetInfos[asset];
+      return {
+        blockNumber: event.blockNumber,
+        txHash: event.transactionHash,
+        sender: event.returnValues['_sender'],
+        to: bech32.encode(
+          'terra',
+          bech32.toWords(hexToBytes(event.returnValues['_to'].slice(0, 42)))
+        ),
+        requested: requested.toFixed(0),
+        amount: amount.toFixed(0),
+        fee: fee.toFixed(0),
+        asset,
+        terraAssetInfo: info,
+      };
+    });
 
     return monitoringDatas;
   }
@@ -125,22 +125,23 @@ async function getPastEvents(
   fromBlock: number,
   toBlock: number,
   retry: number
-): Promise<Array<EventData>> {
+): Promise<EventData[]> {
   try {
     const events = await contract.getPastEvents('Burn', {
       fromBlock,
-      toBlock
+      toBlock,
     });
 
     return events;
   } catch (err) {
-    // In ropsten network, sometimes happens unrelated error.
-    // Total Burn event is definitely smaller than 10000.
+    // query returned more than 10000 results error occurs sometime in
+    // Ropsten network even though it is impossible to have more than
+    // 10000 results
     if (
       retry > 0 &&
       err.message === 'Returned error: query returned more than 10000 results'
     ) {
-      console.log('infura errors happened. retry getPastEvents');
+      console.error('infura errors happened. retry getPastEvents');
 
       await sleep(500);
       return getPastEvents(contract, fromBlock, toBlock, retry - 1);

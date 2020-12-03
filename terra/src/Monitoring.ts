@@ -61,14 +61,20 @@ export class Monitoring {
 
     this.EthContracts = {};
     this.TerraAssetMapping = {};
+
     for (const [asset, value] of Object.entries(ethContractInfos)) {
       const info = terraAssetInfos[asset];
-      if (info === undefined) continue;
+
+      if (info === undefined) {
+        continue;
+      }
+
       if (
         (info.denom === undefined && info.contract_address === undefined) ||
         (info.denom !== undefined && info.contract_address !== undefined)
-      )
+      ) {
         throw 'Must provide one of denom and contract_address';
+      }
 
       const contract = new web3.eth.Contract(
         WrappedTokenAbi,
@@ -82,7 +88,7 @@ export class Monitoring {
   }
 
   // load and process a single block
-  async load(lastHeight: number): Promise<[number, Array<MonitoringData>]> {
+  async load(lastHeight: number): Promise<[number, MonitoringData[]]> {
     const latestHeight =
       parseInt(
         (await this.LCDClient.tendermint.blockInfo()).block.header.height
@@ -94,7 +100,7 @@ export class Monitoring {
     // If initial state, we start sync from latest height
     const targetHeight = lastHeight === 0 ? latestHeight : lastHeight + 1;
     const limit = TERRA_TXS_LOAD_UNIT;
-    const monitoringDatas: Array<MonitoringData> = [];
+    const monitoringDatas: MonitoringData[] = [];
 
     let page = 1;
     let totalPage = 1;
@@ -118,15 +124,19 @@ export class Monitoring {
     return [targetHeight, monitoringDatas];
   }
 
-  parseTx(tx: TxInfo): Array<MonitoringData> {
-    const monitoringDatas: Array<MonitoringData> = [];
+  parseTx(tx: TxInfo): MonitoringData[] {
+    const monitoringDatas: MonitoringData[] = [];
 
     // Skip when tx is failed
-    if (tx.code !== undefined) return monitoringDatas;
+    if (tx.code !== undefined) {
+      return monitoringDatas;
+    }
 
     // Only cares first message
     const msg = tx.tx.msg[0];
-    if (msg === undefined) return monitoringDatas;
+    if (msg === undefined) {
+      return monitoringDatas;
+    }
 
     const msgData = msg.toData();
     const msgType = msgData.type;
@@ -164,6 +174,7 @@ export class Monitoring {
       }
     } else if (msgType === 'wasm/MsgExecuteContract') {
       const data: MsgExecuteContract.Data = msgData as MsgExecuteContract.Data;
+
       if (data.value.contract in this.TerraAssetMapping) {
         const asset = this.TerraAssetMapping[data.value.contract];
         const executeMsg = JSON.parse(

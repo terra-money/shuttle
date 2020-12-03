@@ -2,45 +2,39 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build_eth:
-    runs-on: ubuntu-latest
-    container: "node:14"
+  # build_eth:
+  #   runs-on: ubuntu-latest
+  #   container: "node:14"
 
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Audit
-        run: npm audit
-        working-directory: eth
-
-      - name: Run a multi-line script
-        run: npm run test
-        working-directory: eth
+  #   steps:
+  #     - name: Test
+  #       uses: actions/checkout@v2
+  #     - run: npm install
+  #       working-directory: eth
+  #     - run: npm run test
+  #       working-directory: eth
 
   build_terra:
     runs-on: ubuntu-latest
     container: "node:14"
-    
+
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Audit
-        run: npm audit
+      - name: Test
+        uses: actions/checkout@v2
+      - run: npm install
         working-directory: terra
-
-      - name: Run a multi-line script
-        run: npm run test
+      - run: npm run test
         working-directory: terra

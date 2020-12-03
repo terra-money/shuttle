@@ -48,12 +48,13 @@ class Shuttle {
   async startMonitoring() {
     // Graceful shutdown
     let shutdown = false;
-    process.once('SIGINT', () => {
+
+    const gracefulShutdown = () => {
       shutdown = true;
-    });
-    process.once('SIGTERM', () => {
-      shutdown = true;
-    });
+    }
+    
+    process.once('SIGINT', gracefulShutdown);
+    process.once('SIGTERM', gracefulShutdown);
 
     while (!shutdown) {
       await this.process().catch(async (err) => {
@@ -66,7 +67,7 @@ class Shuttle {
             text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`
           });
 
-          console.log(`Notify Error to Slack: ${data}`);
+          console.info(`Notify Error to Slack: ${data}`);
         }
 
         // sleep 10s after error
@@ -76,7 +77,7 @@ class Shuttle {
       await sleep(500);
     }
 
-    console.log('##### Graceful Shutdown #####');
+    console.info('##### Graceful Shutdown #####');
     process.exit(0);
   }
 
@@ -111,14 +112,14 @@ class Shuttle {
         );
       }
 
-      console.log(`Relay Success: ${txhash}`);
+      console.info(`Relay Success: ${txhash}`);
     }
 
     // Update last_height
     await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
     await this.delAsync(KEY_LAST_TXHASH);
 
-    console.log(`HEIGHT: ${newLastHeight}`);
+    console.info(`HEIGHT: ${newLastHeight}`);
 
     // When catched the block height, wait blocktime
     if (newLastHeight === lastHeight) {

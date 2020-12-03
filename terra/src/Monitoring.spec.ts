@@ -9,7 +9,7 @@ import {
   MsgExecuteContract
 } from '@terra-money/terra.js';
 
-function createMockTx(msgs: Array<Msg>, errCode?: number): TxInfo {
+function createMockTx(msgs: Msg[], errCode?: number): TxInfo {
   return new TxInfo(
     0,
     'txHash',
@@ -60,7 +60,7 @@ describe('Monitoring', () => {
       createMockTx([
         new MsgExecuteContract(
           'terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3',
-          'terra135uup8xwt6fec2jc664mcy0xnqjjh4y3efsqrh',
+          'terra10llyp6v3j3her8u3ce66ragytu45kcmd9asj3u',
           {
             transfer: {
               recipient: 'terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3',
