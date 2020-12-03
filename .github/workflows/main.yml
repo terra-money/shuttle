@@ -2,13 +2,13 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,10 +21,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      # - name: Audit
-      #   run: npm audit
-      #   working-directory: eth
       - name: Test
       - run: npm install
       - run: npm run test
@@ -33,14 +29,9 @@ jobs:
   build_terra:
     runs-on: ubuntu-latest
     container: "node:14"
-    
+
     steps:
       - uses: actions/checkout@v2
-
-      # - name: Audit
-      #   run: npm audit
-      #   working-directory: terra
-
       - name: Test
       - run: npm install
       - run: npm run test
