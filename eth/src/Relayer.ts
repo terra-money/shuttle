@@ -7,7 +7,7 @@ import {
   MnemonicKey,
   AccAddress,
   isTxError,
-  Coin
+  Coin,
 } from '@terra-money/terra.js';
 import { MonitoringData } from 'Monitoring';
 
@@ -30,7 +30,7 @@ class Relayer {
       URL: TERRA_URL,
       chainID: TERRA_CHAIN_ID,
       gasPrices: TERRA_GAS_PRICE,
-      gasAdjustment: TERRA_GAS_ADJUSTMENT
+      gasAdjustment: TERRA_GAS_ADJUSTMENT,
     });
 
     this.sequenceNumber = 0;
@@ -49,8 +49,8 @@ class Relayer {
   }
 
   async relay(monitoringDatas: MonitoringData[]): Promise<string> {
-    const msgs: Array<Msg> = monitoringDatas.reduce(
-      (msgs: Array<Msg>, data: MonitoringData) => {
+    const msgs: Msg[] = monitoringDatas.reduce(
+      (msgs: Msg[], data: MonitoringData) => {
         const fromAddr = this.Wallet.key.accAddress;
 
         // If the given `to` address not proper address,
@@ -59,10 +59,13 @@ class Relayer {
 
         // 18 decimal to 6 decimal
         // it must bigger than 1,000,000,000,000
-        if (data.amount.length < 13) return msgs;
+        if (data.amount.length < 13) {
+          return msgs;
+        }
 
         const amount = data.amount.slice(0, data.amount.length - 12);
         const info = data.terraAssetInfo;
+
         if (info.denom) {
           const denom = info.denom;
 
@@ -77,8 +80,8 @@ class Relayer {
               {
                 transfer: {
                   recipient: toAddr,
-                  amount: amount
-                }
+                  amount: amount,
+                },
               },
               []
             )
@@ -90,17 +93,19 @@ class Relayer {
       []
     );
 
-    if (msgs.length === 0) return '';
+    if (msgs.length === 0) {
+      return '';
+    }
 
     // Adjust sequence number between local and chain
     await this.adjustSequenceNumber();
 
     const tx = await this.Wallet.createAndSignTx({
       msgs,
-      sequence: this.sequenceNumber++
+      sequence: this.sequenceNumber++,
     });
-
     const result = await this.LCDClient.tx.broadcastSync(tx);
+
     if (isTxError(result)) {
       throw new Error(
         `Error while executing: ${result.code} - ${result.raw_log}`

@@ -14,12 +14,8 @@ class Relayer {
       monitoringData.contract.methods
         .mint(recipient, monitoringData.amount + '000000000000')
         .send()
-        .on('transactionHash', (hash: string) => {
-          resolve(hash);
-        })
-        .on('error', (err: string) => {
-          reject(err);
-        });
+        .on('transactionHash', resolve)
+        .on('error', reject);
     });
   }
 }

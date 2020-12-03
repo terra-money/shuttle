@@ -21,7 +21,7 @@ const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 const ax = axios.create({
   httpAgent: new http.Agent({ keepAlive: true }),
   httpsAgent: new https.Agent({ keepAlive: true }),
-  timeout: 15000
+  timeout: 15000,
 });
 
 class Shuttle {
@@ -44,26 +44,26 @@ class Shuttle {
   async startMonitoring() {
     // Graceful shutdown
     let shutdown = false;
-    process.once('SIGINT', () => {
+
+    const gracefulShutdown = () => {
       shutdown = true;
-    });
-    process.once('SIGTERM', () => {
-      shutdown = true;
-    });
+    };
+
+    process.once('SIGINT', gracefulShutdown);
+    process.once('SIGTERM', gracefulShutdown);
 
     while (!shutdown) {
       await this.process().catch(async (err) => {
-        console.log(err);
         const errorMsg =
           err instanceof Error ? err.toString() : JSON.stringify(err);
         console.error(`Process failed: ${errorMsg}`);
 
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
-            text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`
+            text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`,
           });
 
-          console.log(`Notify Error to Slack: ${data}`);
+          console.info(`Notify Error to Slack: ${data}`);
         }
 
         // sleep 1 minute after error
@@ -73,7 +73,7 @@ class Shuttle {
       await sleep(500);
     }
 
-    console.log('##### Graceful Shutdown #####');
+    console.info('##### Graceful Shutdown #####');
     process.exit(0);
   }
 
@@ -95,12 +95,14 @@ class Shuttle {
         );
       }
 
-      if (txhash.length !== 0) console.log(`Relay Success: ${txhash}`);
+      if (txhash.length !== 0) {
+        console.info(`Relay Success: ${txhash}`);
+      }
     }
 
     // Update last_height
     await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
-    console.log(`HEIGHT: ${newLastHeight}`);
+    console.info(`HEIGHT: ${newLastHeight}`);
 
     // When catched the block height, wait 10 second
     if (newLastHeight === lastHeight) {
@@ -109,7 +111,7 @@ class Shuttle {
   }
 
   buildSlackNotification(
-    monitoringDatas: Array<MonitoringData>,
+    monitoringDatas: MonitoringData[],
     resultTxHash: string
   ): { text: string } {
     let notification = '';
@@ -137,7 +139,7 @@ class Shuttle {
     const text = `${notification}`;
 
     return {
-      text
+      text,
     };
   }
 }

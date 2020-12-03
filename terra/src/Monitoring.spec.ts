@@ -9,7 +9,7 @@ import {
   MsgExecuteContract
 } from '@terra-money/terra.js';
 
-function createMockTx(msgs: Array<Msg>, errCode?: number): TxInfo {
+function createMockTx(msgs: Msg[], errCode?: number): TxInfo {
   return new TxInfo(
     0,
     'txHash',
