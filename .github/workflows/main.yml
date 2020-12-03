@@ -20,19 +20,19 @@ jobs:
     container: "node:14"
 
     steps:
-      - uses: actions/checkout@v2
       - name: Test
+        uses: actions/checkout@v2
+        working-directory: eth
       - run: npm install
       - run: npm run test
-        working-directory: eth
 
   build_terra:
     runs-on: ubuntu-latest
     container: "node:14"
 
     steps:
-      - uses: actions/checkout@v2
       - name: Test
+        uses: actions/checkout@v2
+        working-directory: terra
       - run: npm install
       - run: npm run test
-        working-directory: terra
