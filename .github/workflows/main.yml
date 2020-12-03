@@ -25,9 +25,9 @@ jobs:
       # - name: Audit
       #   run: npm audit
       #   working-directory: eth
-
       - name: Test
-        run: npm run test
+      - run: npm install
+      - run: npm run test
         working-directory: eth
 
   build_terra:
@@ -42,5 +42,6 @@ jobs:
       #   working-directory: terra
 
       - name: Test
-        run: npm run test
+      - run: npm install
+      - run: npm run test
         working-directory: terra
