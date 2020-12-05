@@ -13,7 +13,6 @@ import Relayer from './Relayer';
 const REDIS_PREFIX = 'terra_shuttle';
 const KEY_LAST_HEIGHT = 'last_height';
 const KEY_LAST_TXHASH = 'last_txhash';
-const KEY_PENDING_TX_QUEUE = 'pending_tx_queue';
 
 const TERRA_BLOCK_SECOND = parseInt(process.env.TERRA_BLOCK_SECOND as string);
 const REDIS_URL = process.env.REDIS_URL as string;
@@ -24,7 +23,7 @@ const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 const ax = axios.create({
   httpAgent: new http.Agent({ keepAlive: true }),
   httpsAgent: new https.Agent({ keepAlive: true }),
-  timeout: 15000,
+  timeout: 15000
 });
 
 class Shuttle {
@@ -33,9 +32,6 @@ class Shuttle {
   getAsync: (key: string) => Promise<string | null>;
   setAsync: (key: string, val: string) => Promise<unknown>;
   delAsync: (key: string) => Promise<unknown>;
-  llenAsync: (key: string) => Promise<number>;
-  lpopAsync: (key: string) => Promise<string>;
-  rpushAsync: (key: string) => Promise<unknown>;
 
   constructor() {
     // Redis setup
@@ -44,9 +40,6 @@ class Shuttle {
     this.getAsync = promisify(redisClient.get).bind(redisClient);
     this.setAsync = promisify(redisClient.set).bind(redisClient);
     this.delAsync = promisify(redisClient.del).bind(redisClient);
-    this.lpopAsync = promisify(redisClient.lpop).bind(redisClient);
-    this.rpushAsync = promisify(redisClient.rpush).bind(redisClient);
-    this.llenAsync = promisify(redisClient.llen).bind(redisClient);
 
     this.monitoring = new Monitoring();
     this.relayer = new Relayer();
@@ -58,8 +51,8 @@ class Shuttle {
 
     const gracefulShutdown = () => {
       shutdown = true;
-    };
-
+    }
+    
     process.once('SIGINT', gracefulShutdown);
     process.once('SIGTERM', gracefulShutdown);
 
@@ -71,7 +64,7 @@ class Shuttle {
 
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
-            text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`,
+            text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`
           });
 
           console.info(`Notify Error to Slack: ${data}`);
@@ -133,21 +126,6 @@ class Shuttle {
       await sleep(TERRA_BLOCK_SECOND * 1000);
     }
   }
-
-  async txBooster() {
-    if (await this.llenAsync(KEY_PENDING_TX_QUEUE) == 0) {
-      return;
-    }
-
-    const txHash = await this.lpopAsync(KEY_PENDING_TX_QUEUE);
-    const tx = await this.monitoring.getTransaction(txHash);
-
-    // 
-    const gasPrice = new BigNumber(await this.monitoring.getGasPrices()).plus(10000000000);
-    if (new BigNumber(tx.gasPrice) < gasPrice) {
-
-    }
-  }
 }
 
 function sleep(ms: number) {
@@ -179,7 +157,7 @@ function buildSlackNotification(
   const text = `${notification}`;
 
   return {
-    text,
+    text
   };
 }
 

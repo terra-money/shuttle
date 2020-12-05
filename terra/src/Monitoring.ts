@@ -4,9 +4,8 @@ import {
   AccAddress,
   MsgSend,
   MsgExecuteContract,
-  TxInfo,
+  TxInfo
 } from '@terra-money/terra.js';
-import { Transaction, TransactionConfig } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
 import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
@@ -32,7 +31,6 @@ const ETH_URL = process.env.ETH_URL as string;
 const TERRA_URL = process.env.TERRA_URL as string;
 
 export class Monitoring {
-  web3: Web3;
   LCDClient: LCDClient;
   TerraTrackingAddress: AccAddress;
 
@@ -45,7 +43,7 @@ export class Monitoring {
     const web3 = new Web3();
     const provider = new HDWalletProvider({
       mnemonic: ETH_MNEMONIC,
-      providerOrUrl: ETH_URL,
+      providerOrUrl: ETH_URL
     });
 
     provider.engine.stop();
@@ -55,7 +53,7 @@ export class Monitoring {
     this.TerraTrackingAddress = TERRA_TRACKING_ADDR;
     this.LCDClient = new LCDClient({
       URL: TERRA_URL,
-      chainID: TERRA_CHAIN_ID,
+      chainID: TERRA_CHAIN_ID
     });
 
     const ethContractInfos = EthContractInfos[ETH_CHAIN_ID];
@@ -87,8 +85,6 @@ export class Monitoring {
       this.EthContracts[asset] = contract;
       this.TerraAssetMapping[info.denom || info.contract_address || ''] = asset;
     }
-
-    this.web3 = web3;
   }
 
   // load and process a single block
@@ -112,7 +108,7 @@ export class Monitoring {
       const txResult = await this.LCDClient.tx.search({
         'tx.height': targetHeight,
         page,
-        limit,
+        limit
       });
 
       monitoringDatas.push(
@@ -171,7 +167,7 @@ export class Monitoring {
               amount: amount.toFixed(0),
               fee: fee.toFixed(0),
               asset,
-              contract: this.EthContracts[asset],
+              contract: this.EthContracts[asset]
             });
           }
         });
@@ -210,7 +206,7 @@ export class Monitoring {
               amount: amount.toFixed(0),
               fee: fee.toFixed(0),
               asset,
-              contract: this.EthContracts[asset],
+              contract: this.EthContracts[asset]
             });
           }
         }
@@ -218,23 +214,6 @@ export class Monitoring {
     }
 
     return monitoringDatas;
-  }
-
-  async getGasPrices(): Promise<string> {
-    return this.web3.eth.getGasPrice();
-  }
-
-  async getTransaction(txHash: string): Promise<Transaction> {
-    return this.web3.eth.getTransaction(txHash);
-  }
-
-  async sendTransaction(transactionConfig: TransactionConfig): Promise<string> {
-    return new Promise((resolve, reject) => {
-      this.web3.eth
-        .sendTransaction(transactionConfig)
-        .on('transactionHash', resolve)
-        .on('error', reject);
-    });
   }
 }
 
