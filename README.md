@@ -2,7 +2,7 @@
 
 ![Shuttle Banner](/resources/banner.png)
 
-Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sent between Terra and Ethereum networks, and only supports the transfer of whitelisted assets.
+Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sent between Terra and Ethereum networks, and only supports the transfer of [whitelisted](#erc20-contracts) assets.
 
 ## Table of Contents
 - [Shuttle Bridge](#shuttle-bridge)
