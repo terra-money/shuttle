@@ -73,7 +73,9 @@ export class Monitoring {
       ) - TERRA_BLOCK_CONFIRMATION;
 
     // skip no new blocks generated
-    if (lastHeight >= latestHeight) return [latestHeight, []];
+    if (lastHeight >= latestHeight) {
+      return [latestHeight, []];
+    }
 
     // If initial state, we start sync from latest height
     const targetHeight = lastHeight === 0 ? latestHeight : lastHeight + 1;
@@ -82,6 +84,7 @@ export class Monitoring {
 
     let page = 1;
     let totalPage = 1;
+
     do {
       const txResult = await this.LCDClient.tx.search({
         'tx.height': targetHeight,
