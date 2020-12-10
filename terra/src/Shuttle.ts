@@ -106,8 +106,8 @@ class Shuttle {
         }
       }
 
-      const txhash = await this.relayer.relay(monitoringData, MAX_RETRY);
       await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
+      const txhash = await this.relayer.relay(monitoringData, MAX_RETRY);
 
       // Notify to slack
       if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
