@@ -14,6 +14,7 @@ import { Relayer, RelayData } from './Relayer';
 const REDIS_PREFIX = 'terra_shuttle';
 const KEY_LAST_HEIGHT = 'last_height';
 const KEY_LAST_TXHASH = 'last_txhash';
+const KEY_NONCE = 'next_nonce';
 
 const KEY_QUEOE_TX = 'queue_tx';
 
@@ -65,7 +66,12 @@ class Shuttle {
   }
 
   async startMonitoring() {
-    this.nonce = await this.relayer.loadNonce();
+    const nonce = await this.getAsync(KEY_NONCE);
+    if (nonce && nonce !== '') {
+      this.nonce = parseInt(nonce);
+    } else {
+      this.nonce = await this.relayer.loadNonce();
+    }
 
     // Graceful shutdown
     let shutdown = false;
@@ -136,6 +142,7 @@ class Shuttle {
 
       await this.rpushAsync(KEY_QUEOE_TX, JSON.stringify(relayData));
       await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
+      await this.setAsync(KEY_NONCE, this.nonce.toString());
 
       // Notify to slack
       if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {

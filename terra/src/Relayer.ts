@@ -34,7 +34,7 @@ export class Relayer {
   }
 
   loadNonce(): Promise<number> {
-    return this.web3.eth.getTransactionCount(this.fromAddress);
+    return this.web3.eth.getTransactionCount(this.fromAddress, 'pending');
   }
 
   async build(
@@ -82,13 +82,7 @@ export class Relayer {
       this.web3.eth
         .sendSignedTransaction(relayData.signedTxData)
         .on('transactionHash', resolve)
-        .on('error', (err) => {
-          if (err.message !== 'nonce too low') {
-            reject(err);
-          }
-
-          resolve(relayData.txHash);
-        });
+        .on('error', reject);
     });
   }
 
