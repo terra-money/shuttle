@@ -4,6 +4,7 @@ import * as http from 'http';
 import * as https from 'https';
 import { promisify } from 'util';
 import BigNumber from 'bignumber.js';
+import Bluebird from 'bluebird';
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
@@ -94,10 +95,10 @@ class Shuttle {
         }
 
         // sleep 10s after error
-        await sleep(9500);
+        await Bluebird.delay(9500);
       });
 
-      await sleep(500);
+      await Bluebird.delay(500);
     }
 
     console.info('##### Graceful Shutdown #####');
@@ -150,7 +151,7 @@ class Shuttle {
 
     // When catched the block height, wait blocktime
     if (newLastHeight === lastHeight) {
-      await sleep(TERRA_BLOCK_SECOND * 1000);
+      await Bluebird.delay(TERRA_BLOCK_SECOND * 1000);
     }
 
     await this.checkTxQueue();
@@ -161,9 +162,11 @@ class Shuttle {
     const len = await this.llenAsync(KEY_QUEOE_TX);
     if (len === 0) return;
 
-    for (let i = 0; i < len; i++) {
-      const relayDatas = (await this.lrangeAsync(KEY_QUEOE_TX, 0, 0)) || [];
-      const relayData: RelayData = JSON.parse(relayDatas[0]);
+    const relayDatas =
+      (await this.lrangeAsync(KEY_QUEOE_TX, 0, Math.min(4, len))) || [];
+
+    return Bluebird.mapSeries(relayDatas, async (data) => {
+      const relayData: RelayData = JSON.parse(data);
       const tx = await this.relayer.getTransaction(relayData.txHash);
 
       if (tx !== null) {
@@ -175,12 +178,8 @@ class Shuttle {
           await this.relayer.relay(relayData);
         }
       }
-    }
+    });
   }
-}
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function buildSlackNotification(
