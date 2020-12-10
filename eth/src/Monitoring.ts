@@ -64,7 +64,7 @@ export class Monitoring {
 
   async load(lastHeight: number): Promise<[number, MonitoringData[]]> {
     const latestHeight =
-      (await this.Web3.eth.getBlockNumber()) - ETH_BLOCK_CONFIRMATION;
+      (await getBlockNumber(this.Web3, MAX_RETRY)) - ETH_BLOCK_CONFIRMATION;
 
     // skip no new blocks generated
     if (lastHeight >= latestHeight) {
@@ -117,6 +117,22 @@ export class Monitoring {
     });
 
     return monitoringDatas;
+  }
+}
+
+async function getBlockNumber(web3: Web3, retry: number): Promise<number> {
+  try {
+    return await web3.eth.getBlockNumber();
+  } catch (err) {
+    // invalid project id error occurs sometimes in infura
+    if (retry > 0 && err.message.includes('invalid project id')) {
+      console.error('infura errors happened. retry getBlockNumber');
+
+      await sleep(500);
+      return getBlockNumber(web3, retry - 1);
+    }
+
+    throw err;
   }
 }
 
