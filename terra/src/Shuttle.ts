@@ -117,18 +117,21 @@ class Shuttle {
     // Relay to terra chain
     // To prevent duplicate relay, set string KEY_LAST_TXHASH.
     // When the KEY_LAST_TXHASH exists, skip relay util that txhash
-    let relayFlag = false;
     const lastTxHash = await this.getAsync(KEY_LAST_TXHASH);
-    for (let i = 0; i < monitoringDatas.length; i++) {
+    let i;
+
+    // Skip to lastTxHash
+    for (i = 0; i < monitoringDatas.length; i++) {
       const monitoringData = monitoringDatas[i];
 
-      if (!relayFlag && lastTxHash !== undefined) {
-        if (lastTxHash === monitoringData.txHash) {
-          relayFlag = true;
-          continue;
-        }
+      if (lastTxHash && lastTxHash === monitoringData.txHash) {
+        i++; // start from next index
+        break;
       }
+    }
 
+    for (; i < monitoringDatas.length; i++) {
+      const monitoringData = monitoringDatas[i];
       const relayData = await this.relayer.build(monitoringData, this.nonce++);
 
       await this.rpushAsync(KEY_QUEOE_TX, JSON.stringify(relayData));
