@@ -92,12 +92,7 @@ export class Monitoring {
         limit,
       });
 
-      monitoringDatas.push(
-        ...monitoringDatas.concat.apply(
-          [],
-          txResult.txs.map(this.parseTx.bind(this))
-        )
-      );
+      monitoringDatas.push(...txResult.txs.map(this.parseTx.bind(this)).flat());
 
       totalPage = txResult.page_total;
     } while (page++ < totalPage);
