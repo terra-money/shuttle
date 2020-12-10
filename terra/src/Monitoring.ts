@@ -79,7 +79,7 @@ export class Monitoring {
       const contract = new web3.eth.Contract(
         WrappedTokenAbi,
         value.contract_address,
-        { from: fromAddress }
+        { from: fromAddress, gas: 100000 }
       );
 
       this.EthContracts[asset] = contract;
