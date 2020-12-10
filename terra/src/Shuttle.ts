@@ -118,13 +118,13 @@ class Shuttle {
     // To prevent duplicate relay, set string KEY_LAST_TXHASH.
     // When the KEY_LAST_TXHASH exists, skip relay util that txhash
     const lastTxHash = await this.getAsync(KEY_LAST_TXHASH);
-    let i;
+    let i = 0;
 
     // Skip to lastTxHash
-    for (i = 0; i < monitoringDatas.length; i++) {
+    for (; lastTxHash && i < monitoringDatas.length; i++) {
       const monitoringData = monitoringDatas[i];
 
-      if (lastTxHash && lastTxHash === monitoringData.txHash) {
+      if (lastTxHash === monitoringData.txHash) {
         i++; // start from next index
         break;
       }
