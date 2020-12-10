@@ -58,9 +58,6 @@ class Shuttle {
           err instanceof Error ? err.toString() : JSON.stringify(err);
         console.error(`Process failed: ${errorMsg}`);
 
-        // ignore invalid project id error
-        if (errorMsg.includes('invalid project id')) return;
-
         // notify to slack
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
           const { data } = await ax.post(SLACK_WEB_HOOK, {

@@ -139,8 +139,7 @@ async function getPastEvents(
     // 10000 results
     if (
       retry > 0 &&
-      (err.message ===
-        'Returned error: query returned more than 10000 results' ||
+      (err.message.includes('query returned more than 10000 results') ||
         err.message.includes('invalid project id'))
     ) {
       console.error('infura errors happened. retry getPastEvents');
