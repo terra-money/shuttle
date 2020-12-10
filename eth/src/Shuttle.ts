@@ -54,6 +54,9 @@ class Shuttle {
 
     while (!shutdown) {
       await this.process().catch(async (err) => {
+        // ignore invalid project id
+        if (err.message === 'invalid project id\n') return;
+
         const errorMsg =
           err instanceof Error ? err.toString() : JSON.stringify(err);
         console.error(`Process failed: ${errorMsg}`);
