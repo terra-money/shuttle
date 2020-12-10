@@ -81,10 +81,13 @@ class Shuttle {
       await this.process().catch(async (err) => {
         const errorMsg =
           err instanceof Error ? err.toString() : JSON.stringify(err);
+
         console.error(`Process failed: ${errorMsg}`);
 
         // ignore invalid project id error
-        if (errorMsg.includes('invalid project id')) return;
+        if (errorMsg.includes('invalid project id')) {
+          return;
+        }
 
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
@@ -118,6 +121,7 @@ class Shuttle {
     const lastTxHash = await this.getAsync(KEY_LAST_TXHASH);
     for (let i = 0; i < monitoringDatas.length; i++) {
       const monitoringData = monitoringDatas[i];
+
       if (!relayFlag && lastTxHash !== undefined) {
         if (lastTxHash === monitoringData.txHash) {
           relayFlag = true;
@@ -126,6 +130,7 @@ class Shuttle {
       }
 
       const relayData = await this.relayer.build(monitoringData, this.nonce++);
+
       await this.rpushAsync(KEY_QUEOE_TX, JSON.stringify(relayData));
       await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
 
@@ -160,7 +165,10 @@ class Shuttle {
   async checkTxQueue() {
     const now = new Date().getTime();
     const len = await this.llenAsync(KEY_QUEOE_TX);
-    if (len === 0) return;
+
+    if (len === 0) {
+      return;
+    }
 
     const relayDatas =
       (await this.lrangeAsync(KEY_QUEOE_TX, 0, Math.min(4, len))) || [];

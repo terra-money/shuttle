@@ -6,7 +6,6 @@ import HDWalletProvider from '@truffle/hdwallet-provider';
 
 const ETH_MNEMONIC = process.env.ETH_MNEMONIC as string;
 const ETH_URL = process.env.ETH_URL as string;
-
 const ETH_DONATION = process.env.ETH_DONATION as string;
 
 export interface RelayData {
@@ -84,7 +83,10 @@ export class Relayer {
         .sendSignedTransaction(relayData.signedTxData)
         .on('transactionHash', resolve)
         .on('error', (err) => {
-          if (err.message !== 'nonce too low') reject(err);
+          if (err.message !== 'nonce too low') {
+            reject(err);
+          }
+
           resolve(relayData.txHash);
         });
     });
