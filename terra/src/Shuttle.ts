@@ -20,6 +20,8 @@ const REDIS_URL = process.env.REDIS_URL as string;
 const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 
+const MAX_RETRY = 5;
+
 const ax = axios.create({
   httpAgent: new http.Agent({ keepAlive: true }),
   httpsAgent: new https.Agent({ keepAlive: true }),
@@ -100,13 +102,12 @@ class Shuttle {
       if (!relayFlag && lastTxHash !== undefined) {
         if (lastTxHash === monitoringData.txHash) {
           relayFlag = true;
+          continue;
         }
-
-        continue;
       }
 
-      const txhash = await this.relayer.relay(monitoringData);
-      await this.setAsync(KEY_LAST_TXHASH, txhash);
+      const txhash = await this.relayer.relay(monitoringData, MAX_RETRY);
+      await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
 
       // Notify to slack
       if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
