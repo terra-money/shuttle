@@ -8,19 +8,20 @@ import BigNumber from 'bignumber.js';
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
 import { Monitoring, MonitoringData } from './Monitoring';
-import Relayer from './Relayer';
+import { Relayer, RelayData } from './Relayer';
+import { Transaction } from 'web3-core';
 
 const REDIS_PREFIX = 'terra_shuttle';
 const KEY_LAST_HEIGHT = 'last_height';
 const KEY_LAST_TXHASH = 'last_txhash';
+
+const KEY_QUEOE_TX = 'queue_tx';
 
 const TERRA_BLOCK_SECOND = parseInt(process.env.TERRA_BLOCK_SECOND as string);
 const REDIS_URL = process.env.REDIS_URL as string;
 
 const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
-
-const MAX_RETRY = 5;
 
 const ax = axios.create({
   httpAgent: new http.Agent({ keepAlive: true }),
@@ -34,6 +35,16 @@ class Shuttle {
   getAsync: (key: string) => Promise<string | null>;
   setAsync: (key: string, val: string) => Promise<unknown>;
   delAsync: (key: string) => Promise<unknown>;
+  llenAsync: (key: string) => Promise<number>;
+  lrangeAsync: (
+    key: string,
+    start: number,
+    stop: number
+  ) => Promise<string[] | undefined>;
+  lpopAsync: (key: string) => Promise<string | undefined>;
+  rpushAsync: (key: string, value: string) => Promise<unknown>;
+
+  nonce: number;
 
   constructor() {
     // Redis setup
@@ -42,12 +53,20 @@ class Shuttle {
     this.getAsync = promisify(redisClient.get).bind(redisClient);
     this.setAsync = promisify(redisClient.set).bind(redisClient);
     this.delAsync = promisify(redisClient.del).bind(redisClient);
+    this.llenAsync = promisify(redisClient.llen).bind(redisClient);
+    this.lrangeAsync = promisify(redisClient.lrange).bind(redisClient);
+    this.lpopAsync = promisify(redisClient.lpop).bind(redisClient);
+    this.rpushAsync = promisify(redisClient.rpush).bind(redisClient);
 
     this.monitoring = new Monitoring();
     this.relayer = new Relayer();
+
+    this.nonce = 0;
   }
 
   async startMonitoring() {
+    this.nonce = await this.relayer.loadNonce();
+
     // Graceful shutdown
     let shutdown = false;
 
@@ -106,18 +125,22 @@ class Shuttle {
         }
       }
 
+      const relayData = await this.relayer.build(monitoringData, this.nonce++);
+      await this.rpushAsync(KEY_QUEOE_TX, JSON.stringify(relayData));
       await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
-      const txhash = await this.relayer.relay(monitoringData, MAX_RETRY);
 
       // Notify to slack
       if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
         await ax.post(
           SLACK_WEB_HOOK,
-          buildSlackNotification(monitoringData, txhash)
+          buildSlackNotification(monitoringData, relayData.txHash)
         );
       }
 
-      console.info(`Relay Success: ${txhash}`);
+      console.info(`Relay Success: ${relayData.txHash}`);
+
+      // logging first and do relay later
+      await this.relayer.relay(relayData);
     }
 
     // Update last_height
@@ -129,6 +152,30 @@ class Shuttle {
     // When catched the block height, wait blocktime
     if (newLastHeight === lastHeight) {
       await sleep(TERRA_BLOCK_SECOND * 1000);
+    }
+
+    await this.checkTxQueue();
+  }
+
+  async checkTxQueue() {
+    const now = new Date().getTime();
+    const len = await this.llenAsync(KEY_QUEOE_TX);
+    if (len === 0) return;
+
+    for (let i = 0; i < len; i++) {
+      const relayDatas = (await this.lrangeAsync(KEY_QUEOE_TX, 0, 0)) || [];
+      const relayData: RelayData = JSON.parse(relayDatas[0]);
+      const tx = await this.relayer.getTransaction(relayData.txHash);
+
+      if (tx !== null) {
+        // tx found in mempool, remove it
+        await this.lpopAsync(KEY_QUEOE_TX);
+      } else if (tx === null) {
+        if (now - relayData.createdAt > 1000 * 60) {
+          // tx not found in the mempool, rebroadcast tx
+          await this.relayer.relay(relayData);
+        }
+      }
     }
   }
 }
