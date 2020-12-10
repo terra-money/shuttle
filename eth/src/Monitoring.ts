@@ -121,9 +121,7 @@ export class Monitoring {
 }
 
 async function getBlockNumber(web3: Web3, retry: number): Promise<number> {
-  try {
-    return await web3.eth.getBlockNumber();
-  } catch (err) {
+  return web3.eth.getBlockNumber().catch(async (err) => {
     // invalid project id error occurs sometimes in infura
     if (retry > 0 && err.message.includes('invalid project id')) {
       console.error('infura errors happened. retry getBlockNumber');
@@ -133,7 +131,7 @@ async function getBlockNumber(web3: Web3, retry: number): Promise<number> {
     }
 
     throw err;
-  }
+  });
 }
 
 async function getPastEvents(
@@ -142,14 +140,10 @@ async function getPastEvents(
   toBlock: number,
   retry: number
 ): Promise<EventData[]> {
-  try {
-    const events = await contract.getPastEvents('Burn', {
-      fromBlock,
-      toBlock,
-    });
-
-    return events;
-  } catch (err) {
+  return await contract.getPastEvents('Burn', {
+    fromBlock,
+    toBlock,
+  }).catch(async (err) => {
     // query returned more than 10000 results error occurs sometime in
     // Ropsten network even though it is impossible to have more than
     // 10000 results
@@ -165,7 +159,7 @@ async function getPastEvents(
     }
 
     throw err;
-  }
+  })
 }
 
 function sleep(ms: number) {

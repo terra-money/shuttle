@@ -23,8 +23,10 @@ const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 const ax = axios.create({
   httpAgent: new http.Agent({ keepAlive: true }),
   httpsAgent: new https.Agent({ keepAlive: true }),
-  timeout: 15000
+  timeout: 15000,
 });
+
+const MAX_RETRY = 5;
 
 class Shuttle {
   monitoring: Monitoring;
@@ -51,8 +53,8 @@ class Shuttle {
 
     const gracefulShutdown = () => {
       shutdown = true;
-    }
-    
+    };
+
     process.once('SIGINT', gracefulShutdown);
     process.once('SIGTERM', gracefulShutdown);
 
@@ -62,9 +64,12 @@ class Shuttle {
           err instanceof Error ? err.toString() : JSON.stringify(err);
         console.error(`Process failed: ${errorMsg}`);
 
+        // ignore invalid project id error
+        if (errorMsg.includes('invalid project id')) return;
+
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
           const { data } = await ax.post(SLACK_WEB_HOOK, {
-            text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`
+            text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`,
           });
 
           console.info(`Notify Error to Slack: ${data}`);
@@ -97,11 +102,12 @@ class Shuttle {
       if (!relayFlag && lastTxHash !== undefined) {
         if (lastTxHash === monitoringData.txHash) {
           relayFlag = true;
-          continue;
         }
+
+        continue;
       }
 
-      const txhash = await this.relayer.relay(monitoringData);
+      const txhash = await this.relayer.relay(monitoringData, MAX_RETRY);
       await this.setAsync(KEY_LAST_TXHASH, txhash);
 
       // Notify to slack
@@ -157,7 +163,7 @@ function buildSlackNotification(
   const text = `${notification}`;
 
   return {
-    text
+    text,
   };
 }
 
