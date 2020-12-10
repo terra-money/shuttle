@@ -26,8 +26,6 @@ const ax = axios.create({
   timeout: 15000,
 });
 
-const MAX_RETRY = 5;
-
 class Shuttle {
   monitoring: Monitoring;
   relayer: Relayer;
@@ -107,7 +105,7 @@ class Shuttle {
         continue;
       }
 
-      const txhash = await this.relayer.relay(monitoringData, MAX_RETRY);
+      const txhash = await this.relayer.relay(monitoringData);
       await this.setAsync(KEY_LAST_TXHASH, txhash);
 
       // Notify to slack
