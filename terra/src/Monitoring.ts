@@ -4,19 +4,15 @@ import {
   AccAddress,
   MsgSend,
   MsgExecuteContract,
-  TxInfo
+  TxInfo,
 } from '@terra-money/terra.js';
-import { Contract } from 'web3-eth-contract';
 import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
-import WrappedTokenAbi from './config/WrappedTokenAbi';
-import HDWalletProvider from '@truffle/hdwallet-provider';
 import BigNumber from 'bignumber.js';
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
 const FEE_RATE = process.env.FEE_RATE as string;
-const ETH_MNEMONIC = process.env.ETH_MNEMONIC as string;
 
 const TERRA_TRACKING_ADDR = process.env.TERRA_TRACKING_ADDR as string;
 const TERRA_TXS_LOAD_UNIT = parseInt(process.env.TERRA_TXS_LOAD_UNIT as string);
@@ -26,34 +22,22 @@ const TERRA_BLOCK_CONFIRMATION = parseInt(
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
-
-const ETH_URL = process.env.ETH_URL as string;
 const TERRA_URL = process.env.TERRA_URL as string;
 
 export class Monitoring {
   LCDClient: LCDClient;
   TerraTrackingAddress: AccAddress;
 
-  EthContracts: { [asset: string]: Contract };
+  EthContracts: { [asset: string]: string };
   TerraAssetMapping: {
     [denom_or_address: string]: string;
   };
 
   constructor() {
-    const web3 = new Web3();
-    const provider = new HDWalletProvider({
-      mnemonic: ETH_MNEMONIC,
-      providerOrUrl: ETH_URL
-    });
-
-    provider.engine.stop();
-    web3.setProvider(provider);
-    const fromAddress = provider.getAddress();
-
     this.TerraTrackingAddress = TERRA_TRACKING_ADDR;
     this.LCDClient = new LCDClient({
       URL: TERRA_URL,
-      chainID: TERRA_CHAIN_ID
+      chainID: TERRA_CHAIN_ID,
     });
 
     const ethContractInfos = EthContractInfos[ETH_CHAIN_ID];
@@ -76,13 +60,7 @@ export class Monitoring {
         throw 'Must provide one of denom and contract_address';
       }
 
-      const contract = new web3.eth.Contract(
-        WrappedTokenAbi,
-        value.contract_address,
-        { from: fromAddress, gas: 100000 }
-      );
-
-      this.EthContracts[asset] = contract;
+      this.EthContracts[asset] = value.contract_address;
       this.TerraAssetMapping[info.denom || info.contract_address || ''] = asset;
     }
   }
@@ -95,7 +73,9 @@ export class Monitoring {
       ) - TERRA_BLOCK_CONFIRMATION;
 
     // skip no new blocks generated
-    if (lastHeight >= latestHeight) return [latestHeight, []];
+    if (lastHeight >= latestHeight) {
+      return [latestHeight, []];
+    }
 
     // If initial state, we start sync from latest height
     const targetHeight = lastHeight === 0 ? latestHeight : lastHeight + 1;
@@ -104,19 +84,15 @@ export class Monitoring {
 
     let page = 1;
     let totalPage = 1;
+
     do {
       const txResult = await this.LCDClient.tx.search({
         'tx.height': targetHeight,
         page,
-        limit
+        limit,
       });
 
-      monitoringDatas.push(
-        ...monitoringDatas.concat.apply(
-          [],
-          txResult.txs.map(this.parseTx.bind(this))
-        )
-      );
+      monitoringDatas.push(...txResult.txs.map(this.parseTx.bind(this)).flat());
 
       totalPage = txResult.page_total;
     } while (page++ < totalPage);
@@ -167,7 +143,7 @@ export class Monitoring {
               amount: amount.toFixed(0),
               fee: fee.toFixed(0),
               asset,
-              contract: this.EthContracts[asset]
+              contractAddr: this.EthContracts[asset],
             });
           }
         });
@@ -206,7 +182,7 @@ export class Monitoring {
               amount: amount.toFixed(0),
               fee: fee.toFixed(0),
               asset,
-              contract: this.EthContracts[asset]
+              contractAddr: this.EthContracts[asset],
             });
           }
         }
@@ -234,5 +210,5 @@ export type MonitoringData = {
   asset: string;
 
   // eth side data for relayer
-  contract: Contract;
+  contractAddr: string;
 };

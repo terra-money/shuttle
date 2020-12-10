@@ -59,7 +59,9 @@ class Shuttle {
         console.error(`Process failed: ${errorMsg}`);
 
         // ignore invalid project id error
-        if (errorMsg.includes('invalid project id')) return;
+        if (errorMsg.includes('invalid project id')) {
+          return;
+        }
 
         // notify to slack
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
