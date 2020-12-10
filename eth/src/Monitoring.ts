@@ -141,7 +141,7 @@ async function getPastEvents(
       retry > 0 &&
       (err.message ===
         'Returned error: query returned more than 10000 results' ||
-        err.message === 'Invalid JSON RPC response: "invalid project id\n"')
+        err.message.includes('invalid project id'))
     ) {
       console.error('infura errors happened. retry getPastEvents');
 
