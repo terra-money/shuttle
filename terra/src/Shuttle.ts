@@ -9,7 +9,6 @@ BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
 import { Monitoring, MonitoringData } from './Monitoring';
 import { Relayer, RelayData } from './Relayer';
-import { Transaction } from 'web3-core';
 
 const REDIS_PREFIX = 'terra_shuttle';
 const KEY_LAST_HEIGHT = 'last_height';

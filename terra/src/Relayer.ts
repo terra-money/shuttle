@@ -83,7 +83,10 @@ export class Relayer {
       this.web3.eth
         .sendSignedTransaction(relayData.signedTxData)
         .on('transactionHash', resolve)
-        .on('error', reject);
+        .on('error', (err) => {
+          if (err.message !== 'nonce too low') reject(err);
+          resolve(relayData.txHash);
+        });
     });
   }
 
