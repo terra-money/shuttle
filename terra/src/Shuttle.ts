@@ -14,7 +14,7 @@ import { Relayer, RelayData } from './Relayer';
 const REDIS_PREFIX = 'terra_shuttle';
 const KEY_LAST_HEIGHT = 'last_height';
 const KEY_LAST_TXHASH = 'last_txhash';
-const KEY_NONCE = 'next_nonce';
+const KEY_NEXT_NONCE = 'next_nonce';
 
 const KEY_QUEOE_TX = 'queue_tx';
 
@@ -42,7 +42,11 @@ class Shuttle {
     start: number,
     stop: number
   ) => Promise<string[] | undefined>;
-  lpopAsync: (key: string) => Promise<string | undefined>;
+  lremAsync: (
+    key: string,
+    count: number,
+    val: string
+  ) => Promise<number | undefined>;
   rpushAsync: (key: string, value: string) => Promise<unknown>;
 
   nonce: number;
@@ -56,7 +60,7 @@ class Shuttle {
     this.delAsync = promisify(redisClient.del).bind(redisClient);
     this.llenAsync = promisify(redisClient.llen).bind(redisClient);
     this.lrangeAsync = promisify(redisClient.lrange).bind(redisClient);
-    this.lpopAsync = promisify(redisClient.lpop).bind(redisClient);
+    this.lremAsync = promisify(redisClient.lrem).bind(redisClient);
     this.rpushAsync = promisify(redisClient.rpush).bind(redisClient);
 
     this.monitoring = new Monitoring();
@@ -66,7 +70,7 @@ class Shuttle {
   }
 
   async startMonitoring() {
-    const nonce = await this.getAsync(KEY_NONCE);
+    const nonce = await this.getAsync(KEY_NEXT_NONCE);
     if (nonce && nonce !== '') {
       this.nonce = parseInt(nonce);
     } else {
@@ -103,8 +107,8 @@ class Shuttle {
           console.info(`Notify Error to Slack: ${data}`);
         }
 
-        // sleep 10s after error
-        await Bluebird.delay(9500);
+        // sleep 60s after error
+        await Bluebird.delay(60 * 1000);
       });
 
       await Bluebird.delay(500);
@@ -115,12 +119,17 @@ class Shuttle {
   }
 
   async process() {
+    // Check whether tx is successfully broadcasted or not
+    // If a tx is not found in the mempool for a long period,
+    // rebroadcast the tx with same nonce.
+    await this.checkTxQueue();
+
     const lastHeight = parseInt((await this.getAsync(KEY_LAST_HEIGHT)) || '0');
     const [newLastHeight, monitoringDatas] = await this.monitoring.load(
       lastHeight
     );
 
-    // Relay to terra chain
+    // Relay to Ethereum chain
     // To prevent duplicate relay, set string KEY_LAST_TXHASH.
     // When the KEY_LAST_TXHASH exists, skip relay util that txhash
     const lastTxHash = await this.getAsync(KEY_LAST_TXHASH);
@@ -142,7 +151,7 @@ class Shuttle {
 
       await this.rpushAsync(KEY_QUEOE_TX, JSON.stringify(relayData));
       await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
-      await this.setAsync(KEY_NONCE, this.nonce.toString());
+      await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
 
       // Notify to slack
       if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
@@ -154,7 +163,7 @@ class Shuttle {
 
       console.info(`Relay Success: ${relayData.txHash}`);
 
-      // logging first and do relay later
+      // Do logging first and relay later
       await this.relayer.relay(relayData);
     }
 
@@ -168,8 +177,6 @@ class Shuttle {
     if (newLastHeight === lastHeight) {
       await Bluebird.delay(TERRA_BLOCK_SECOND * 1000);
     }
-
-    await this.checkTxQueue();
   }
 
   async checkTxQueue() {
@@ -189,11 +196,15 @@ class Shuttle {
 
       if (tx !== null) {
         // tx found in mempool, remove it
-        await this.lpopAsync(KEY_QUEOE_TX);
+        await this.lremAsync(KEY_QUEOE_TX, 1, data);
       } else if (tx === null) {
         if (now - relayData.createdAt > 1000 * 60) {
           // tx not found in the mempool, rebroadcast tx
-          await this.relayer.relay(relayData);
+          await this.relayer.relay(relayData).catch((err) => {
+            // In somecase, there are possibilities
+            // that tx is found during rebroadcast
+            if (err.message !== 'nonce too low') throw err;
+          });
         }
       }
     });
