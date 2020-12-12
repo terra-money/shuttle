@@ -203,7 +203,7 @@ class Shuttle {
           await this.relayer.relay(relayData).catch((err) => {
             // In somecase, there are possibilities
             // that tx is found during rebroadcast
-            if (err.message !== 'nonce too low') throw err;
+            if (err.message !== 'already known') throw err;
           });
         }
       }
