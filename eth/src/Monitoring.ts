@@ -123,7 +123,11 @@ export class Monitoring {
 async function getBlockNumber(web3: Web3, retry: number): Promise<number> {
   return web3.eth.getBlockNumber().catch(async (err) => {
     // invalid project id error occurs sometimes in infura
-    if (retry > 0 && err.message.includes('invalid project id')) {
+    if (
+      retry > 0 &&
+      (err.message.includes('invalid project id') ||
+        err.message.includes('request failed or timed out'))
+    ) {
       console.error('infura errors happened. retry getBlockNumber');
 
       await sleep(500);
@@ -140,26 +144,30 @@ async function getPastEvents(
   toBlock: number,
   retry: number
 ): Promise<EventData[]> {
-  return await contract.getPastEvents('Burn', {
-    fromBlock,
-    toBlock,
-  }).catch(async (err) => {
-    // query returned more than 10000 results error occurs sometime in
-    // Ropsten network even though it is impossible to have more than
-    // 10000 results
-    if (
-      retry > 0 &&
-      (err.message.includes('query returned more than 10000 results') ||
-        err.message.includes('invalid project id'))
-    ) {
-      console.error('infura errors happened. retry getPastEvents');
+  return await contract
+    .getPastEvents('Burn', {
+      fromBlock,
+      toBlock,
+    })
+    .catch(async (err) => {
+      // query returned more than 10000 results error occurs sometime in
+      // Ropsten network even though it is impossible to have more than
+      // 10000 results
+      if (
+        retry > 0 &&
+        (err.message.includes('query returned more than 10000 results') ||
+          err.message.includes('invalid project id') ||
+          err.message.includes('request failed or timed out') ||
+          err.message.includes('unknown block'))
+      ) {
+        console.error('infura errors happened. retry getPastEvents');
 
-      await sleep(500);
-      return getPastEvents(contract, fromBlock, toBlock, retry - 1);
-    }
+        await sleep(500);
+        return getPastEvents(contract, fromBlock, toBlock, retry - 1);
+      }
 
-    throw err;
-  })
+      throw err;
+    });
 }
 
 function sleep(ms: number) {
