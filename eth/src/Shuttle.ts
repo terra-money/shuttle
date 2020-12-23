@@ -19,7 +19,7 @@ const KEY_LAST_HEIGHT = 'last_height';
 const REDIS_URL = process.env.REDIS_URL as string;
 const ETH_BLOCK_SECOND = parseInt(process.env.ETH_BLOCK_SECOND as string);
 const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
-const SLACK_NOTI_ASSET = process.env.SLACK_NOTI_ASSET;
+const SLACK_NOTI_ETH_ASSET = process.env.SLACK_NOTI_ETH_ASSET;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 
 const ax = axios.create({
@@ -127,7 +127,7 @@ class Shuttle {
     let notification = '';
     monitoringDatas.forEach((data) => {
       notification += '```';
-      notification += `[${SLACK_NOTI_NETWORK}] ${SLACK_NOTI_ASSET}\n`;
+      notification += `[${SLACK_NOTI_NETWORK}] ${SLACK_NOTI_ETH_ASSET} => TERRA\n`;
       notification += `Sender: ${data.sender}\n`;
       notification += `To:     ${data.to}\n`;
       notification += `\n`;
@@ -141,7 +141,7 @@ class Shuttle {
         .div(1e18)
         .toFixed(6)} ${data.asset}\n`;
       notification += `\n`;
-      notification += `Eth TxHash:   ${data.txHash}\n`;
+      notification += `${SLACK_NOTI_ETH_ASSET} TxHash:   ${data.txHash}\n`;
       notification += `Terra TxHash: ${resultTxHash}\n`;
       notification += '```\n';
     });
