@@ -5,6 +5,65 @@ const contractInfos: {
     };
   };
 } = {
+  bsc_testnet: {
+    LUNA: {
+      contract_address: '0xA1B4Aa780713df91e9Fa0FAa415ce49756D81E3b',
+    },
+    UST: {
+      contract_address: '0x66BDf3Bd407A63eAB5eAF5eCE69f2D7bb403EfC9',
+    },
+    KRT:  {
+      contract_address: '0x59a870b16adE2A152815Ba0d4Fa074fc3F71A828',
+    },
+    SDT: {
+      contract_address: '0x5e2c2088d3fB10aAb25a0D323CdBEc5147232B1a',
+    },
+    MNT: {
+      contract_address: '0x1449D1Ba8FB922E74F7761F077e77EAe66A0f8DA',
+    },
+    MIR: {
+      contract_address: '0x320106A19C934ab8dbdde8056Ebae5A6f340720e',
+    },
+    mAAPL: {
+      contract_address: '0x0dFa0F08136DA5d28618E7E31A7e24b01a95bB69',
+    },
+    mGOOGL: {
+      contract_address: '0x56a31ea21862447E3Af9bfe76A45679E44103274',
+    },
+    mTSLA: {
+      contract_address: '0xA2a42F0deB45ca7310a3C02A70fb569d5d5248FA',
+    },
+    mNFLX: {
+      contract_address: '0xc6F5e6476958cA81eC8FC68A1ea7c68206b0e501',
+    },
+    mQQQ: {
+      contract_address: '0x1Ad3354B2E7C0F7D5A370a03CAf439DD345437a9',
+    },
+    mTWTR: {
+      contract_address: '0x5C4273b1B20112321f0951D0bC2d5eD40c800226',
+    },
+    mMSFT: {
+      contract_address: '0xE4f2C30E938c24ee874dfDFAb20fFFBA81323457',
+    },
+    mAMZN: {
+      contract_address: '0xfBC94545AD2ff3F7B009258FB43F2EAb46744767',
+    },
+    mBABA: {
+      contract_address: '0xFc78bf14Dc997e681dAc4b4D811B45026d04123F',
+    },
+    mIAU: {
+      contract_address: '0xeff3b95faC30230D30F8c8222670A3812D79857B',
+    },
+    mSLV: {
+      contract_address: '0x662DDF725F5BDE9b31BBD16793Fd0c234F67979B',
+    },
+    mUSO: {
+      contract_address: '0x5D428492846bd05D8137e56Fe806D28606453cbf',
+    },
+    mVIXY: {
+      contract_address: '0x57986628daaDC418E09A2917D6c8b793B7dC1ACD',
+    }
+  },
   ropsten: {
     LUNA: {
       contract_address: '0xbf51453468771D14cEbdF8856cC5D5145364Cd6F',

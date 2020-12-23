@@ -11,7 +11,10 @@ BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 import { Monitoring, MonitoringData } from './Monitoring';
 import { Relayer, RelayData } from './Relayer';
 
-const REDIS_PREFIX = 'terra_shuttle';
+const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
+
+// skip chain-id prefix for mainnet
+const REDIS_PREFIX = 'terra_shuttle' + ETH_CHAIN_ID.replace('mainnet', '');
 const KEY_LAST_HEIGHT = 'last_height';
 const KEY_LAST_TXHASH = 'last_txhash';
 const KEY_NEXT_NONCE = 'next_nonce';
@@ -71,10 +74,11 @@ class Shuttle {
 
   async startMonitoring() {
     const nonce = await this.getAsync(KEY_NEXT_NONCE);
-    if (nonce && nonce !== '') {
+    const chainNonce = await this.relayer.loadNonce();
+    if (nonce && nonce !== '' && parseInt(nonce) >= chainNonce) {
       this.nonce = parseInt(nonce);
     } else {
-      this.nonce = await this.relayer.loadNonce();
+      this.nonce = chainNonce;
     }
 
     // Graceful shutdown

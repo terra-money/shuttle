@@ -9,10 +9,11 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
   - [Table of Contents](#table-of-contents)
   - [Components](#components)
   - [ERC20 Contracts](#erc20-contracts)
+  - [ERC20 Contracts on BSC (Binance Smart Chain)](#erc20-contracts-on-bsc-binance-smart-chain)
   - [Terra Denoms and Contracts](#terra-denoms-and-contracts)
   - [How it works](#how-it-works)
-    - [Terra => Ethereum](#terra--ethereum)
-    - [Ethereum => Terra](#ethereum--terra)
+    - [Terra => Ethereum or BSC](#terra--ethereum-or-bsc)
+    - [Ethereum or BSC => Terra](#ethereum-or-bsc--terra)
 
 ## Components
 * [Ethereum Contracts](./contracts)
@@ -43,6 +44,29 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
 | mUSO   | 0x31c63146a635EB7465e5853020b39713AC356991 | 0xDF00833C87bEfA3aF5634d81BE18E9DEf2F9C7c0 |
 | mVIXY  | 0xf72FCd9DCF0190923Fadd44811E240Ef4533fc86 | 0xC1629641Cdb2D636Ae220fb759264306902c4AC0 |
 
+## ERC20 Contracts on BSC (Binance Smart Chain)
+| asset  | bsc          | bsc-testnet                                |
+| ------ | ------------ | ------------------------------------------ |
+| LUNA   | not deployed | 0xA1B4Aa780713df91e9Fa0FAa415ce49756D81E3b |
+| UST    | not deployed | 0x66BDf3Bd407A63eAB5eAF5eCE69f2D7bb403EfC9 |
+| KRT    | not deployed | 0x59a870b16adE2A152815Ba0d4Fa074fc3F71A828 |
+| SDT    | not deployed | 0x5e2c2088d3fB10aAb25a0D323CdBEc5147232B1a |
+| MNT    | not deployed | 0x1449D1Ba8FB922E74F7761F077e77EAe66A0f8DA |
+| MIR    | not deployed | 0x320106A19C934ab8dbdde8056Ebae5A6f340720e |
+| mAAPL  | not deployed | 0x0dFa0F08136DA5d28618E7E31A7e24b01a95bB69 |
+| mGOOGL | not deployed | 0x56a31ea21862447E3Af9bfe76A45679E44103274 |
+| mTSLA  | not deployed | 0xA2a42F0deB45ca7310a3C02A70fb569d5d5248FA |
+| mNFLX  | not deployed | 0xc6F5e6476958cA81eC8FC68A1ea7c68206b0e501 |
+| mQQQ   | not deployed | 0x1Ad3354B2E7C0F7D5A370a03CAf439DD345437a9 |
+| mTWTR  | not deployed | 0x5C4273b1B20112321f0951D0bC2d5eD40c800226 |
+| mMSFT  | not deployed | 0xE4f2C30E938c24ee874dfDFAb20fFFBA81323457 |
+| mAMZN  | not deployed | 0xfBC94545AD2ff3F7B009258FB43F2EAb46744767 |
+| mBABA  | not deployed | 0xFc78bf14Dc997e681dAc4b4D811B45026d04123F |
+| mIAU   | not deployed | 0xeff3b95faC30230D30F8c8222670A3812D79857B |
+| mSLV   | not deployed | 0x662DDF725F5BDE9b31BBD16793Fd0c234F67979B |
+| mUSO   | not deployed | 0x5D428492846bd05D8137e56Fe806D28606453cbf |
+| mVIXY  | not deployed | 0x57986628daaDC418E09A2917D6c8b793B7dC1ACD |
+
 ## Terra Denoms and Contracts
 
 | asset  | mainnet                                      | tequila-0004                                 |
@@ -69,12 +93,16 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
 
 ## How it works
 
-### Terra => Ethereum
+### Terra => Ethereum or BSC
 Transfer KRT to the TerraShuttle address with memo(=`0xEthereumAddress`)
 
-TerraShuttle addresses:
+[Ethereum] TerraShuttle addresses:
    * [mainnet] `terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc`
    * [tequila-0004] `terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3`
+
+[BSC] TerraShuttle addresses:
+   * [mainnet] `not deployed`
+   * [tequila-0004] `terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r`
 
 Ex)
 
@@ -88,8 +116,11 @@ Ex)
 
    https://ropsten.etherscan.io/tx/0xe396fcf652429d6909d87057494b7836c5bbd7a7fed998d5e1b43f82eff0c80b
  
+* BSC Tx: 
+  
+   https://testnet.bscscan.com/tx/0xa05dd296b93cf46697d39fd8c9552b22d353ea4d28a0dbc5f90725166d1b3f16
 
-### Ethereum => Terra
+### Ethereum or BSC => Terra
 
 > Shuttle waits 7 block confirmations before relaying a tx.
 
@@ -103,6 +134,10 @@ Ex)
 * Ethereum Tx: 
 
    https://ropsten.etherscan.io/tx/0xfb81d0b8dbd7742a516a7b8c2ac3b146c1c43b2992a64cb33b006b7c66eafa85
+
+* BSC Tx:
+
+   https://testnet.bscscan.com/tx/0xae92ac95b5143886df56bfe76cb521ec52f8bbdefe20a01164e2fa8c00944e37
 
 * Terra Tx:
 

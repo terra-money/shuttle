@@ -88,6 +88,34 @@ module.exports = {
       timeoutBlocks: 200, // # of blocks before a deployment times out  (minimum/default: 50)
       skipDryRun: true, // Skip dry run before migrations? (default: false for public nets )
       networkCheckTimeout: 1000000000,
+    },
+    bsc_testnet: {
+      provider: () =>
+        new HDWalletProvider(
+          process.env.MNEMONIC,
+          `https://data-seed-prebsc-1-s1.binance.org:8545`,
+          process.env.MNEMONIC_INDEX
+        ),
+      network_id: 97,
+      gas: 5500000,
+      confirmations: 0,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+      networkCheckTimeout: 1000000000,
+    },
+    bsc: {
+      provider: () =>
+        new HDWalletProvider(
+          process.env.MNEMONIC,
+          `https://bsc-dataseed.binance.org/`,
+          process.env.MNEMONIC_INDEX
+        ),
+      network_id: 56,
+      gas: 5500000,
+      confirmations: 0,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+      networkCheckTimeout: 1000000000,
     }
     // Useful for private networks
     // private: {
@@ -116,10 +144,9 @@ module.exports = {
       // }
     },
   },
-  plugins: [
-    'truffle-plugin-verify'
-  ],
+  plugins: ["truffle-plugin-verify"],
   api_keys: {
-    etherscan: 'NSBZ55CDQJNN6MKESSXFJWWPYWCM9E6NE3'
-  }
+    etherscan: "NSBZ55CDQJNN6MKESSXFJWWPYWCM9E6NE3",
+    bscscan: "DEK3CQ5SX9UKVMYJTSI3JY7ITMA5HC3I6B",
+  },
 };

@@ -10,7 +10,10 @@ BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 import { Monitoring, MonitoringData } from './Monitoring';
 import Relayer from './Relayer';
 
-const REDIS_PREFIX = 'eth_shuttle';
+const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
+
+// skip chain-id prefix for mainnet
+const REDIS_PREFIX = 'eth_shuttle' + ETH_CHAIN_ID.replace('mainnet', '');
 const KEY_LAST_HEIGHT = 'last_height';
 
 const REDIS_URL = process.env.REDIS_URL as string;
