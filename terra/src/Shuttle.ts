@@ -25,6 +25,7 @@ const TERRA_BLOCK_SECOND = parseInt(process.env.TERRA_BLOCK_SECOND as string);
 const REDIS_URL = process.env.REDIS_URL as string;
 
 const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
+const SLACK_NOTI_ASSET = process.env.SLACK_NOTI_ASSET;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 
 const ax = axios.create({
@@ -220,7 +221,7 @@ function buildSlackNotification(
   resultTxHash: string
 ): { text: string } {
   let notification = '```';
-  notification += `[${SLACK_NOTI_NETWORK}] TERRA => ETH\n`;
+  notification += `[${SLACK_NOTI_NETWORK}] ${SLACK_NOTI_ASSET}\n`;
   notification += `Sender: ${data.sender}\n`;
   notification += `To:     ${data.to}\n`;
   notification += `\n`;
