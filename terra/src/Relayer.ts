@@ -7,6 +7,7 @@ import HDWalletProvider from '@truffle/hdwallet-provider';
 const ETH_MNEMONIC = process.env.ETH_MNEMONIC as string;
 const ETH_URL = process.env.ETH_URL as string;
 const ETH_DONATION = process.env.ETH_DONATION as string;
+const ETH_GAS_PRICE = process.env.ETH_GAS_PRICE as string;
 
 export interface RelayData {
   transactionConfig: TransactionConfig;
@@ -59,7 +60,7 @@ export class Relayer {
       to: contractAddr,
       value: '0',
       gas: 100000,
-      gasPrice: '75000000000',
+      gasPrice: ETH_GAS_PRICE,
       data,
       nonce,
     };
