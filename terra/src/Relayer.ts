@@ -3,11 +3,11 @@ import Web3 from 'web3';
 import { TransactionConfig, Transaction } from 'web3-core';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 import HDWalletProvider from '@truffle/hdwallet-provider';
+import BigNumber from 'bignumber.js';
 
 const ETH_MNEMONIC = process.env.ETH_MNEMONIC as string;
 const ETH_URL = process.env.ETH_URL as string;
 const ETH_DONATION = process.env.ETH_DONATION as string;
-const ETH_GAS_PRICE = process.env.ETH_GAS_PRICE as string;
 
 export interface RelayData {
   transactionConfig: TransactionConfig;
@@ -40,7 +40,8 @@ export class Relayer {
 
   async build(
     monitoringData: MonitoringData,
-    nonce: number
+    nonce: number,
+    gasPrice: string
   ): Promise<RelayData> {
     // Check the address is valid
     let recipient = monitoringData.to;
@@ -60,7 +61,7 @@ export class Relayer {
       to: contractAddr,
       value: '0',
       gas: 100000,
-      gasPrice: ETH_GAS_PRICE,
+      gasPrice,
       data,
       nonce,
     };
@@ -78,6 +79,30 @@ export class Relayer {
     };
   }
 
+  async increaseGasPrice(
+    relayData: RelayData,
+    targetGasPrice: BigNumber
+  ): Promise<RelayData> {
+    if (
+      targetGasPrice >
+      new BigNumber(
+        relayData.transactionConfig.gasPrice as string
+      ).multipliedBy(1.1)
+    ) {
+      relayData.transactionConfig.gasPrice = targetGasPrice.toFixed(0);
+
+      const signedTransaction = await this.web3.eth.signTransaction(
+        relayData.transactionConfig
+      );
+
+      relayData.txHash = this.web3.utils.sha3(signedTransaction.raw) as string;
+      relayData.signedTxData = signedTransaction.raw;
+      relayData.createdAt = new Date().getTime();
+    }
+
+    return relayData;
+  }
+
   relay(relayData: RelayData): Promise<string> {
     return new Promise((resolve, reject) => {
       this.web3.eth
@@ -85,6 +110,10 @@ export class Relayer {
         .on('transactionHash', resolve)
         .on('error', reject);
     });
+  }
+
+  getGasPrice(): Promise<string> {
+    return this.web3.eth.getGasPrice();
   }
 
   getTransaction(txHash: string): Promise<Transaction> {

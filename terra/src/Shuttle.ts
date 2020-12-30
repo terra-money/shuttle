@@ -41,6 +41,7 @@ class Shuttle {
   setAsync: (key: string, val: string) => Promise<unknown>;
   delAsync: (key: string) => Promise<unknown>;
   llenAsync: (key: string) => Promise<number>;
+  lsetAsync: (key: string, index: number, val: string) => Promise<unknown>;
   lrangeAsync: (
     key: string,
     start: number,
@@ -63,6 +64,7 @@ class Shuttle {
     this.setAsync = promisify(redisClient.set).bind(redisClient);
     this.delAsync = promisify(redisClient.del).bind(redisClient);
     this.llenAsync = promisify(redisClient.llen).bind(redisClient);
+    this.lsetAsync = promisify(redisClient.lset).bind(redisClient);
     this.lrangeAsync = promisify(redisClient.lrange).bind(redisClient);
     this.lremAsync = promisify(redisClient.lrem).bind(redisClient);
     this.rpushAsync = promisify(redisClient.rpush).bind(redisClient);
@@ -150,9 +152,18 @@ class Shuttle {
       }
     }
 
+    // load latest gas price
+    const gasPrice = new BigNumber(await this.relayer.getGasPrice())
+      .multipliedBy(1.2)
+      .toFixed(0);
+
     for (; i < monitoringDatas.length; i++) {
       const monitoringData = monitoringDatas[i];
-      const relayData = await this.relayer.build(monitoringData, this.nonce++);
+      const relayData = await this.relayer.build(
+        monitoringData,
+        this.nonce++,
+        gasPrice
+      );
 
       await this.rpushAsync(KEY_QUEOE_TX, JSON.stringify(relayData));
       await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
@@ -193,26 +204,47 @@ class Shuttle {
     }
 
     const relayDatas =
-      (await this.lrangeAsync(KEY_QUEOE_TX, 0, Math.min(4, len))) || [];
+      (await this.lrangeAsync(KEY_QUEOE_TX, 0, Math.min(10, len))) || [];
 
-    return Bluebird.mapSeries(relayDatas, async (data) => {
+    const targetGasPrice = new BigNumber(
+      await this.relayer.getGasPrice()
+    ).multipliedBy(1.2);
+
+    await Bluebird.mapSeries(relayDatas, async (data, idx) => {
       const relayData: RelayData = JSON.parse(data);
       const tx = await this.relayer.getTransaction(relayData.txHash);
 
-      if (tx !== null) {
-        // tx found in mempool, remove it
-        await this.lremAsync(KEY_QUEOE_TX, 1, data);
-      } else if (tx === null) {
+      if (tx === null || tx.blockNumber === null) {
         if (now - relayData.createdAt > 1000 * 60) {
-          // tx not found in the mempool, rebroadcast tx
-          await this.relayer.relay(relayData).catch((err) => {
+          // tx not found in the mempool or block,
+          // rebroadcast tx with increased gas price
+          const newRelayData = await this.relayer.increaseGasPrice(
+            relayData,
+            targetGasPrice
+          );
+
+          // change the data to new info
+          await this.lsetAsync(KEY_QUEOE_TX, idx, JSON.stringify(newRelayData));
+          await this.relayer.relay(newRelayData).catch(async (err) => {
             // In somecase, there are possibilities
             // that tx is found during rebroadcast
-            if (err.message !== 'already known') throw err;
+            if (
+              err.message === 'already known' ||
+              err.message === 'nonce too low'
+            ) {
+              await this.lsetAsync(KEY_QUEOE_TX, idx, 'DELETE');
+            } else {
+              throw err;
+            }
           });
         }
+      } else {
+        // tx found in block, remove it
+        await this.lsetAsync(KEY_QUEOE_TX, idx, 'DELETE');
       }
     });
+
+    await this.lremAsync(KEY_QUEOE_TX, 10, 'DELETE');
   }
 }
 
