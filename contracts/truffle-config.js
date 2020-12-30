@@ -107,7 +107,7 @@ module.exports = {
       provider: () =>
         new HDWalletProvider(
           process.env.MNEMONIC,
-          `https://bsc-dataseed.binance.org/`,
+          `https://bsc-dataseed1.binance.org/`,
           process.env.MNEMONIC_INDEX
         ),
       network_id: 56,
