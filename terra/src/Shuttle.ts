@@ -31,7 +31,7 @@ const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 const ax = axios.create({
   httpAgent: new http.Agent({ keepAlive: true }),
   httpsAgent: new https.Agent({ keepAlive: true }),
-  timeout: 15000,
+  timeout: 30000,
 });
 
 class Shuttle {
