@@ -69,11 +69,13 @@ class Shuttle {
 
         // notify to slack
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
-          const { data } = await ax.post(SLACK_WEB_HOOK, {
-            text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`,
-          });
-
-          console.info(`Notify Error to Slack: ${data}`);
+          await ax
+            .post(SLACK_WEB_HOOK, {
+              text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`,
+            })
+            .catch(() => {
+              console.error('Slack Notification Error');
+            });
         }
 
         // sleep 1 minute after error
@@ -103,10 +105,14 @@ class Shuttle {
 
       // Notify to slack
       if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
-        await ax.post(
-          SLACK_WEB_HOOK,
-          this.buildSlackNotification(monitoringDatas, txhash)
-        );
+        await ax
+          .post(
+            SLACK_WEB_HOOK,
+            this.buildSlackNotification(monitoringDatas, txhash)
+          )
+          .catch(() => {
+            console.error('Slack Notification Error');
+          });
       }
 
       if (txhash.length !== 0) {

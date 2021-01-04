@@ -107,11 +107,11 @@ class Shuttle {
         }
 
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
-          const { data } = await ax.post(SLACK_WEB_HOOK, {
+          await ax.post(SLACK_WEB_HOOK, {
             text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`,
+          }).catch(() => {
+            console.error('Slack Notification Error');
           });
-
-          console.info(`Notify Error to Slack: ${data}`);
         }
 
         // sleep 60s after error
@@ -174,7 +174,9 @@ class Shuttle {
         await ax.post(
           SLACK_WEB_HOOK,
           buildSlackNotification(monitoringData, relayData.txHash)
-        );
+        ).catch(() => {
+          console.error('Slack Notification Error');
+        });
       }
 
       console.info(`Relay Success: ${relayData.txHash}`);
