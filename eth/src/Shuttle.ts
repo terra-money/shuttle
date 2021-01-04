@@ -95,13 +95,13 @@ class Shuttle {
       lastHeight
     );
 
+    // Update last_height
+    await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
+    console.info(`HEIGHT: ${newLastHeight}`);
+
     // Relay to terra chain
     if (monitoringDatas.length > 0) {
       const txhash = await this.relayer.relay(monitoringDatas);
-
-      // Update last_height
-      await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
-      console.info(`HEIGHT: ${newLastHeight}`);
 
       // Notify to slack
       if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
