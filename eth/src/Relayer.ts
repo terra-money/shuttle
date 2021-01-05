@@ -8,6 +8,8 @@ import {
   AccAddress,
   isTxError,
   Coin,
+  StdTx,
+  TxInfo,
 } from '@terra-money/terra.js';
 import { MonitoringData } from 'Monitoring';
 
@@ -18,11 +20,15 @@ const TERRA_GAS_PRICE = process.env.TERRA_GAS_PRICE as string;
 const TERRA_GAS_ADJUSTMENT = process.env.TERRA_GAS_ADJUSTMENT as string;
 const TERRA_DONATION = process.env.TERRA_DONATION as string;
 
-class Relayer {
+export interface RelayData {
+  tx: StdTx;
+  txHash: string;
+  createdAt: number;
+}
+
+export class Relayer {
   Wallet: Wallet;
   LCDClient: LCDClient;
-
-  sequenceNumber: number;
 
   constructor() {
     // Register terra chain infos
@@ -33,22 +39,20 @@ class Relayer {
       gasAdjustment: TERRA_GAS_ADJUSTMENT,
     });
 
-    this.sequenceNumber = 0;
     this.Wallet = new Wallet(
       this.LCDClient,
       new MnemonicKey({ mnemonic: TERRA_MNEMONIC })
     );
   }
 
-  async adjustSequenceNumber() {
-    const sequenceNumber = await this.Wallet.sequence();
-    this.sequenceNumber =
-      this.sequenceNumber > sequenceNumber
-        ? this.sequenceNumber
-        : sequenceNumber;
+  loadSequence(): Promise<number> {
+    return this.Wallet.sequence();
   }
 
-  async relay(monitoringDatas: MonitoringData[]): Promise<string> {
+  async build(
+    monitoringDatas: MonitoringData[],
+    sequence: number
+  ): Promise<RelayData | null> {
     const msgs: Msg[] = monitoringDatas.reduce(
       (msgs: Msg[], data: MonitoringData) => {
         const fromAddr = this.Wallet.key.accAddress;
@@ -94,16 +98,24 @@ class Relayer {
     );
 
     if (msgs.length === 0) {
-      return '';
+      return null;
     }
-
-    // Adjust sequence number between local and chain
-    await this.adjustSequenceNumber();
 
     const tx = await this.Wallet.createAndSignTx({
       msgs,
-      sequence: this.sequenceNumber++,
+      sequence,
     });
+
+    const txHash = await this.LCDClient.tx.hash(tx);
+
+    return {
+      tx,
+      txHash,
+      createdAt: new Date().getTime(),
+    };
+  }
+
+  async relay(tx: StdTx): Promise<void> {
     const result = await this.LCDClient.tx.broadcastSync(tx);
 
     if (isTxError(result)) {
@@ -111,9 +123,11 @@ class Relayer {
         `Error while executing: ${result.code} - ${result.raw_log}`
       );
     }
+  }
 
-    return result.txhash;
+  async getTransaction(txHash: string): Promise<TxInfo | null> {
+    return await this.LCDClient.tx.txInfo(txHash).catch(() => {
+      return null; // ignore not found error
+    });
   }
 }
-
-export = Relayer;

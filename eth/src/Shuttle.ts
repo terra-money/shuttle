@@ -4,17 +4,20 @@ import * as http from 'http';
 import * as https from 'https';
 import { promisify } from 'util';
 import BigNumber from 'bignumber.js';
+import Bluebird from 'bluebird';
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
 import { Monitoring, MonitoringData } from './Monitoring';
-import Relayer from './Relayer';
+import { Relayer, RelayData } from './Relayer';
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 
 // skip chain-id prefix for mainnet
 const REDIS_PREFIX = 'eth_shuttle' + ETH_CHAIN_ID.replace('mainnet', '');
 const KEY_LAST_HEIGHT = 'last_height';
+const KEY_NEXT_SEQUENCE = 'next_sequence';
+const KEY_QUEUE_TX = 'queue_tx';
 
 const REDIS_URL = process.env.REDIS_URL as string;
 const ETH_BLOCK_SECOND = parseInt(process.env.ETH_BLOCK_SECOND as string);
@@ -33,6 +36,21 @@ class Shuttle {
   relayer: Relayer;
   getAsync: (key: string) => Promise<string | null>;
   setAsync: (key: string, val: string) => Promise<unknown>;
+  llenAsync: (key: string) => Promise<number>;
+  lsetAsync: (key: string, index: number, val: string) => Promise<unknown>;
+  lrangeAsync: (
+    key: string,
+    start: number,
+    stop: number
+  ) => Promise<string[] | undefined>;
+  lremAsync: (
+    key: string,
+    count: number,
+    val: string
+  ) => Promise<number | undefined>;
+  rpushAsync: (key: string, value: string) => Promise<unknown>;
+
+  sequence: number;
 
   constructor() {
     // Redis setup
@@ -40,12 +58,25 @@ class Shuttle {
 
     this.getAsync = promisify(redisClient.get).bind(redisClient);
     this.setAsync = promisify(redisClient.set).bind(redisClient);
+    this.llenAsync = promisify(redisClient.llen).bind(redisClient);
+    this.lsetAsync = promisify(redisClient.lset).bind(redisClient);
+    this.lrangeAsync = promisify(redisClient.lrange).bind(redisClient);
+    this.lremAsync = promisify(redisClient.lrem).bind(redisClient);
+    this.rpushAsync = promisify(redisClient.rpush).bind(redisClient);
 
     this.monitoring = new Monitoring();
     this.relayer = new Relayer();
+    this.sequence = 0;
   }
 
   async startMonitoring() {
+    const sequence = await this.getAsync(KEY_NEXT_SEQUENCE);
+    if (sequence && sequence !== '') {
+      this.sequence = parseInt(sequence);
+    } else {
+      this.sequence = await this.relayer.loadSequence();
+    }
+
     // Graceful shutdown
     let shutdown = false;
 
@@ -78,11 +109,11 @@ class Shuttle {
             });
         }
 
-        // sleep 1 minute after error
-        await sleep(60 * 1000);
+        // sleep 60s after error
+        await Bluebird.delay(60 * 1000);
       });
 
-      await sleep(500);
+      await Bluebird.delay(500);
     }
 
     console.info('##### Graceful Shutdown #####');
@@ -90,40 +121,85 @@ class Shuttle {
   }
 
   async process() {
+    // Check whether tx is successfully broadcasted or not
+    // If a tx is not found in a block for a long period,
+    // rebroadcast the tx with same sequence.
+    await this.checkTxQueue();
+
     const lastHeight = parseInt((await this.getAsync(KEY_LAST_HEIGHT)) || '0');
     const [newLastHeight, monitoringDatas] = await this.monitoring.load(
       lastHeight
     );
 
-    // Update last_height
-    await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
-    console.info(`HEIGHT: ${newLastHeight}`);
-
     // Relay to terra chain
     if (monitoringDatas.length > 0) {
-      const txhash = await this.relayer.relay(monitoringDatas);
+      const relayData = await this.relayer.build(
+        monitoringDatas,
+        this.sequence
+      );
 
-      // Notify to slack
-      if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
-        await ax
-          .post(
-            SLACK_WEB_HOOK,
-            this.buildSlackNotification(monitoringDatas, txhash)
-          )
-          .catch(() => {
-            console.error('Slack Notification Error');
-          });
-      }
+      if (relayData !== null) {
+        // Increase sequence number, only when tx is broadcasted
+        this.sequence++;
 
-      if (txhash.length !== 0) {
-        console.info(`Relay Success: ${txhash}`);
-      }
-    }
+        await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
+        await this.setAsync(KEY_NEXT_SEQUENCE, this.sequence.toString());
+        await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
+
+        // Notify to slack
+        if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
+          await ax
+            .post(
+              SLACK_WEB_HOOK,
+              this.buildSlackNotification(monitoringDatas, relayData.txHash)
+            )
+            .catch(() => {
+              console.error('Slack Notification Error');
+            });
+        }
+
+        console.info(`Relay Success: ${relayData.txHash}`);
+
+        // Do logging first and relay later
+        await this.relayer.relay(relayData.tx);
+      } else await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
+    } else await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
+
+    console.info(`HEIGHT: ${newLastHeight}`);
 
     // When catched the block height, wait 10 second
     if (newLastHeight === lastHeight) {
-      await sleep(ETH_BLOCK_SECOND * 1000);
+      await Bluebird.delay(ETH_BLOCK_SECOND * 1000);
     }
+  }
+
+  async checkTxQueue() {
+    const now = new Date().getTime();
+    const len = await this.llenAsync(KEY_QUEUE_TX);
+
+    if (len === 0) {
+      return;
+    }
+
+    const relayDatas =
+      (await this.lrangeAsync(KEY_QUEUE_TX, 0, Math.min(10, len))) || [];
+
+    await Bluebird.mapSeries(relayDatas, async (data, idx) => {
+      const relayData: RelayData = JSON.parse(data);
+      const tx = await this.relayer.getTransaction(relayData.txHash);
+
+      if (tx === null) {
+        if (now - relayData.createdAt > 1000 * 60) {
+          // tx not found in the block for a minute,
+          await this.relayer.relay(relayData.tx);
+        }
+      } else {
+        // tx found in a block, remove it
+        await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
+      }
+    });
+
+    await this.lremAsync(KEY_QUEUE_TX, 10, 'DELETE');
   }
 
   buildSlackNotification(
@@ -158,10 +234,6 @@ class Shuttle {
       text,
     };
   }
-}
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export = Shuttle;

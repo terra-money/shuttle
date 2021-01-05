@@ -19,7 +19,7 @@ const KEY_LAST_HEIGHT = 'last_height';
 const KEY_LAST_TXHASH = 'last_txhash';
 const KEY_NEXT_NONCE = 'next_nonce';
 
-const KEY_QUEOE_TX = 'queue_tx';
+const KEY_QUEUE_TX = 'queue_tx';
 
 const TERRA_BLOCK_SECOND = parseInt(process.env.TERRA_BLOCK_SECOND as string);
 const REDIS_URL = process.env.REDIS_URL as string;
@@ -77,11 +77,10 @@ class Shuttle {
 
   async startMonitoring() {
     const nonce = await this.getAsync(KEY_NEXT_NONCE);
-    const chainNonce = await this.relayer.loadNonce();
-    if (nonce && nonce !== '' && parseInt(nonce) >= chainNonce) {
+    if (nonce && nonce !== '') {
       this.nonce = parseInt(nonce);
     } else {
-      this.nonce = chainNonce;
+      this.nonce = await this.relayer.loadNonce();
     }
 
     // Graceful shutdown
@@ -107,11 +106,13 @@ class Shuttle {
         }
 
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
-          await ax.post(SLACK_WEB_HOOK, {
-            text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`,
-          }).catch(() => {
-            console.error('Slack Notification Error');
-          });
+          await ax
+            .post(SLACK_WEB_HOOK, {
+              text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`,
+            })
+            .catch(() => {
+              console.error('Slack Notification Error');
+            });
         }
 
         // sleep 60s after error
@@ -127,7 +128,7 @@ class Shuttle {
 
   async process() {
     // Check whether tx is successfully broadcasted or not
-    // If a tx is not found in the mempool for a long period,
+    // If a tx is not found in a block for a long period,
     // rebroadcast the tx with same nonce.
     await this.checkTxQueue();
 
@@ -165,18 +166,20 @@ class Shuttle {
         gasPrice
       );
 
-      await this.rpushAsync(KEY_QUEOE_TX, JSON.stringify(relayData));
+      await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
       await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
       await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
 
       // Notify to slack
       if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
-        await ax.post(
-          SLACK_WEB_HOOK,
-          buildSlackNotification(monitoringData, relayData.txHash)
-        ).catch(() => {
-          console.error('Slack Notification Error');
-        });
+        await ax
+          .post(
+            SLACK_WEB_HOOK,
+            buildSlackNotification(monitoringData, relayData.txHash)
+          )
+          .catch(() => {
+            console.error('Slack Notification Error');
+          });
       }
 
       console.info(`Relay Success: ${relayData.txHash}`);
@@ -199,14 +202,14 @@ class Shuttle {
 
   async checkTxQueue() {
     const now = new Date().getTime();
-    const len = await this.llenAsync(KEY_QUEOE_TX);
+    const len = await this.llenAsync(KEY_QUEUE_TX);
 
     if (len === 0) {
       return;
     }
 
     const relayDatas =
-      (await this.lrangeAsync(KEY_QUEOE_TX, 0, Math.min(10, len))) || [];
+      (await this.lrangeAsync(KEY_QUEUE_TX, 0, Math.min(10, len))) || [];
 
     const targetGasPrice = new BigNumber(
       await this.relayer.getGasPrice()
@@ -226,7 +229,7 @@ class Shuttle {
           );
 
           // change the data to new info
-          await this.lsetAsync(KEY_QUEOE_TX, idx, JSON.stringify(newRelayData));
+          await this.lsetAsync(KEY_QUEUE_TX, idx, JSON.stringify(newRelayData));
           await this.relayer.relay(newRelayData).catch(async (err) => {
             // In somecase, there are possibilities
             // that tx is found during rebroadcast
@@ -234,7 +237,7 @@ class Shuttle {
               err.message === 'already known' ||
               err.message === 'nonce too low'
             ) {
-              await this.lsetAsync(KEY_QUEOE_TX, idx, 'DELETE');
+              await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
             } else {
               throw err;
             }
@@ -242,11 +245,11 @@ class Shuttle {
         }
       } else {
         // tx found in block, remove it
-        await this.lsetAsync(KEY_QUEOE_TX, idx, 'DELETE');
+        await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
       }
     });
 
-    await this.lremAsync(KEY_QUEOE_TX, 10, 'DELETE');
+    await this.lremAsync(KEY_QUEUE_TX, 10, 'DELETE');
   }
 }
 
