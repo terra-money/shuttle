@@ -147,7 +147,7 @@ The following `StdTx` sends 100 LUNA from `terra1rk6tvacasnnyssfnn00zl7wz43pjnpn
 
 #### CW20 Tokens
 
-mAssets and the MIR token must be sent differently by calling the token contract using a `MsgExecuteContract` to send the message.
+mAssets and the MIR token must be sent differently by calling the token contract using a `MsgExecuteContract`.
 
 **HandleMsg JSON:**
 
