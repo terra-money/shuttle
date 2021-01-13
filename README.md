@@ -2,23 +2,26 @@
 
 ![Shuttle Banner](/resources/banner.png)
 
-Shuttle is a Terra to Ethereum bridge. Currently unidirectional (Terra assets to Ethereum only), and only supports the transfer of [whitelisted](#erc20-contracts) assets.   
+Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sent between Terra and Ethereum networks, and only supports the transfer of [whitelisted](#erc20-contracts) assets.
 
 ## Table of Contents
+
 - [Shuttle Bridge](#shuttle-bridge)
   - [Table of Contents](#table-of-contents)
   - [Components](#components)
   - [ERC20 Contracts](#erc20-contracts)
+  - [ERC20 Contracts on BSC (Binance Smart Chain)](#erc20-contracts-on-bsc-binance-smart-chain)
   - [Terra Denoms and Contracts](#terra-denoms-and-contracts)
-  - [How it works](#how-it-works)
-    - [Terra => Ethereum](#terra--ethereum)
-    - [Ethereum => Terra](#ethereum--terra)
+  - [Usage Instructions](#usage-instructions)
+    - [Terra => Ethereum / BSC](#terra--ethereum--bsc)
+    - [Ethereum or BSC => Terra](#ethereum-or-bsc--terra)
 
 ## Components
-* [Ethereum Contracts](./contracts)
-* [Ethereum side Shuttle](./eth)
-* [Terra side Shuttle](./terra)
-  
+
+- [Ethereum Contracts](./contracts)
+- [Ethereum side Shuttle](./eth)
+- [Terra side Shuttle](./terra)
+
 ## ERC20 Contracts
 
 | asset  | mainnet                                    | ropsten                                    |
@@ -42,6 +45,30 @@ Shuttle is a Terra to Ethereum bridge. Currently unidirectional (Terra assets to
 | mSLV   | 0x9d1555d8cB3C846Bb4f7D5B1B1080872c3166676 | 0xECBe84E79bb26a7FF2474AA1b58d2696A9b5F58F |
 | mUSO   | 0x31c63146a635EB7465e5853020b39713AC356991 | 0xDF00833C87bEfA3aF5634d81BE18E9DEf2F9C7c0 |
 | mVIXY  | 0xf72FCd9DCF0190923Fadd44811E240Ef4533fc86 | 0xC1629641Cdb2D636Ae220fb759264306902c4AC0 |
+
+## ERC20 Contracts on BSC (Binance Smart Chain)
+
+| asset  | bsc                                        | bsc-testnet                                |
+| ------ | ------------------------------------------ | ------------------------------------------ |
+| LUNA   | 0xECCF35F941Ab67FfcAA9A1265C2fF88865caA005 | 0xA1B4Aa780713df91e9Fa0FAa415ce49756D81E3b |
+| UST    | 0x23396cF899Ca06c4472205fC903bDB4de249D6fC | 0x66BDf3Bd407A63eAB5eAF5eCE69f2D7bb403EfC9 |
+| KRT    | 0xfFBDB9BDCae97a962535479BB96cC2778D65F4dd | 0x59a870b16adE2A152815Ba0d4Fa074fc3F71A828 |
+| SDT    | 0x7d5f9F8CF59986743f34BC137Fc197E2e22b7B05 | 0x5e2c2088d3fB10aAb25a0D323CdBEc5147232B1a |
+| MNT    | 0x41D74991509318517226755E508695c4D1CE43a6 | 0x1449D1Ba8FB922E74F7761F077e77EAe66A0f8DA |
+| MIR    | 0x5B6DcF557E2aBE2323c48445E8CC948910d8c2c9 | 0x320106A19C934ab8dbdde8056Ebae5A6f340720e |
+| mAAPL  | 0x900AEb8c40b26A8f8DfAF283F884b03EE7Abb3Ec | 0x0dFa0F08136DA5d28618E7E31A7e24b01a95bB69 |
+| mGOOGL | 0x62D71B23bF15218C7d2D7E48DBbD9e9c650B173f | 0x56a31ea21862447E3Af9bfe76A45679E44103274 |
+| mTSLA  | 0xF215A127A196e3988C09d052e16BcFD365Cd7AA3 | 0xA2a42F0deB45ca7310a3C02A70fb569d5d5248FA |
+| mNFLX  | 0xa04F060077D90Fe2647B61e4dA4aD1F97d6649dc | 0xc6F5e6476958cA81eC8FC68A1ea7c68206b0e501 |
+| mQQQ   | 0x1Cb4183Ac708e07511Ac57a2E45A835F048D7C56 | 0x1Ad3354B2E7C0F7D5A370a03CAf439DD345437a9 |
+| mTWTR  | 0x7426Ab52A0e057691E2544fae9C8222e958b2cfB | 0x5C4273b1B20112321f0951D0bC2d5eD40c800226 |
+| mMSFT  | 0x0ab06caa3Ca5d6299925EfaA752A2D2154ECE929 | 0xE4f2C30E938c24ee874dfDFAb20fFFBA81323457 |
+| mAMZN  | 0x3947B992DC0147D2D89dF0392213781b04B25075 | 0xfBC94545AD2ff3F7B009258FB43F2EAb46744767 |
+| mBABA  | 0xcA2f75930912B85d8B2914Ad06166483c0992945 | 0xFc78bf14Dc997e681dAc4b4D811B45026d04123F |
+| mIAU   | 0x1658AeD6C7dbaB2Ddbd8f5D898b0e9eAb0305813 | 0xeff3b95faC30230D30F8c8222670A3812D79857B |
+| mSLV   | 0x211e763d0b9311c08EC92D72DdC20AB024b6572A | 0x662DDF725F5BDE9b31BBD16793Fd0c234F67979B |
+| mUSO   | 0x9cDDF33466cE007676C827C76E799F5109f1843C | 0x5D428492846bd05D8137e56Fe806D28606453cbf |
+| mVIXY  | 0x92E744307694Ece235cd02E82680ec37c657D23E | 0x57986628daaDC418E09A2917D6c8b793B7dC1ACD |
 
 ## Terra Denoms and Contracts
 
@@ -67,43 +94,135 @@ Shuttle is a Terra to Ethereum bridge. Currently unidirectional (Terra assets to
 | mUSO   | terra1lvmx8fsagy70tv0fhmfzdw9h6s3sy4prz38ugf | terra1fucmfp8x4mpzsydjaxyv26hrkdg4vpdzdvf647 |
 | mVIXY  | terra1zp3a6q6q4953cz376906g5qfmxnlg77hx3te45 | terra1z0k7nx0vl85hwpv3e3hu2cyfkwq07fl7nqchvd |
 
-## How it works
+## Usage Instructions
 
-### Terra => Ethereum
-Transfer KRT to the TerraShuttle address with memo(=`0xEthereumAddress`)
+**NOTE:** Only assets recognized (listed above) can be used with Shuttle. Sending an asset not mentioned in this document will result in permanent loss of funds.
 
-TerraShuttle addresses:
-   * [mainnet] `terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc`
-   * [tequila-0004] `terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3`
+### Terra => Ethereum / BSC
 
-Ex)
+To transfer an asset from Terra to Ethereum or BSC using Shuttle, send the asset to the Shuttle address inside a transaction whose memo field is set to the recipient address on the destination chain.
 
-* Terra Tx: 
+Use the table below to find the corresponding Shuttle address for your source and destination chain pair.
 
-   https://finder.terra.money/tequila-0004/tx/F265D79EB847ED76A7BEB467990EDCAB07D2A4F706767E36CFF5AEFB3427AAAC
+| Source Chain (Terra) | Desination Chain           | Shuttle Address                                                                                                                              |
+| -------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `columbus-4`         | Ethereum Mainnet           | [terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc](https://finder.terra.money/columbus-4/address/terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc)   |
+| `columbus-4`         | BSC Mainnet                | [terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2](https://finder.terra.money/columbus-4/address/terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2)   |
+| `tequila-0004`       | Ethereum Testnet (Ropsten) | [terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3](https://finder.terra.money/tequila-0004/address/terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3) |
+| `tequila-0004`       | BSC Testnet                | [terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r](https://finder.terra.money/tequila-0004/address/terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r) |
 
-   https://tequila-lcd.terra.dev/txs/F265D79EB847ED76A7BEB467990EDCAB07D2A4F706767E36CFF5AEFB3427AAAC
+#### Native Assets
 
-* Ethereum Tx: 
+To transfer native Terra assets such as LUNA, UST, KRT, etc. create a `MsgSend` message where the recipient is set to the proper Shuttle address.
 
-   https://ropsten.etherscan.io/tx/0xe396fcf652429d6909d87057494b7836c5bbd7a7fed998d5e1b43f82eff0c80b
- 
+**Example Transaction containing `MsgSend`:**
 
-### Ethereum => Terra
+The following `StdTx` sends 100 LUNA from `terra1rk6tvacasnnyssfnn00zl7wz43pjnpn7vayqv6` on `columbus-4` to `0x320BC76961fB4e2A0e2E86D43d4b9D13B4985b8f` on Ethereum mainnet through the mainnet Shuttle.
+
+```json
+{
+  "type": "core/StdTx",
+  "value": {
+    "msg": [
+      {
+        "type": "bank/MsgSend",
+        "value": {
+          "from_address": "terra1rk6tvacasnnyssfnn00zl7wz43pjnpn7vayqv6",
+          "to_address": "terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3",
+          "amount": [
+            {
+              "denom": "uluna",
+              "amount": "100000000"
+            }
+          ]
+        }
+      }
+    ],
+    "fee": { ... },
+    "signatures": [ ... ],
+    "memo": "0x320BC76961fB4e2A0e2E86D43d4b9D13B4985b8f"
+  }
+}
+```
+
+#### CW20 Tokens
+
+mAssets and the MIR token must be sent differently by calling the token contract using a `MsgExecuteContract` to send the message.
+
+**HandleMsg JSON:**
+
+The recipient must be set to the appropriate Shuttle address for source/destination chain pair:
+
+```json
+{
+  "transfer": {
+    "recipient": "terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc",
+    "amount": "100000000"
+  }
+}
+```
+
+**Transaction containing MsgExecuteContract**:
+
+The following transaction send 100 MIR tokens from `terra1rk6tvacasnnyssfnn00zl7wz43pjnpn7vayqv6` on `columbus-4` to `0x320BC76961fB4e2A0e2E86D43d4b9D13B4985b8f` on Ethereum mainnet.
+
+```json
+{
+  "type": "core/StdTx",
+  "value": {
+    "msg": [
+      {
+        "type": "wasm/MsgExecuteContract",
+        "value": {
+          "sender": "terra1rk6tvacasnnyssfnn00zl7wz43pjnpn7vayqv6",
+          "contract": "terra15gwkyepfc6xgca5t5zefzwy42uts8l2m4g40k6",
+          "execute_msg": "ewogICJ0cmFuc2ZlciI6IHsKICAgICJyZWNpcGllbnQiOiAidGVycmExM3l4aHJrMDhxdmRmNXpkYzlzczVtd3NnNXNmN3p2YTl4cmd3Z2MiLAogICAgImFtb3VudCI6ICIxMDAwMDAwMDAiCiAgfQp9",
+          "coins": []
+        }
+      }
+    ],
+    "fee": { ... },
+    "signatures": [ ... ],
+    "memo": "0x320BC76961fB4e2A0e2E86D43d4b9D13B4985b8f"
+  }
+}
+```
+
+Exampe transactions:
+
+- Terra Tx:
+
+  https://finder.terra.money/tequila-0004/tx/F265D79EB847ED76A7BEB467990EDCAB07D2A4F706767E36CFF5AEFB3427AAAC
+
+  https://tequila-lcd.terra.dev/txs/F265D79EB847ED76A7BEB467990EDCAB07D2A4F706767E36CFF5AEFB3427AAAC
+
+- Ethereum Tx:
+
+  https://ropsten.etherscan.io/tx/0xe396fcf652429d6909d87057494b7836c5bbd7a7fed998d5e1b43f82eff0c80b
+
+- BSC Tx:
+
+  https://testnet.bscscan.com/tx/0xa05dd296b93cf46697d39fd8c9552b22d353ea4d28a0dbc5f90725166d1b3f16
+
+### Ethereum or BSC => Terra
 
 > Shuttle waits 7 block confirmations before relaying a tx.
 
-Execute `burn(uint256 amount, bytes32 to)` with bech32 decoded terra address 
- `burn('1000000000000000000', '0x890d71d9e7031a9a09b82c214dba08a413e133a5000000000000000000000000')`.
+Execute `burn(uint256 amount, bytes32 to)` with bech32 decoded terra address
+`burn('1000000000000000000', '0x890d71d9e7031a9a09b82c214dba08a413e133a5000000000000000000000000')`.
 
-Terra address has 20bytes constant length, so it implies `burn('amount', 'unbech32(TerraAddress)' + '0' * 24)`. 
+Terra address has 20 bytes constant length, so it implies `burn('amount', 'unbech32(TerraAddress)' + '0' * 24)`.
 
-Ex) 
+Ex)
 
-* Ethereum Tx: 
+- Ethereum Tx:
 
-   https://ropsten.etherscan.io/tx/0xfb81d0b8dbd7742a516a7b8c2ac3b146c1c43b2992a64cb33b006b7c66eafa85
+  https://ropsten.etherscan.io/tx/0xfb81d0b8dbd7742a516a7b8c2ac3b146c1c43b2992a64cb33b006b7c66eafa85
 
-* Terra Tx:
+- BSC Tx:
 
-   https://finder.terra.money/tequila-0004/tx/AE2325AC4B5193ABD0CEB8A6708070A0D5C481264755313E23B854FF8005EFAC
+  https://testnet.bscscan.com/tx/0xae92ac95b5143886df56bfe76cb521ec52f8bbdefe20a01164e2fa8c00944e37
+
+- Terra Tx:
+
+  https://finder.terra.money/tequila-0004/tx/AE2325AC4B5193ABD0CEB8A6708070A0D5C481264755313E23B854FF8005EFAC
