@@ -3,7 +3,7 @@ import * as http from 'http';
 import * as https from 'https';
 import OracleInfos from './config/OracleInfos';
 
-const UPDATE_INTERVAL = 3600 * 1000; // 1 hour
+const UPDATE_INTERVAL = 6 * 60 * 60 * 1000; // 6 hour
 const QUOTE_TICKER = process.env.FEE_QUOTE_TICKER as string;
 const FIXER_API_KEY = process.env.FIXER_API_KEY as string;
 const POLYGON_API_KEY = process.env.POLYGON_API_KEY as string;
