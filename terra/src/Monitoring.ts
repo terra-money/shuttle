@@ -142,7 +142,7 @@ export class Monitoring {
             const minFee = FEE_MIN_AMOUNT.dividedBy(price);
 
             // Skip logging or other actions for tiny amount transaction
-            if (requested < minFee) {
+            if (requested.lte(minFee)) {
               continue;
             }
 
