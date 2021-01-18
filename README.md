@@ -14,7 +14,10 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
   - [Terra Denoms and Contracts](#terra-denoms-and-contracts)
   - [Usage Instructions](#usage-instructions)
     - [Terra => Ethereum / BSC](#terra--ethereum--bsc)
+      - [Native Assets](#native-assets)
+      - [CW20 Tokens](#cw20-tokens)
     - [Ethereum / BSC => Terra](#ethereum--bsc--terra)
+  - [Relaying Fee](#relaying-fee)
 
 ## Components
 
@@ -226,3 +229,7 @@ Ex)
 - Terra Tx:
 
   https://finder.terra.money/tequila-0004/tx/AE2325AC4B5193ABD0CEB8A6708070A0D5C481264755313E23B854FF8005EFAC
+
+
+## Relaying Fee
+Shuttle charges a fee only for transferring assets from Terra to Ethereum, and the quantity is calculated as `max($1, 0.1% * amount)`. **A transaction with tiny amount smaller than $1 value will be ignored.**
