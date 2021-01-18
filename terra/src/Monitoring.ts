@@ -142,26 +142,24 @@ export class Monitoring {
             const minFee = FEE_MIN_AMOUNT.dividedBy(price);
 
             // Skip logging or other actions for tiny amount transaction
-            if (requested.lte(minFee)) {
-              continue;
+            if (requested.gt(minFee)) {
+              // Enforce minimum fee
+              let fee = requested.multipliedBy(FEE_RATE);
+              fee = fee < minFee ? minFee : fee;
+
+              const amount = requested.minus(fee);
+              monitoringDatas.push({
+                blockNumber,
+                txHash,
+                sender,
+                to,
+                requested: requested.toFixed(0),
+                amount: amount.toFixed(0),
+                fee: fee.toFixed(0),
+                asset,
+                contractAddr: this.EthContracts[asset],
+              });
             }
-
-            // Enforce minimum fee
-            let fee = requested.multipliedBy(FEE_RATE);
-            fee = fee < minFee ? minFee : fee;
-
-            const amount = requested.minus(fee);
-            monitoringDatas.push({
-              blockNumber,
-              txHash,
-              sender,
-              to,
-              requested: requested.toFixed(0),
-              amount: amount.toFixed(0),
-              fee: fee.toFixed(0),
-              asset,
-              contractAddr: this.EthContracts[asset],
-            });
           }
         }
       }
@@ -187,20 +185,30 @@ export class Monitoring {
             const to = tx.tx.memo;
 
             const requested = new BigNumber(transferMsg['amount']);
-            const fee = requested.multipliedBy(FEE_RATE);
-            const amount = requested.minus(fee);
 
-            monitoringDatas.push({
-              blockNumber,
-              txHash,
-              sender,
-              to,
-              requested: requested.toFixed(0),
-              amount: amount.toFixed(0),
-              fee: fee.toFixed(0),
-              asset,
-              contractAddr: this.EthContracts[asset],
-            });
+            // Compute minimum fee with oracle price
+            const price = await this.oracle.getPrice(asset);
+            const minFee = FEE_MIN_AMOUNT.dividedBy(price);
+
+            // Skip logging or other actions for tiny amount transaction
+            if (requested.gt(minFee)) {
+              // Enforce minimum fee
+              let fee = requested.multipliedBy(FEE_RATE);
+              fee = fee < minFee ? minFee : fee;
+
+              const amount = requested.minus(fee);
+              monitoringDatas.push({
+                blockNumber,
+                txHash,
+                sender,
+                to,
+                requested: requested.toFixed(0),
+                amount: amount.toFixed(0),
+                fee: fee.toFixed(0),
+                asset,
+                contractAddr: this.EthContracts[asset],
+              });
+            }
           }
         }
       }
