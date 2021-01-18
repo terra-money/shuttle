@@ -8,7 +8,7 @@ import {
 import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
 import BigNumber from 'bignumber.js';
-import Oracle from 'Oracle';
+import Oracle from './Oracle';
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
