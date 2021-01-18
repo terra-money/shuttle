@@ -32,9 +32,7 @@ jobs:
     container: "node:14"
 
     steps:
-      - name: Test
+      - name: Install
         uses: actions/checkout@v2
       - run: npm install
-        working-directory: terra
-      - run: npm run test
         working-directory: terra
