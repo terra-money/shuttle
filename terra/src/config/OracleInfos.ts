@@ -20,7 +20,7 @@ const oracleInfos: {
     type: 'forex',
   },
   SDT: {
-    ticker: 'SDR',
+    ticker: 'XDR',
     type: 'forex',
   },
   MNT: {
