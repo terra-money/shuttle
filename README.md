@@ -14,7 +14,7 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
   - [Terra Denoms and Contracts](#terra-denoms-and-contracts)
   - [Usage Instructions](#usage-instructions)
     - [Terra => Ethereum / BSC](#terra--ethereum--bsc)
-    - [Ethereum or BSC => Terra](#ethereum-or-bsc--terra)
+    - [Ethereum / BSC => Terra](#ethereum--bsc--terra)
 
 ## Components
 
@@ -147,7 +147,7 @@ The following `StdTx` sends 100 LUNA from `terra1rk6tvacasnnyssfnn00zl7wz43pjnpn
 
 #### CW20 Tokens
 
-mAssets and the MIR token must be sent differently by calling the token contract using a `MsgExecuteContract` to send the message.
+mAssets and the MIR token must be sent differently by calling the token contract using a `MsgExecuteContract`.
 
 **HandleMsg JSON:**
 
@@ -204,7 +204,7 @@ Exampe transactions:
 
   https://testnet.bscscan.com/tx/0xa05dd296b93cf46697d39fd8c9552b22d353ea4d28a0dbc5f90725166d1b3f16
 
-### Ethereum or BSC => Terra
+### Ethereum / BSC => Terra
 
 > Shuttle waits 7 block confirmations before relaying a tx.
 
