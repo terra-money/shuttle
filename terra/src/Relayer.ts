@@ -30,8 +30,8 @@ export class Relayer {
     provider.engine.stop();
     web3.setProvider(provider);
 
-    this.fromAddress = provider.getAddress();
     this.web3 = web3;
+    this.fromAddress = provider.getAddress();
   }
 
   loadNonce(): Promise<number> {

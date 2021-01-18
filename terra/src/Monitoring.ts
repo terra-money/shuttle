@@ -8,10 +8,12 @@ import {
 import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
 import BigNumber from 'bignumber.js';
+import Oracle from './Oracle';
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
-const FEE_RATE = process.env.FEE_RATE as string;
+const FEE_RATE = new BigNumber(process.env.FEE_RATE as string);
+const FEE_MIN_AMOUNT = new BigNumber(process.env.FEE_MIN_AMOUNT as string);
 
 const TERRA_TRACKING_ADDR = process.env.TERRA_TRACKING_ADDR as string;
 const TERRA_TXS_LOAD_UNIT = parseInt(process.env.TERRA_TXS_LOAD_UNIT as string);
@@ -24,6 +26,7 @@ const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
 const TERRA_URL = process.env.TERRA_URL as string;
 
 export class Monitoring {
+  oracle: Oracle;
   LCDClient: LCDClient;
   TerraTrackingAddress: AccAddress;
 
@@ -34,6 +37,7 @@ export class Monitoring {
 
   constructor() {
     this.TerraTrackingAddress = TERRA_TRACKING_ADDR;
+    this.oracle = new Oracle();
     this.LCDClient = new LCDClient({
       URL: TERRA_URL,
       chainID: TERRA_CHAIN_ID,
@@ -91,7 +95,9 @@ export class Monitoring {
         limit,
       });
 
-      monitoringDatas.push(...txResult.txs.map(this.parseTx.bind(this)).flat());
+      monitoringDatas.push(
+        ...(await Promise.all(txResult.txs.map(this.parseTx.bind(this)))).flat()
+      );
 
       totalPage = txResult.page_total;
     } while (page++ < totalPage);
@@ -99,7 +105,7 @@ export class Monitoring {
     return [targetHeight, monitoringDatas];
   }
 
-  parseTx(tx: TxInfo): MonitoringData[] {
+  async parseTx(tx: TxInfo): Promise<MonitoringData[]> {
     const monitoringDatas: MonitoringData[] = [];
 
     // Skip when tx is failed
@@ -126,26 +132,31 @@ export class Monitoring {
         const sender = data.value.from_address;
         const to = tx.tx.memo;
 
-        data.value.amount.forEach((coin) => {
+        for (const coin of data.value.amount) {
           if (coin.denom in this.TerraAssetMapping) {
             const asset = this.TerraAssetMapping[coin.denom];
             const requested = new BigNumber(coin.amount);
-            const fee = requested.multipliedBy(FEE_RATE);
-            const amount = requested.minus(fee);
 
-            monitoringDatas.push({
-              blockNumber,
-              txHash,
-              sender,
-              to,
-              requested: requested.toFixed(0),
-              amount: amount.toFixed(0),
-              fee: fee.toFixed(0),
-              asset,
-              contractAddr: this.EthContracts[asset],
-            });
+            // Compute fee with minimum fee consideration
+            const fee = await this.computeFee(asset, requested);
+
+            // Skip logging or other actions for tiny amount transaction
+            if (requested.gt(fee)) {
+              const amount = requested.minus(fee);
+              monitoringDatas.push({
+                blockNumber,
+                txHash,
+                sender,
+                to,
+                requested: requested.toFixed(0),
+                amount: amount.toFixed(0),
+                fee: fee.toFixed(0),
+                asset,
+                contractAddr: this.EthContracts[asset],
+              });
+            }
           }
-        });
+        }
       }
     } else if (msgType === 'wasm/MsgExecuteContract') {
       const data: MsgExecuteContract.Data = msgData as MsgExecuteContract.Data;
@@ -169,26 +180,44 @@ export class Monitoring {
             const to = tx.tx.memo;
 
             const requested = new BigNumber(transferMsg['amount']);
-            const fee = requested.multipliedBy(FEE_RATE);
-            const amount = requested.minus(fee);
 
-            monitoringDatas.push({
-              blockNumber,
-              txHash,
-              sender,
-              to,
-              requested: requested.toFixed(0),
-              amount: amount.toFixed(0),
-              fee: fee.toFixed(0),
-              asset,
-              contractAddr: this.EthContracts[asset],
-            });
+            // Compute fee with minimum fee consideration
+            const fee = await this.computeFee(asset, requested);
+
+            // Skip logging or other actions for tiny amount transaction
+            if (requested.gt(fee)) {
+              const amount = requested.minus(fee);
+              monitoringDatas.push({
+                blockNumber,
+                txHash,
+                sender,
+                to,
+                requested: requested.toFixed(0),
+                amount: amount.toFixed(0),
+                fee: fee.toFixed(0),
+                asset,
+                contractAddr: this.EthContracts[asset],
+              });
+            }
           }
         }
       }
     }
 
     return monitoringDatas;
+  }
+
+  async computeFee(asset: string, amount: BigNumber): Promise<BigNumber> {
+    if (FEE_MIN_AMOUNT.isZero() && FEE_RATE.isZero()) {
+      return new BigNumber(0);
+    }
+
+    const price = await this.oracle.getPrice(asset);
+
+    const fee = amount.multipliedBy(FEE_RATE);
+    const minFee = FEE_MIN_AMOUNT.dividedBy(price);
+
+    return fee < minFee ? minFee : fee;
   }
 }
 
