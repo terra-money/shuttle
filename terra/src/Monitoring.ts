@@ -137,16 +137,11 @@ export class Monitoring {
             const asset = this.TerraAssetMapping[coin.denom];
             const requested = new BigNumber(coin.amount);
 
-            // Compute minimum fee with oracle price
-            const price = await this.oracle.getPrice(asset);
-            const minFee = FEE_MIN_AMOUNT.dividedBy(price);
+            // Compute fee with minimum fee consideration
+            const fee = await this.computeFee(asset, requested);
 
             // Skip logging or other actions for tiny amount transaction
-            if (requested.gt(minFee)) {
-              // Enforce minimum fee
-              let fee = requested.multipliedBy(FEE_RATE);
-              fee = fee < minFee ? minFee : fee;
-
+            if (requested.gt(fee)) {
               const amount = requested.minus(fee);
               monitoringDatas.push({
                 blockNumber,
@@ -186,16 +181,11 @@ export class Monitoring {
 
             const requested = new BigNumber(transferMsg['amount']);
 
-            // Compute minimum fee with oracle price
-            const price = await this.oracle.getPrice(asset);
-            const minFee = FEE_MIN_AMOUNT.dividedBy(price);
+            // Compute fee with minimum fee consideration
+            const fee = await this.computeFee(asset, requested);
 
             // Skip logging or other actions for tiny amount transaction
-            if (requested.gt(minFee)) {
-              // Enforce minimum fee
-              let fee = requested.multipliedBy(FEE_RATE);
-              fee = fee < minFee ? minFee : fee;
-
+            if (requested.gt(fee)) {
               const amount = requested.minus(fee);
               monitoringDatas.push({
                 blockNumber,
@@ -215,6 +205,19 @@ export class Monitoring {
     }
 
     return monitoringDatas;
+  }
+
+  async computeFee(asset: string, amount: BigNumber): Promise<BigNumber> {
+    if (FEE_MIN_AMOUNT.isZero() && FEE_RATE.isZero()) {
+      return new BigNumber(0);
+    }
+
+    const price = await this.oracle.getPrice(asset);
+
+    const fee = amount.multipliedBy(FEE_RATE);
+    const minFee = FEE_MIN_AMOUNT.dividedBy(price);
+
+    return fee < minFee ? minFee : fee;
   }
 }
 

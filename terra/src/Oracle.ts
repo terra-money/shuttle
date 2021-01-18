@@ -57,14 +57,14 @@ class Oracle {
     }
 
     const data = this.data[asset];
-    const now = new Date().getTime();
+    const now = Date.now();
     if (data.price !== 0 && now < data.lastUpdated + UPDATE_INTERVAL) {
       return data.price;
     }
 
     const URL = this.buildURL(data.type, data.ticker);
     try {
-      const price = this.parseResposne(asset, (await ax.get(URL)).data);
+      const price = this.parseResponse(asset, (await ax.get(URL)).data);
       // Update price info
       this.data[asset].price = price;
       this.data[asset].lastUpdated = now;
@@ -76,7 +76,7 @@ class Oracle {
     }
   }
 
-  parseResposne(asset: string, response: any): number {
+  parseResponse(asset: string, response: any): number {
     const type = this.data[asset].type;
     const ticker = this.data[asset].ticker;
 
