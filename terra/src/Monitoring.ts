@@ -217,7 +217,7 @@ export class Monitoring {
     const fee = amount.multipliedBy(FEE_RATE);
     const minFee = FEE_MIN_AMOUNT.dividedBy(price);
 
-    return fee < minFee ? minFee : fee;
+    return fee.lt(minFee) ? minFee : fee;
   }
 }
 
