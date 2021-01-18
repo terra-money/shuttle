@@ -82,10 +82,10 @@ class Oracle {
 
     if (type === 'forex') {
       const rates = response['rates'];
-      const priceBase = rates[QUOTE_TICKER]; // Base / EUR
-      const priceAsset = rates[ticker]; // Asset / EUR
+      const priceQuote = rates[QUOTE_TICKER]; // EUR / QUOTE
+      const priceAsset = rates[ticker]; // EUR / Asset
 
-      return priceBase / priceAsset; // Base / Asset
+      return priceQuote / priceAsset; // Asset / QUOTE
     }
 
     if (type === 'stock') {
