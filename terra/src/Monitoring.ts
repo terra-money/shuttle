@@ -95,7 +95,9 @@ export class Monitoring {
         limit,
       });
 
-      monitoringDatas.push(...txResult.txs.map(this.parseTx.bind(this)).flat());
+      monitoringDatas.push(
+        ...(await Promise.all(txResult.txs.map(this.parseTx.bind(this)))).flat()
+      );
 
       totalPage = txResult.page_total;
     } while (page++ < totalPage);
@@ -137,7 +139,7 @@ export class Monitoring {
 
             // Compute minimum fee with oracle price
             const price = await this.oracle.getPrice(asset);
-            const minFee = FEE_MIN_AMOUNT.dividedBy(price)
+            const minFee = FEE_MIN_AMOUNT.dividedBy(price);
 
             // Skip logging or other actions for tiny amount transaction
             if (requested < minFee) {
