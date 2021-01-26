@@ -25,7 +25,7 @@ async function main() {
   });
 
   const txHash = await feeCollector.transfer(
-    collectedFees.filter((fee) => fee[0] !== '0')
+    collectedFees.filter((fee) => fee[1] !== '0')
   );
 
   console.info(`TxHash: ${txHash}`);
