@@ -13,6 +13,7 @@ import {
   MsgExecuteContract,
   isTxError,
 } from '@terra-money/terra.js';
+import prompts from 'prompts';
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
@@ -146,7 +147,7 @@ export class FeeCollector {
             {
               transfer: {
                 recipient: toAddr,
-                amount: amount,
+                amount,
               },
             },
             []
@@ -158,6 +159,16 @@ export class FeeCollector {
     }, []);
 
     if (msgs.length === 0) {
+      return null;
+    }
+
+    const response = await prompts({
+      type: 'text',
+      name: 'value',
+      message: `${JSON.stringify(msgs)}\n Broadcast [Y/N]?`,
+    });
+
+    if (response['value'] !== 'Y') {
       return null;
     }
 
