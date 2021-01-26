@@ -3,6 +3,7 @@ import { Contract, EventData } from 'web3-eth-contract';
 import { hexToBytes } from 'web3-utils';
 import bech32 from 'bech32';
 import BigNumber from 'bignumber.js';
+import BlueBird from 'bluebird';
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
@@ -131,7 +132,7 @@ async function getBlockNumber(web3: Web3, retry: number): Promise<number> {
     ) {
       console.error('infura errors happened. retry getBlockNumber');
 
-      await sleep(500);
+      await BlueBird.delay(500);
       return getBlockNumber(web3, retry - 1);
     }
 
@@ -164,16 +165,12 @@ async function getPastEvents(
       ) {
         console.error('infura errors happened. retry getPastEvents');
 
-        await sleep(500);
+        await BlueBird.delay(500);
         return getPastEvents(contract, fromBlock, toBlock, retry - 1);
       }
 
       throw err;
     });
-}
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export type TerraAssetInfo = {
