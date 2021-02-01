@@ -83,6 +83,10 @@ const oracleInfos: {
     ticker: 'VIXY',
     type: 'stock',
   },
+  aUST: {
+    ticker: 'USD',
+    type: 'forex',
+  },
 };
 
 export = oracleInfos;
