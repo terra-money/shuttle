@@ -98,3 +98,7 @@ contract WrappedmUSO is WrappedToken {
 contract WrappedmVIXY is WrappedToken {
     constructor() public WrappedToken("Wrapped Mirror VIXY Token", "mVIXY") {}
 }
+
+contract WrappedaUST is WrappedToken {
+    constructor() public WrappedToken("Wrapped Anchor UST Token", "aUST") {}
+}
