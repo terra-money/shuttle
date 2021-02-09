@@ -84,10 +84,11 @@ export class Relayer {
     targetGasPrice: BigNumber
   ): Promise<RelayData> {
     if (
-      targetGasPrice >
-      new BigNumber(
-        relayData.transactionConfig.gasPrice as string
-      ).multipliedBy(1.1)
+      targetGasPrice.gt(
+        new BigNumber(
+          relayData.transactionConfig.gasPrice as string
+        ).multipliedBy(1.1)
+      )
     ) {
       relayData.transactionConfig.gasPrice = targetGasPrice.toFixed(0);
 
