@@ -128,6 +128,7 @@ async function getBlockNumber(web3: Web3, retry: number): Promise<number> {
       retry > 0 &&
       (err.message.includes('invalid project id') ||
         err.message.includes('request failed or timed out') ||
+        err.message.includes('502 Bad Gateway') ||
         err.message.includes('Invalid JSON RPC response'))
     ) {
       console.error('infura errors happened. retry getBlockNumber');
@@ -161,6 +162,7 @@ async function getPastEvents(
           err.message.includes('invalid project id') ||
           err.message.includes('request failed or timed out') ||
           err.message.includes('unknown block') ||
+          err.message.includes('502 Bad Gateway') ||
           err.message.includes('Invalid JSON RPC response'))
       ) {
         console.error('infura errors happened. retry getPastEvents');
