@@ -101,7 +101,10 @@ class Shuttle {
         console.error(`Process failed: ${errorMsg}`);
 
         // ignore invalid project id error
-        if (errorMsg.includes('invalid project id')) {
+        if (
+          errorMsg.includes('invalid project id') ||
+          err.message.includes('502 Bad Gateway')
+        ) {
           return;
         }
 
@@ -240,7 +243,7 @@ class Shuttle {
               // Tx is in pending state; wait
               return;
             } else if (err.message === 'nonce too low') {
-              // Tx is already included; delete 
+              // Tx is already included; delete
               await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
             } else {
               // Unknown problem happend
