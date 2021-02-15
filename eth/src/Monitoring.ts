@@ -115,7 +115,7 @@ export class Monitoring {
         asset,
         terraAssetInfo: info,
       };
-    });
+    }).filter((data) => data.blockNumber >= fromBlock && data.blockNumber <= toBlock);
 
     return monitoringDatas;
   }
