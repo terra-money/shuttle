@@ -77,7 +77,7 @@ export class Monitoring {
 
     // skip no new blocks generated
     if (lastHeight >= latestHeight) {
-      return [latestHeight, []];
+      return [lastHeight, []];
     }
 
     // If initial state, we start sync from latest height
