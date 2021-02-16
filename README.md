@@ -48,6 +48,7 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
 | mSLV   | 0x9d1555d8cB3C846Bb4f7D5B1B1080872c3166676 | 0xECBe84E79bb26a7FF2474AA1b58d2696A9b5F58F |
 | mUSO   | 0x31c63146a635EB7465e5853020b39713AC356991 | 0xDF00833C87bEfA3aF5634d81BE18E9DEf2F9C7c0 |
 | mVIXY  | 0xf72FCd9DCF0190923Fadd44811E240Ef4533fc86 | 0xC1629641Cdb2D636Ae220fb759264306902c4AC0 |
+| mFB    | 0x0e99cC0535BB6251F6679Fa6E65d6d3b430e840B | 0x0Add4875eBcbD2306921e12133feB562E1cc82b4 |
 
 ## ERC20 Contracts on BSC (Binance Smart Chain)
 
@@ -72,6 +73,7 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
 | mSLV   | 0x211e763d0b9311c08EC92D72DdC20AB024b6572A | 0x662DDF725F5BDE9b31BBD16793Fd0c234F67979B |
 | mUSO   | 0x9cDDF33466cE007676C827C76E799F5109f1843C | 0x5D428492846bd05D8137e56Fe806D28606453cbf |
 | mVIXY  | 0x92E744307694Ece235cd02E82680ec37c657D23E | 0x57986628daaDC418E09A2917D6c8b793B7dC1ACD |
+| mFB    | 0x5501F4713020cf299C3C5929da549Aab3592E451 | 0x354CA25cf8eB08537f6047e9daF02Eb02222C1D5 |
 
 ## Terra Denoms and Contracts
 
@@ -96,6 +98,7 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
 | mSLV   | terra1kscs6uhrqwy6rx5kuw5lwpuqvm3t6j2d6uf2lp | terra1fdkfhgk433tar72t4edh6p6y9rmjulzc83ljuw |
 | mUSO   | terra1lvmx8fsagy70tv0fhmfzdw9h6s3sy4prz38ugf | terra1fucmfp8x4mpzsydjaxyv26hrkdg4vpdzdvf647 |
 | mVIXY  | terra1zp3a6q6q4953cz376906g5qfmxnlg77hx3te45 | terra1z0k7nx0vl85hwpv3e3hu2cyfkwq07fl7nqchvd |
+| mFB    | terra1mqsjugsugfprn3cvgxsrr8akkvdxv2pzc74us7 | terra14gq9wj0tt6vu0m4ec2tkkv4ln3qrtl58lgdl2c |
 
 ## Usage Instructions
 
