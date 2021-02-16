@@ -87,6 +87,10 @@ const oracleInfos: {
     ticker: 'USD',
     type: 'forex',
   },
+  mFB: {
+    ticker: 'FB',
+    type: 'stock',
+  },
 };
 
 export = oracleInfos;

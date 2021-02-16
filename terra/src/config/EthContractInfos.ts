@@ -63,6 +63,9 @@ const contractInfos: {
     mVIXY: {
       contract_address: '0x92E744307694Ece235cd02E82680ec37c657D23E',
     },
+    mFB: {
+      contract_address: '0x5501F4713020cf299C3C5929da549Aab3592E451',
+    },
   },
   bsc_testnet: {
     LUNA: {
@@ -121,6 +124,9 @@ const contractInfos: {
     },
     mVIXY: {
       contract_address: '0x57986628daaDC418E09A2917D6c8b793B7dC1ACD',
+    },
+    mFB: {
+      contract_address: '0x354CA25cf8eB08537f6047e9daF02Eb02222C1D5',
     },
   },
   ropsten: {
@@ -184,6 +190,9 @@ const contractInfos: {
     aUST: {
       contract_address: '0x006479f75D6622AE6a21BE17C7F555B94c672342',
     },
+    mFB: {
+      contract_address: '0x0Add4875eBcbD2306921e12133feB562E1cc82b4',
+    },
   },
   mainnet: {
     LUNA: {
@@ -242,6 +251,9 @@ const contractInfos: {
     },
     mVIXY: {
       contract_address: '0xf72FCd9DCF0190923Fadd44811E240Ef4533fc86',
+    },
+    mFB: {
+      contract_address: '0x0e99cC0535BB6251F6679Fa6E65d6d3b430e840B',
     },
   },
 };
