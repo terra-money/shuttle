@@ -174,6 +174,8 @@ class Shuttle {
   }
 
   async checkTxQueue() {
+    await this.lremAsync(KEY_QUEUE_TX, 10, 'DELETE');
+
     const now = new Date().getTime();
     const len = await this.llenAsync(KEY_QUEUE_TX);
 
