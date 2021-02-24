@@ -240,4 +240,4 @@ Ex)
 
 
 ## Relaying Fee
-Shuttle charges a fee only for transferring assets from Terra to Ethereum, and the quantity is calculated as `max($1, 0.1% * amount)`. **A transaction with tiny amount smaller than $1 value will be ignored.**
+Shuttle charges a fee only for transferring assets from Terra to Ethereum/BSC, and the quantity is calculated as `max($1, 0.1% * amount)`. **A transaction with tiny amount smaller than $1 value will be ignored.**
