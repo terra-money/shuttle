@@ -5,6 +5,11 @@ const contractInfos: {
     };
   };
 } = {
+  kovan: {
+    UST: {
+      contract_address: '0xC5EE7115D5e05C2e07878095470B54a52B80cE74',
+    },
+  },
   bsc: {
     LUNA: {
       contract_address: '0xECCF35F941Ab67FfcAA9A1265C2fF88865caA005',
