@@ -65,7 +65,7 @@ const assetInfos: {
       contract_address: 'terra1z0k7nx0vl85hwpv3e3hu2cyfkwq07fl7nqchvd',
     },
     aUST: {
-      contract_address: 'terra10c0q6qyk2634tfx2nw9v4gxqlm7a0luk9huhy8',
+      contract_address: 'terra153xdrtsmn8wkhxgzms6ss6rm8klkpnz4xhxnrx',
     },
     mFB: {
       contract_address: 'terra14gq9wj0tt6vu0m4ec2tkkv4ln3qrtl58lgdl2c',
