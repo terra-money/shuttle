@@ -195,7 +195,7 @@ The following transaction send 100 MIR tokens from `terra1rk6tvacasnnyssfnn00zl7
 }
 ```
 
-Exampe transactions:
+Example transactions:
 
 - Terra Tx:
 
