@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js';
 const ETH_MNEMONIC = process.env.ETH_MNEMONIC as string;
 const ETH_URL = process.env.ETH_URL as string;
 const ETH_DONATION = process.env.ETH_DONATION as string;
+const ETH_NETWORK_NUMBER = parseInt(process.env.ETH_NETWORK_NUMBER as string);
 
 export interface RelayData {
   transactionConfig: TransactionConfig;
@@ -64,6 +65,7 @@ export class Relayer {
       gasPrice,
       data,
       nonce,
+      chainId: ETH_NETWORK_NUMBER,
     };
 
     const signedTransaction = await this.web3.eth.signTransaction(

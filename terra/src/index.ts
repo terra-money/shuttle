@@ -9,6 +9,7 @@ Start ShuttleTerra
 
 TERRA_CHAIN_ID: ${process.env.TERRA_CHAIN_ID}
 ETH_CHAIN_ID: ${process.env.ETH_CHAIN_ID}
+ETH_NETWORK_NUMBER: ${process.env.ETH_NETWORK_NUMBER}
 
 TERRA_TRACKING_ADDR: ${process.env.TERRA_TRACKING_ADDR}
 
