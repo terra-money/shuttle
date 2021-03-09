@@ -56,6 +56,12 @@ class Oracle {
       return 1;
     }
 
+    // when the price source is not exists,
+    // just return 1 as price
+    if (!(asset in this.data)) {
+      return 1;
+    }
+
     const data = this.data[asset];
     const now = Date.now();
     if (data.price !== 0 && now < data.lastUpdated + UPDATE_INTERVAL) {

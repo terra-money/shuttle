@@ -198,6 +198,9 @@ const contractInfos: {
     mFB: {
       contract_address: '0x0Add4875eBcbD2306921e12133feB562E1cc82b4',
     },
+    ANC: {
+      contract_address: '0x93e9012b0a9DA6d5EeA352c56e22B4Ad7225fC33',
+    },
   },
   mainnet: {
     LUNA: {

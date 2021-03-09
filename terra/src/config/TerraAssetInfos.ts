@@ -64,11 +64,14 @@ const assetInfos: {
     mVIXY: {
       contract_address: 'terra1z0k7nx0vl85hwpv3e3hu2cyfkwq07fl7nqchvd',
     },
+    mFB: {
+      contract_address: 'terra14gq9wj0tt6vu0m4ec2tkkv4ln3qrtl58lgdl2c',
+    },
     aUST: {
       contract_address: 'terra1xhxx7tgth24d8f9pz6vkjmvulp88xh9vl9kmxu',
     },
-    mFB: {
-      contract_address: 'terra14gq9wj0tt6vu0m4ec2tkkv4ln3qrtl58lgdl2c',
+    ANC: {
+      contract_address: 'terra1800p00qlxh0nmt0r0u9hv7m4lg042fnafng2t6',
     },
   },
   'columbus-4': {
