@@ -68,10 +68,7 @@ const assetInfos: {
       contract_address: 'terra14gq9wj0tt6vu0m4ec2tkkv4ln3qrtl58lgdl2c',
     },
     aUST: {
-      contract_address: 'terra1xhxx7tgth24d8f9pz6vkjmvulp88xh9vl9kmxu',
-    },
-    ANC: {
-      contract_address: 'terra1800p00qlxh0nmt0r0u9hv7m4lg042fnafng2t6',
+      contract_address: 'terra1ajt556dpzvjwl0kl5tzku3fc3p3knkg9mkv8jl',
     },
   },
   'columbus-4': {
