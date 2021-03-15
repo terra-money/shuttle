@@ -260,6 +260,9 @@ const contractInfos: {
     mFB: {
       contract_address: '0x0e99cC0535BB6251F6679Fa6E65d6d3b430e840B',
     },
+    aUST: {
+      contract_address: '0xa8De3e3c934e2A1BB08B010104CcaBBD4D6293ab',
+    },
   },
 };
 

@@ -132,6 +132,9 @@ const assetInfos: {
     mFB: {
       contract_address: 'terra1mqsjugsugfprn3cvgxsrr8akkvdxv2pzc74us7',
     },
+    aUST: {
+      contract_address: 'terra1hj2lwwxdnsncvaey6wwjjamujc9m205xktntnw',
+    },
   },
 };
 
