@@ -133,7 +133,7 @@ const assetInfos: {
       contract_address: 'terra1mqsjugsugfprn3cvgxsrr8akkvdxv2pzc74us7',
     },
     aUST: {
-      contract_address: 'terra1hj2lwwxdnsncvaey6wwjjamujc9m205xktntnw',
+      contract_address: 'terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu',
     },
   },
 };
