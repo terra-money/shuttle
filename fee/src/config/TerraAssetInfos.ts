@@ -70,6 +70,9 @@ const assetInfos: {
     aUST: {
       contract_address: 'terra1ajt556dpzvjwl0kl5tzku3fc3p3knkg9mkv8jl',
     },
+    ANC: {
+      contract_address: 'terra1747mad58h0w4y589y3sk84r5efqdev9q4r02pc',
+    },
   },
   'columbus-4': {
     LUNA: {
@@ -134,6 +137,9 @@ const assetInfos: {
     },
     aUST: {
       contract_address: 'terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu',
+    },
+    ANC: {
+      contract_address: 'terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76',
     },
   },
 };

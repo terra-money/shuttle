@@ -198,6 +198,9 @@ const contractInfos: {
     aUST: {
       contract_address: '0x006479f75D6622AE6a21BE17C7F555B94c672342',
     },
+    ANC: {
+      contract_address: '0x93e9012b0a9DA6d5EeA352c56e22B4Ad7225fC33',
+    },
   },
   mainnet: {
     LUNA: {
@@ -262,6 +265,9 @@ const contractInfos: {
     },
     aUST: {
       contract_address: '0xa8De3e3c934e2A1BB08B010104CcaBBD4D6293ab',
+    },
+    ANC: {
+      contract_address: '0x0F3ADC247E91c3c50bC08721355A41037E89Bc20',
     },
   },
 };
