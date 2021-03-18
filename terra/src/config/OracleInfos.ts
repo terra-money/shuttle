@@ -91,6 +91,10 @@ const oracleInfos: {
     ticker: 'FB',
     type: 'stock',
   },
+  ANC: {
+    ticker: 'anchor-protocol',
+    type: 'crypto',
+  },
 };
 
 export = oracleInfos;
