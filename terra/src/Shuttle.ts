@@ -105,10 +105,10 @@ class Shuttle {
             this.nonce++,
             gasPrice
           );
-          
+
           await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
           await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
-          
+
           console.info(`Ownership Transfer Success: ${relayData.txHash}`);
           await this.relayer.relay(relayData);
 
@@ -116,6 +116,8 @@ class Shuttle {
           await Bluebird.delay(500);
         }
       }
+
+      await this.setAsync(KEY_MINTER_ADDRESS, this.monitoring.minterAddress);
     }
 
     const minterNonce = await this.getAsync(KEY_NEXT_MINTER_NONCE);
