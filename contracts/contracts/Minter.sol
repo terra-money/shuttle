@@ -121,7 +121,12 @@ contract Minter is IMinter {
         bytes[] memory _signatures
     ) public override withNonce {
         require(
-            verify(keccak256(abi.encodePacked(nonce, _txHash)), _signatures),
+            verify(
+                keccak256(
+                    abi.encodePacked(nonce, _token, _to, _amount, _txHash)
+                ),
+                _signatures
+            ),
             "Minter: invalid signature"
         );
 
@@ -129,18 +134,18 @@ contract Minter is IMinter {
     }
 
     // view
-    function signerLength() public view override returns (uint256) {
+    function signerLength() public override view returns (uint256) {
         return signerCount;
     }
 
-    function isSigner(address _candidate) public view override returns (bool) {
+    function isSigner(address _candidate) public override view returns (bool) {
         return signers[_candidate];
     }
 
     function verify(bytes32 _hash, bytes[] memory _signatures)
         public
-        view
         override
+        view
         returns (bool)
     {
         bytes32 h = ECDSA.toEthSignedMessageHash(_hash);
