@@ -18,6 +18,8 @@ const REDIS_PREFIX = 'terra_shuttle' + ETH_CHAIN_ID.replace('mainnet', '');
 const KEY_LAST_HEIGHT = 'last_height';
 const KEY_LAST_TXHASH = 'last_txhash';
 const KEY_NEXT_NONCE = 'next_nonce';
+const KEY_MINTER_ADDRESS = 'minter_address';
+const KEY_NEXT_MINTER_NONCE = 'next_minter_nonce';
 
 const KEY_QUEUE_TX = 'queue_tx';
 
@@ -55,6 +57,7 @@ class Shuttle {
   rpushAsync: (key: string, value: string) => Promise<unknown>;
 
   nonce: number;
+  minterNonce: number;
 
   constructor() {
     // Redis setup
@@ -73,6 +76,7 @@ class Shuttle {
     this.relayer = new Relayer();
 
     this.nonce = 0;
+    this.minterNonce = 0;
   }
 
   async startMonitoring() {
@@ -81,6 +85,44 @@ class Shuttle {
       this.nonce = parseInt(nonce);
     } else {
       this.nonce = await this.relayer.loadNonce();
+    }
+
+    // If minter address is set,
+    // we check the address is current owner of token contracts
+    if (this.monitoring.minterAddress) {
+      const minterAddress = await this.getAsync(KEY_MINTER_ADDRESS);
+      if (this.monitoring.minterAddress !== minterAddress) {
+        const gasPrice = new BigNumber(await this.relayer.getGasPrice())
+          .multipliedBy(1.2)
+          .toFixed(0);
+
+        for (const tokenContractAddr of Object.values(
+          this.monitoring.EthContracts
+        )) {
+          const relayData = await this.relayer.transferOwnership(
+            this.monitoring.minterAddress as string,
+            tokenContractAddr,
+            this.nonce++,
+            gasPrice
+          );
+          
+          await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
+          await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
+          
+          console.info(`Ownership Transfer Success: ${relayData.txHash}`);
+          await this.relayer.relay(relayData);
+
+          // Delay 500ms
+          await Bluebird.delay(500);
+        }
+      }
+    }
+
+    const minterNonce = await this.getAsync(KEY_NEXT_MINTER_NONCE);
+    if (minterNonce && minterNonce !== '') {
+      this.minterNonce = parseInt(minterNonce);
+    } else {
+      this.minterNonce = 1;
     }
 
     // Graceful shutdown
@@ -166,12 +208,14 @@ class Shuttle {
       const relayData = await this.relayer.build(
         monitoringData,
         this.nonce++,
+        this.minterNonce++,
         gasPrice
       );
 
       await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
       await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
       await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
+      await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
 
       // Notify to slack
       if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
@@ -197,7 +241,7 @@ class Shuttle {
 
     console.info(`HEIGHT: ${newLastHeight}`);
 
-    // When catched the block height, wait blocktime
+    // When catches the block height, wait block time
     if (newLastHeight === lastHeight) {
       await Bluebird.delay(TERRA_BLOCK_SECOND * 1000);
     }
@@ -236,7 +280,7 @@ class Shuttle {
           // change the data to new info
           await this.lsetAsync(KEY_QUEUE_TX, idx, JSON.stringify(newRelayData));
           await this.relayer.relay(newRelayData).catch(async (err) => {
-            // In somecase, there are possibilities
+            // In sometimes, there are possibilities
             // that tx is found during rebroadcast
             if (
               err.message === 'already known' ||
@@ -248,7 +292,7 @@ class Shuttle {
               // Tx is already included; delete
               await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
             } else {
-              // Unknown problem happend
+              // Unknown problem happened
               throw err;
             }
           });

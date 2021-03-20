@@ -30,6 +30,7 @@ export class Monitoring {
   LCDClient: LCDClient;
   TerraTrackingAddress: AccAddress;
 
+  minterAddress?: string;
   EthContracts: { [asset: string]: string };
   TerraAssetMapping: {
     [denom_or_address: string]: string;
@@ -50,6 +51,13 @@ export class Monitoring {
     this.TerraAssetMapping = {};
 
     for (const [asset, value] of Object.entries(ethContractInfos)) {
+      if (asset === "minter") {
+        // set minter address
+        this.minterAddress = value.contract_address;
+
+        continue;
+      }
+
       const info = terraAssetInfos[asset];
 
       if (info === undefined) {
@@ -153,6 +161,7 @@ export class Monitoring {
                 fee: fee.toFixed(0),
                 asset,
                 contractAddr: this.EthContracts[asset],
+                minterAddr: this.minterAddress,
               });
             }
           }
@@ -197,6 +206,7 @@ export class Monitoring {
                 fee: fee.toFixed(0),
                 asset,
                 contractAddr: this.EthContracts[asset],
+                minterAddr: this.minterAddress,
               });
             }
           }
@@ -239,4 +249,5 @@ export type MonitoringData = {
 
   // eth side data for relayer
   contractAddr: string;
+  minterAddr?: string;
 };

@@ -135,6 +135,9 @@ const contractInfos: {
     },
   },
   ropsten: {
+    minter: {
+      contract_address: '0x76E20dF61E5b5e6a7600B634a24a2Bb497989bC9',
+    },
     LUNA: {
       contract_address: '0xbf51453468771D14cEbdF8856cC5D5145364Cd6F',
     },

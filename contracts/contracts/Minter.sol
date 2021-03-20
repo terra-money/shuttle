@@ -30,7 +30,7 @@ interface IMinter {
     ) external;
 }
 
-contract Minter is IMinter, Ownable {
+contract Minter is IMinter {
     // whitelist
     uint256 private signerCount = 0;
     mapping(address => bool) private signers;
