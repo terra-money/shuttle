@@ -137,7 +137,10 @@ class Shuttle {
         }
       }
 
+      // reset nonce to 1
+      this.minterNonce = 1;
       await this.setAsync(KEY_MINTER_ADDRESS, this.monitoring.minterAddress);
+      await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
     }
 
     // Graceful shutdown
