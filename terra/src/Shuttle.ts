@@ -87,6 +87,13 @@ class Shuttle {
       this.nonce = await this.relayer.loadNonce();
     }
 
+    const minterNonce = await this.getAsync(KEY_NEXT_MINTER_NONCE);
+    if (minterNonce && minterNonce !== '') {
+      this.minterNonce = parseInt(minterNonce);
+    } else {
+      this.minterNonce = 1;
+    }
+
     // If minter address is set,
     // we check the address is current owner of token contracts
     if (this.monitoring.minterAddress) {
@@ -99,15 +106,28 @@ class Shuttle {
         for (const tokenContractAddr of Object.values(
           this.monitoring.EthContracts
         )) {
-          const relayData = await this.relayer.transferOwnership(
-            this.monitoring.minterAddress as string,
-            tokenContractAddr,
-            this.nonce++,
-            gasPrice
-          );
+          let relayData: RelayData;
+          if (minterAddress && minterAddress !== '') {
+            relayData = await this.relayer.transferOwnershipMultiSig(
+              minterAddress,
+              this.monitoring.minterAddress as string,
+              tokenContractAddr,
+              this.nonce++,
+              this.minterNonce++,
+              gasPrice
+            );
+          } else {
+            relayData = await this.relayer.transferOwnership(
+              this.monitoring.minterAddress as string,
+              tokenContractAddr,
+              this.nonce++,
+              gasPrice
+            );
+          }
 
           await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
           await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
+          await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
 
           console.info(`Ownership Transfer Success: ${relayData.txHash}`);
           await this.relayer.relay(relayData);
@@ -118,13 +138,6 @@ class Shuttle {
       }
 
       await this.setAsync(KEY_MINTER_ADDRESS, this.monitoring.minterAddress);
-    }
-
-    const minterNonce = await this.getAsync(KEY_NEXT_MINTER_NONCE);
-    if (minterNonce && minterNonce !== '') {
-      this.minterNonce = parseInt(minterNonce);
-    } else {
-      this.minterNonce = 1;
     }
 
     // Graceful shutdown
@@ -207,12 +220,22 @@ class Shuttle {
 
     for (; i < monitoringDatas.length; i++) {
       const monitoringData = monitoringDatas[i];
-      const relayData = await this.relayer.build(
-        monitoringData,
-        this.nonce++,
-        this.minterNonce++,
-        gasPrice
-      );
+      let relayData: RelayData;
+      if (this.monitoring.minterAddress) {
+        relayData = await this.relayer.buildMultiSig(
+          monitoringData,
+          this.monitoring.minterAddress,
+          this.nonce++,
+          this.minterNonce++,
+          gasPrice
+        );
+      } else {
+        relayData = await this.relayer.build(
+          monitoringData,
+          this.nonce++,
+          gasPrice
+        );
+      }
 
       await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
       await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);

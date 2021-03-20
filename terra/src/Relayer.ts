@@ -88,10 +88,55 @@ export class Relayer {
     };
   }
 
+  async transferOwnershipMultiSig(
+    originMinterAddr: string,
+    newMinterAddr: string,
+    tokenContractAddr: string,
+    nonce: number,
+    minterNonce: number,
+    gasPrice: string
+  ): Promise<RelayData> {
+    const contract = new this.web3.eth.Contract(MinterAbi);
+    const contractAddr = originMinterAddr;
+
+    const signData = this.web3.utils.soliditySha3(
+      minterNonce.toString(),
+      tokenContractAddr,
+      newMinterAddr
+    ) as string;
+
+    const signatures = await this.generateSignatures(signData);
+    const data = contract.methods
+      .collectOwnership(tokenContractAddr, newMinterAddr, signatures)
+      .encodeABI();
+
+    const transactionConfig: TransactionConfig = {
+      from: this.fromAddress,
+      to: contractAddr,
+      value: '0',
+      gas: 100000,
+      gasPrice,
+      data,
+      nonce,
+      chainId: ETH_NETWORK_NUMBER,
+    };
+
+    const signedTransaction = await this.web3.eth.signTransaction(
+      transactionConfig
+    );
+    const txHash = this.web3.utils.sha3(signedTransaction.raw) as string;
+
+    return {
+      transactionConfig,
+      signedTxData: signedTransaction.raw,
+      txHash,
+      createdAt: new Date().getTime(),
+    };
+  }
+
   async build(
     monitoringData: MonitoringData,
     nonce: number,
-    minterNonce: number,
     gasPrice: string
   ): Promise<RelayData> {
     // Check the address is valid
@@ -100,36 +145,69 @@ export class Relayer {
       recipient = ETH_DONATION;
     }
 
+    const contract = new this.web3.eth.Contract(WrappedTokenAbi);
+    const contractAddr = monitoringData.contractAddr;
+
+    const amount = monitoringData.amount + '000000000000';
+    const data = contract.methods.mint(recipient, amount).encodeABI();
+
+    const transactionConfig: TransactionConfig = {
+      from: this.fromAddress,
+      to: contractAddr,
+      value: '0',
+      gas: 100000,
+      gasPrice,
+      data,
+      nonce,
+      chainId: ETH_NETWORK_NUMBER,
+    };
+
+    const signedTransaction = await this.web3.eth.signTransaction(
+      transactionConfig
+    );
+    const txHash = this.web3.utils.sha3(signedTransaction.raw) as string;
+
+    return {
+      transactionConfig,
+      signedTxData: signedTransaction.raw,
+      txHash,
+      createdAt: new Date().getTime(),
+    };
+  }
+
+  async buildMultiSig(
+    monitoringData: MonitoringData,
+    minterAddr: string,
+    nonce: number,
+    minterNonce: number,
+    gasPrice: string
+  ): Promise<RelayData> {
+    let recipient = monitoringData.to;
+    if (!Web3.utils.isAddress(monitoringData.to)) {
+      recipient = ETH_DONATION;
+    }
+
+    const contract = new this.web3.eth.Contract(MinterAbi);
+    const contractAddr = minterAddr;
+
+    const tokenContractAddr = monitoringData.contractAddr;
+
+    const terraTxHash = '0x' + monitoringData.txHash;
     const amount = monitoringData.amount + '000000000000';
 
-    let data: string;
-    let contractAddr: string;
-    if (monitoringData.minterAddr) {
-      const contract = new this.web3.eth.Contract(MinterAbi);
-      contractAddr = monitoringData.minterAddr as string;
+    // build signatures
+    const signData = this.web3.utils.soliditySha3(
+      minterNonce.toString(),
+      tokenContractAddr,
+      recipient,
+      amount,
+      terraTxHash
+    ) as string;
+    const signatures = await this.generateSignatures(signData);
 
-      const txHash = '0x' + monitoringData.txHash;
-      const signData = this.web3.utils.soliditySha3(
-        minterNonce.toString(),
-        txHash
-      ) as string;
-      const signatures = await this.generateSignatures(signData);
-
-      data = contract.methods
-        .mint(
-          monitoringData.contractAddr,
-          recipient,
-          amount,
-          txHash,
-          signatures
-        )
-        .encodeABI();
-    } else {
-      const contract = new this.web3.eth.Contract(WrappedTokenAbi);
-
-      contractAddr = monitoringData.contractAddr;
-      data = contract.methods.mint(recipient, amount).encodeABI();
-    }
+    const data = contract.methods
+      .mint(tokenContractAddr, recipient, amount, terraTxHash, signatures)
+      .encodeABI();
 
     const transactionConfig: TransactionConfig = {
       from: this.fromAddress,
