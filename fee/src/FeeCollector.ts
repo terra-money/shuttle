@@ -69,6 +69,10 @@ export class FeeCollector {
     this.TerraAssetInfos = {};
 
     for (const [asset, value] of Object.entries(ethContractInfos)) {
+      if (asset === 'minter') {
+        continue;
+      }
+
       const info = terraAssetInfos[asset];
       if (info === undefined) {
         continue;

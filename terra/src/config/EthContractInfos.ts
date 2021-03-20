@@ -6,6 +6,9 @@ const contractInfos: {
   };
 } = {
   kovan: {
+    minter: {
+      contract_address: '0xd6c8e716f71179D9b9e0B8A513D806777E882F34',
+    },
     UST: {
       contract_address: '0xC5EE7115D5e05C2e07878095470B54a52B80cE74',
     },
@@ -73,6 +76,9 @@ const contractInfos: {
     },
   },
   bsc_testnet: {
+    minter: {
+      contract_address: '0xB8C4943Ae02ab64Ea6d1f956136606F67bb0Cb56',
+    },
     LUNA: {
       contract_address: '0xA1B4Aa780713df91e9Fa0FAa415ce49756D81E3b',
     },
@@ -203,7 +209,7 @@ const contractInfos: {
     },
     ANC: {
       contract_address: '0x93e9012b0a9DA6d5EeA352c56e22B4Ad7225fC33',
-    }
+    },
   },
   mainnet: {
     LUNA: {
@@ -271,7 +277,7 @@ const contractInfos: {
     },
     ANC: {
       contract_address: '0x0F3ADC247E91c3c50bC08721355A41037E89Bc20',
-    }
+    },
   },
 };
 

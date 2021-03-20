@@ -21,7 +21,11 @@ const SIGNERS = {
     "0xc0e2973a78AeA34EbB12fB5fe1b62F4286D8872d",
   ],
   bsc: [],
-  bsc_testnet: [],
+  bsc_testnet: [
+    "0x5024ECAefBa0767eB5B569EC4fc309F8FDc833d7",
+    "0x55C1cAd03272930D4A07873bC6bfA4b910a8d9F1",
+    "0xE1354334627a9e0Fa3E6583155803ad70AF4d341",
+  ],
 };
 module.exports = function (deployer, network) {
   if (
