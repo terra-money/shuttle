@@ -121,7 +121,12 @@ contract Minter is IMinter, Ownable {
         bytes[] memory _signatures
     ) public override withNonce {
         require(
-            verify(keccak256(abi.encodePacked(nonce, _txHash)), _signatures),
+            verify(
+                keccak256(
+                    abi.encodePacked(nonce, _token, _to, _amount, _txHash)
+                ),
+                _signatures
+            ),
             "Minter: invalid signature"
         );
 
