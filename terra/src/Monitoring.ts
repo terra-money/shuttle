@@ -161,7 +161,6 @@ export class Monitoring {
                 fee: fee.toFixed(0),
                 asset,
                 contractAddr: this.EthContracts[asset],
-                minterAddr: this.minterAddress,
               });
             }
           }
@@ -206,7 +205,6 @@ export class Monitoring {
                 fee: fee.toFixed(0),
                 asset,
                 contractAddr: this.EthContracts[asset],
-                minterAddr: this.minterAddress,
               });
             }
           }
@@ -249,5 +247,4 @@ export type MonitoringData = {
 
   // eth side data for relayer
   contractAddr: string;
-  minterAddr?: string;
 };
