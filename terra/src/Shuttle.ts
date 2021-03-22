@@ -59,6 +59,8 @@ class Shuttle {
   nonce: number;
   minterNonce: number;
 
+  stopOperation: boolean;
+
   constructor() {
     // Redis setup
     const redisClient = redis.createClient(REDIS_URL, { prefix: REDIS_PREFIX });
@@ -77,6 +79,7 @@ class Shuttle {
 
     this.nonce = 0;
     this.minterNonce = 0;
+    this.stopOperation = false;
   }
 
   async startMonitoring() {
@@ -154,6 +157,14 @@ class Shuttle {
     process.once('SIGTERM', gracefulShutdown);
 
     while (!shutdown) {
+
+      // If unrecoverable problem happens, just wait until 
+      // manager solve the problem.
+      if (this.stopOperation) {
+        await Bluebird.delay(600 * 1000);
+        continue;
+      }
+
       await this.process().catch(async (err) => {
         const errorMsg =
           err instanceof Error ? err.toString() : JSON.stringify(err);
@@ -294,9 +305,9 @@ class Shuttle {
 
     await Bluebird.mapSeries(relayDatas, async (data, idx) => {
       const relayData: RelayData = JSON.parse(data);
-      const tx = await this.relayer.getTransaction(relayData.txHash);
-
-      if (tx === null || tx.blockNumber === null) {
+      const txReceipt = await this.relayer.getTransactionReceipt(relayData.txHash);
+      
+      if (txReceipt === null) {
         if (now - relayData.createdAt > 1000 * 60) {
           // tx not found in the mempool or block,
           // rebroadcast tx with increased gas price
@@ -325,9 +336,13 @@ class Shuttle {
             }
           });
         }
-      } else {
+      } else if (txReceipt.status) {
         // tx found in block, remove it
         await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
+      } else {
+        // tx is failed; stop shuttle operations
+        this.stopOperation = true;
+        throw new Error(`Tx failed; ${relayData.txHash} please check the problem`);
       }
     });
 

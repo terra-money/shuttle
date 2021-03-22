@@ -1,6 +1,6 @@
 import { MonitoringData } from 'Monitoring';
 import Web3 from 'web3';
-import { TransactionConfig, Transaction } from 'web3-core';
+import { TransactionConfig, TransactionReceipt } from 'web3-core';
 import MinterAbi from './config/MinterAbi';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 import HDWalletProvider from '@truffle/hdwallet-provider';
@@ -271,8 +271,8 @@ export class Relayer {
     return this.web3.eth.getGasPrice();
   }
 
-  getTransaction(txHash: string): Promise<Transaction> {
-    return this.web3.eth.getTransaction(txHash);
+  getTransactionReceipt(txHash: string): Promise<TransactionReceipt> {
+    return this.web3.eth.getTransactionReceipt(txHash);
   }
 
   async generateSignatures(data: string): Promise<string[]> {
