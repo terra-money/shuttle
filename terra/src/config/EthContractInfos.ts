@@ -14,6 +14,9 @@ const contractInfos: {
     },
   },
   bsc: {
+    minter: {
+      contract_address: '0x65866fbdb58c13d4c81f47779c11b1bfa127641f',
+    },
     LUNA: {
       contract_address: '0xECCF35F941Ab67FfcAA9A1265C2fF88865caA005',
     },
@@ -212,6 +215,9 @@ const contractInfos: {
     },
   },
   mainnet: {
+    minter: {
+      contract_address: '0x9123077acafb3d743c68418304b2a11566cc1175',
+    },
     LUNA: {
       contract_address: '0xd2877702675e6cEb975b4A1dFf9fb7BAF4C91ea9',
     },
