@@ -282,7 +282,7 @@ class Shuttle {
 
     console.info(`HEIGHT: ${newLastHeight}`);
 
-    // When catches the block height, wait block time
+    // When catch the block height, wait block time
     if (newLastHeight === lastHeight) {
       await Bluebird.delay(TERRA_BLOCK_SECOND * 1000);
     }
@@ -323,7 +323,7 @@ class Shuttle {
           // change the data to new info
           await this.lsetAsync(KEY_QUEUE_TX, idx, JSON.stringify(newRelayData));
           await this.relayer.relay(newRelayData).catch(async (err) => {
-            // In sometimes, there are possibilities
+            // Sometimes, there are possibilities
             // that tx is found during rebroadcast
             if (
               err.message === 'already known' ||
