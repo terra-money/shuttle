@@ -6,11 +6,17 @@ const contractInfos: {
   };
 } = {
   kovan: {
+    minter: {
+      contract_address: '0xd6c8e716f71179D9b9e0B8A513D806777E882F34',
+    },
     UST: {
       contract_address: '0xC5EE7115D5e05C2e07878095470B54a52B80cE74',
     },
   },
   bsc: {
+    minter: {
+      contract_address: '0x65866fbdb58c13d4c81f47779c11b1bfa127641f',
+    },
     LUNA: {
       contract_address: '0xECCF35F941Ab67FfcAA9A1265C2fF88865caA005',
     },
@@ -73,6 +79,9 @@ const contractInfos: {
     },
   },
   bsc_testnet: {
+    minter: {
+      contract_address: '0xB8C4943Ae02ab64Ea6d1f956136606F67bb0Cb56',
+    },
     LUNA: {
       contract_address: '0xA1B4Aa780713df91e9Fa0FAa415ce49756D81E3b',
     },
@@ -135,6 +144,9 @@ const contractInfos: {
     },
   },
   ropsten: {
+    minter: {
+      contract_address: '0x5dFeBAFdd0079Cd6D32415bd2507B842812B8a0F',
+    },
     LUNA: {
       contract_address: '0xbf51453468771D14cEbdF8856cC5D5145364Cd6F',
     },
@@ -200,9 +212,12 @@ const contractInfos: {
     },
     ANC: {
       contract_address: '0x93e9012b0a9DA6d5EeA352c56e22B4Ad7225fC33',
-    }
+    },
   },
   mainnet: {
+    minter: {
+      contract_address: '0x9123077acafb3d743c68418304b2a11566cc1175',
+    },
     LUNA: {
       contract_address: '0xd2877702675e6cEb975b4A1dFf9fb7BAF4C91ea9',
     },
@@ -268,7 +283,7 @@ const contractInfos: {
     },
     ANC: {
       contract_address: '0x0F3ADC247E91c3c50bC08721355A41037E89Bc20',
-    }
+    },
   },
 };
 

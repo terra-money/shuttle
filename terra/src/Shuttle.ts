@@ -18,6 +18,8 @@ const REDIS_PREFIX = 'terra_shuttle' + ETH_CHAIN_ID.replace('mainnet', '');
 const KEY_LAST_HEIGHT = 'last_height';
 const KEY_LAST_TXHASH = 'last_txhash';
 const KEY_NEXT_NONCE = 'next_nonce';
+const KEY_MINTER_ADDRESS = 'minter_address';
+const KEY_NEXT_MINTER_NONCE = 'next_minter_nonce';
 
 const KEY_QUEUE_TX = 'queue_tx';
 
@@ -55,6 +57,9 @@ class Shuttle {
   rpushAsync: (key: string, value: string) => Promise<unknown>;
 
   nonce: number;
+  minterNonce: number;
+
+  stopOperation: boolean;
 
   constructor() {
     // Redis setup
@@ -73,6 +78,8 @@ class Shuttle {
     this.relayer = new Relayer();
 
     this.nonce = 0;
+    this.minterNonce = 0;
+    this.stopOperation = false;
   }
 
   async startMonitoring() {
@@ -81,6 +88,65 @@ class Shuttle {
       this.nonce = parseInt(nonce);
     } else {
       this.nonce = await this.relayer.loadNonce();
+    }
+
+    const minterNonce = await this.getAsync(KEY_NEXT_MINTER_NONCE);
+    if (minterNonce && minterNonce !== '') {
+      this.minterNonce = parseInt(minterNonce);
+    } else {
+      this.minterNonce = 1;
+    }
+
+    // If minter address is set,
+    // we check the address is current owner of token contracts
+    if (this.monitoring.minterAddress) {
+      const minterAddress = await this.getAsync(KEY_MINTER_ADDRESS);
+      if (this.monitoring.minterAddress !== minterAddress) {
+        const gasPrice = new BigNumber(await this.relayer.getGasPrice())
+          .multipliedBy(1.2)
+          .toFixed(0);
+
+        for (const tokenContractAddr of Object.values(
+          this.monitoring.EthContracts
+        )) {
+          let relayData: RelayData;
+          if (minterAddress && minterAddress !== '') {
+            relayData = await this.relayer.transferOwnershipMultiSig(
+              minterAddress,
+              this.monitoring.minterAddress as string,
+              tokenContractAddr,
+              this.nonce++,
+              this.minterNonce++,
+              gasPrice
+            );
+          } else {
+            relayData = await this.relayer.transferOwnership(
+              this.monitoring.minterAddress as string,
+              tokenContractAddr,
+              this.nonce++,
+              gasPrice
+            );
+          }
+
+          await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
+          await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
+          await this.setAsync(
+            KEY_NEXT_MINTER_NONCE,
+            this.minterNonce.toString()
+          );
+
+          console.info(`Ownership Transfer Success: ${relayData.txHash}`);
+          await this.relayer.relay(relayData);
+
+          // Delay 500ms
+          await Bluebird.delay(500);
+        }
+
+        // reset nonce to 1
+        this.minterNonce = 1;
+        await this.setAsync(KEY_MINTER_ADDRESS, this.monitoring.minterAddress);
+        await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
+      }
     }
 
     // Graceful shutdown
@@ -94,6 +160,13 @@ class Shuttle {
     process.once('SIGTERM', gracefulShutdown);
 
     while (!shutdown) {
+      // If unrecoverable problem happens, just wait until
+      // manager solve the problem.
+      if (this.stopOperation) {
+        await Bluebird.delay(600 * 1000);
+        continue;
+      }
+
       await this.process().catch(async (err) => {
         const errorMsg =
           err instanceof Error ? err.toString() : JSON.stringify(err);
@@ -163,15 +236,27 @@ class Shuttle {
 
     for (; i < monitoringDatas.length; i++) {
       const monitoringData = monitoringDatas[i];
-      const relayData = await this.relayer.build(
-        monitoringData,
-        this.nonce++,
-        gasPrice
-      );
+      let relayData: RelayData;
+      if (this.monitoring.minterAddress) {
+        relayData = await this.relayer.buildMultiSig(
+          monitoringData,
+          this.monitoring.minterAddress,
+          this.nonce++,
+          this.minterNonce++,
+          gasPrice
+        );
+      } else {
+        relayData = await this.relayer.build(
+          monitoringData,
+          this.nonce++,
+          gasPrice
+        );
+      }
 
       await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
       await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
       await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
+      await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
 
       // Notify to slack
       if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
@@ -197,7 +282,7 @@ class Shuttle {
 
     console.info(`HEIGHT: ${newLastHeight}`);
 
-    // When catched the block height, wait blocktime
+    // When catch the block height, wait block time
     if (newLastHeight === lastHeight) {
       await Bluebird.delay(TERRA_BLOCK_SECOND * 1000);
     }
@@ -222,9 +307,11 @@ class Shuttle {
 
     await Bluebird.mapSeries(relayDatas, async (data, idx) => {
       const relayData: RelayData = JSON.parse(data);
-      const tx = await this.relayer.getTransaction(relayData.txHash);
+      const txReceipt = await this.relayer.getTransactionReceipt(
+        relayData.txHash
+      );
 
-      if (tx === null || tx.blockNumber === null) {
+      if (txReceipt === null) {
         if (now - relayData.createdAt > 1000 * 60) {
           // tx not found in the mempool or block,
           // rebroadcast tx with increased gas price
@@ -236,7 +323,7 @@ class Shuttle {
           // change the data to new info
           await this.lsetAsync(KEY_QUEUE_TX, idx, JSON.stringify(newRelayData));
           await this.relayer.relay(newRelayData).catch(async (err) => {
-            // In somecase, there are possibilities
+            // Sometimes, there are possibilities
             // that tx is found during rebroadcast
             if (
               err.message === 'already known' ||
@@ -248,14 +335,20 @@ class Shuttle {
               // Tx is already included; delete
               await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
             } else {
-              // Unknown problem happend
+              // Unknown problem happened
               throw err;
             }
           });
         }
-      } else {
+      } else if (txReceipt.status) {
         // tx found in block, remove it
         await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
+      } else {
+        // tx is failed; stop shuttle operations
+        this.stopOperation = true;
+        throw new Error(
+          `Tx failed; ${relayData.txHash} please check the problem`
+        );
       }
     });
 

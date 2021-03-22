@@ -45,11 +45,11 @@ module.exports = {
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
     //
-    // development: {
-    //  host: "127.0.0.1",     // Localhost (default: none)
-    //  port: 8545,            // Standard Ethereum port (default: none)
-    //  network_id: "*",       // Any network (default: none)
-    // },
+    dev: {
+      host: "127.0.0.1", // Localhost (default: none)
+      port: 9545, // Standard Ethereum port (default: none)
+      network_id: "*", // Any network (default: none)
+    },
     // Another network with more advanced options...
     // advanced: {
     // port: 8777,             // Custom port
@@ -63,11 +63,11 @@ module.exports = {
     // NB: It's important to wrap the provider as a function.
     ropsten: {
       provider: () =>
-        new HDWalletProvider(
-          process.env.MNEMONIC,
-          `https://ropsten.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-          process.env.MNEMONIC_INDEX
-        ),
+        new HDWalletProvider({
+          mnemonic: process.env.MNEMONIC,
+          providerOrUrl: `https://ropsten.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+          addressIndex: process.env.MNEMONIC_INDEX,
+        }),
       network_id: 3, // Ropsten's id
       gas: 5500000, // Ropsten has a lower block limit than mainnet
       confirmations: 0, // # of confs to wait between deployments. (default: 0)
@@ -77,11 +77,11 @@ module.exports = {
     },
     kovan: {
       provider: () =>
-        new HDWalletProvider(
-          process.env.MNEMONIC,
-          `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-          process.env.MNEMONIC_INDEX
-        ),
+        new HDWalletProvider({
+          mnemonic: process.env.MNEMONIC,
+          providerOrUrl: `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+          addressIndex: process.env.MNEMONIC_INDEX,
+        }),
       network_id: 42, // Ropsten's id
       gas: 5500000, // Ropsten has a lower block limit than mainnet
       confirmations: 0, // # of confs to wait between deployments. (default: 0)
@@ -91,14 +91,14 @@ module.exports = {
     },
     mainnet: {
       provider: () =>
-        new HDWalletProvider(
-          process.env.MNEMONIC,
-          `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-          process.env.MNEMONIC_INDEX
-        ),
+        new HDWalletProvider({
+          mnemonic: process.env.MNEMONIC,
+          providerOrUrl: `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+          addressIndex: process.env.MNEMONIC_INDEX,
+        }),
       network_id: 1, // Ethereum public network
       gas: 5500000, // Ropsten has a lower block limit than mainnet
-      gasPrice: 300000000000, // Gas price to fastly confirm the tx
+      gasPrice: 300000000000, // Gas price for fast confirmation of the tx
       confirmations: 0, // # of confs to wait between deployments. (default: 0)
       timeoutBlocks: 200, // # of blocks before a deployment times out  (minimum/default: 50)
       skipDryRun: true, // Skip dry run before migrations? (default: false for public nets )
@@ -106,11 +106,11 @@ module.exports = {
     },
     bsc_testnet: {
       provider: () =>
-        new HDWalletProvider(
-          process.env.MNEMONIC,
-          `https://data-seed-prebsc-1-s1.binance.org:8545`,
-          process.env.MNEMONIC_INDEX
-        ),
+        new HDWalletProvider({
+          mnemonic: process.env.MNEMONIC,
+          providerOrUrl: `https://data-seed-prebsc-1-s1.binance.org:8545`,
+          addressIndex: process.env.MNEMONIC_INDEX,
+        }),
       network_id: 97,
       gas: 5500000,
       confirmations: 0,
@@ -120,18 +120,18 @@ module.exports = {
     },
     bsc: {
       provider: () =>
-        new HDWalletProvider(
-          process.env.MNEMONIC,
-          `https://bsc-dataseed1.binance.org/`,
-          process.env.MNEMONIC_INDEX
-        ),
+        new HDWalletProvider({
+          mnemonic: process.env.MNEMONIC,
+          providerOrUrl: `https://bsc-dataseed1.binance.org/`,
+          addressIndex: process.env.MNEMONIC_INDEX,
+        }),
       network_id: 56,
       gas: 5500000,
       confirmations: 0,
       timeoutBlocks: 200,
       skipDryRun: true,
       networkCheckTimeout: 1000000000,
-    }
+    },
     // Useful for private networks
     // private: {
     // provider: () => new HDWalletProvider(mnemonic, `https://network.io`),
