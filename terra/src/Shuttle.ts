@@ -130,7 +130,10 @@ class Shuttle {
 
           await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
           await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
-          await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
+          await this.setAsync(
+            KEY_NEXT_MINTER_NONCE,
+            this.minterNonce.toString()
+          );
 
           console.info(`Ownership Transfer Success: ${relayData.txHash}`);
           await this.relayer.relay(relayData);
@@ -138,12 +141,12 @@ class Shuttle {
           // Delay 500ms
           await Bluebird.delay(500);
         }
-      }
 
-      // reset nonce to 1
-      this.minterNonce = 1;
-      await this.setAsync(KEY_MINTER_ADDRESS, this.monitoring.minterAddress);
-      await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
+        // reset nonce to 1
+        this.minterNonce = 1;
+        await this.setAsync(KEY_MINTER_ADDRESS, this.monitoring.minterAddress);
+        await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
+      }
     }
 
     // Graceful shutdown
@@ -157,8 +160,7 @@ class Shuttle {
     process.once('SIGTERM', gracefulShutdown);
 
     while (!shutdown) {
-
-      // If unrecoverable problem happens, just wait until 
+      // If unrecoverable problem happens, just wait until
       // manager solve the problem.
       if (this.stopOperation) {
         await Bluebird.delay(600 * 1000);
@@ -305,8 +307,10 @@ class Shuttle {
 
     await Bluebird.mapSeries(relayDatas, async (data, idx) => {
       const relayData: RelayData = JSON.parse(data);
-      const txReceipt = await this.relayer.getTransactionReceipt(relayData.txHash);
-      
+      const txReceipt = await this.relayer.getTransactionReceipt(
+        relayData.txHash
+      );
+
       if (txReceipt === null) {
         if (now - relayData.createdAt > 1000 * 60) {
           // tx not found in the mempool or block,
@@ -342,7 +346,9 @@ class Shuttle {
       } else {
         // tx is failed; stop shuttle operations
         this.stopOperation = true;
-        throw new Error(`Tx failed; ${relayData.txHash} please check the problem`);
+        throw new Error(
+          `Tx failed; ${relayData.txHash} please check the problem`
+        );
       }
     });
 
