@@ -177,7 +177,8 @@ async function getPastEvents(
         err.message.includes('unknown block') ||
         err.message.includes('502 Bad Gateway') ||
         err.message.includes('Invalid JSON RPC response') ||
-        err.message.includes('exceed maximum block range: 5000'))
+        err.message.includes('exceed maximum block range: 5000') ||
+        err.message.includes('system overloaded'))
     ) {
       console.error('infura errors happened. retry getPastEvents');
 
