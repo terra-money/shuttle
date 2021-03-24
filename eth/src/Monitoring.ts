@@ -99,35 +99,41 @@ export class Monitoring {
     asset: string
   ): Promise<MonitoringData[]> {
     const events = await getPastEvents(contract, fromBlock, toBlock, MAX_RETRY);
-    const monitoringDatas: MonitoringData[] = events.map((event) => {
-      const requested = new BigNumber(event.returnValues['amount']);
-      const fee = requested.multipliedBy(FEE_RATE);
-      const amount = requested.minus(fee);
+    const monitoringDatas: MonitoringData[] = events
+      .filter((event: any) => {
+        return !event['removed'];
+      })
+      .map((event: EventData) => {
+        const requested = new BigNumber(event.returnValues['amount']);
+        const fee = requested.multipliedBy(FEE_RATE);
+        const amount = requested.minus(fee);
 
-      const info = this.TerraAssetInfos[asset];
-      return {
-        blockNumber: event.blockNumber,
-        txHash: event.transactionHash,
-        sender: event.returnValues['_sender'],
-        to: bech32.encode(
-          'terra',
-          bech32.toWords(hexToBytes(event.returnValues['_to'].slice(0, 42)))
-        ),
-        requested: requested.toFixed(0),
-        amount: amount.toFixed(0),
-        fee: fee.toFixed(0),
-        asset,
-        terraAssetInfo: info,
-      };
-    });
+        const info = this.TerraAssetInfos[asset];
+        return {
+          blockNumber: event.blockNumber,
+          txHash: event.transactionHash,
+          sender: event.returnValues['_sender'],
+          to: bech32.encode(
+            'terra',
+            bech32.toWords(hexToBytes(event.returnValues['_to'].slice(0, 42)))
+          ),
+          requested: requested.toFixed(0),
+          amount: amount.toFixed(0),
+          fee: fee.toFixed(0),
+          asset,
+          terraAssetInfo: info,
+        };
+      });
 
     return monitoringDatas;
   }
 }
 
 async function getBlockNumber(web3: Web3, retry: number): Promise<number> {
-  return web3.eth.getBlockNumber().catch(async (err) => {
-    // invalid project id error occurs sometimes in infura
+  try {
+    const blockNumber = await web3.eth.getBlockNumber();
+    return blockNumber;
+  } catch (err) {
     if (
       retry > 0 &&
       (err.message.includes('invalid project id') ||
@@ -138,11 +144,13 @@ async function getBlockNumber(web3: Web3, retry: number): Promise<number> {
       console.error('infura errors happened. retry getBlockNumber');
 
       await BlueBird.delay(500);
-      return getBlockNumber(web3, retry - 1);
+
+      const blockNumber = await getBlockNumber(web3, retry - 1);
+      return blockNumber;
     }
 
     throw err;
-  });
+  }
 }
 
 async function getPastEvents(
@@ -151,33 +159,41 @@ async function getPastEvents(
   toBlock: number,
   retry: number
 ): Promise<EventData[]> {
-  return await contract
-    .getPastEvents('Burn', {
+  try {
+    const events = await contract.getPastEvents('Burn', {
       fromBlock,
       toBlock,
-    })
-    .catch(async (err) => {
-      // query returned more than 10000 results error occurs sometime in
-      // Ropsten network even though it is impossible to have more than
-      // 10000 results
-      if (
-        retry > 0 &&
-        (err.message.includes('query returned more than 10000 results') ||
-          err.message.includes('invalid project id') ||
-          err.message.includes('request failed or timed out') ||
-          err.message.includes('unknown block') ||
-          err.message.includes('502 Bad Gateway') ||
-          err.message.includes('Invalid JSON RPC response') ||
-          err.message.includes('exceed maximum block range: 5000'))
-      ) {
-        console.error('infura errors happened. retry getPastEvents');
-
-        await BlueBird.delay(500);
-        return getPastEvents(contract, fromBlock, toBlock, retry - 1);
-      }
-
-      throw err;
     });
+    return events;
+  } catch (err) {
+    // query returned more than 10000 results error occurs sometime in
+    // Ropsten network even though it is impossible to have more than
+    // 10000 results
+    if (
+      retry > 0 &&
+      (err.message.includes('query returned more than 10000 results') ||
+        err.message.includes('invalid project id') ||
+        err.message.includes('request failed or timed out') ||
+        err.message.includes('unknown block') ||
+        err.message.includes('502 Bad Gateway') ||
+        err.message.includes('Invalid JSON RPC response') ||
+        err.message.includes('exceed maximum block range: 5000'))
+    ) {
+      console.error('infura errors happened. retry getPastEvents');
+
+      await BlueBird.delay(500);
+
+      const events = await getPastEvents(
+        contract,
+        fromBlock,
+        toBlock,
+        retry - 1
+      );
+      return events;
+    }
+
+    throw err;
+  }
 }
 
 export type TerraAssetInfo = {
