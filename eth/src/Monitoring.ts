@@ -41,7 +41,7 @@ export class Monitoring {
     this.EthContracts = {};
     this.TerraAssetInfos = {};
     for (const [asset, value] of Object.entries(ethContractInfos)) {
-      if (asset === "minter") {
+      if (asset === 'minter') {
         continue;
       }
 
@@ -119,7 +119,7 @@ export class Monitoring {
         asset,
         terraAssetInfo: info,
       };
-    }).filter((data) => data.blockNumber >= fromBlock && data.blockNumber <= toBlock);
+    });
 
     return monitoringDatas;
   }
@@ -167,7 +167,8 @@ async function getPastEvents(
           err.message.includes('request failed or timed out') ||
           err.message.includes('unknown block') ||
           err.message.includes('502 Bad Gateway') ||
-          err.message.includes('Invalid JSON RPC response'))
+          err.message.includes('Invalid JSON RPC response') ||
+          err.message.includes('exceed maximum block range: 5000'))
       ) {
         console.error('infura errors happened. retry getPastEvents');
 
