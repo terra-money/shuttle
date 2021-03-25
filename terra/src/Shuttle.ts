@@ -176,7 +176,9 @@ class Shuttle {
         // ignore invalid project id error
         if (
           errorMsg.includes('invalid project id') ||
-          err.message.includes('502 Bad Gateway')
+          err.message.includes('502 Bad Gateway') ||
+          err.message.includes('ESOCKETTIMEDOUT') ||
+          err.message.includes('internal service failure')
         ) {
           return;
         }
