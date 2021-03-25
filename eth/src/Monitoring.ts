@@ -81,6 +81,7 @@ export class Monitoring {
     const fromBlock = lastHeight === 0 ? latestHeight : lastHeight + 1;
     const toBlock = Math.min(fromBlock + ETH_BLOCK_LOAD_UNIT, latestHeight);
 
+    console.info(`Loading From: ${fromBlock}, To: ${toBlock}`);
     const monitoringDatas = await this.getMonitoringDatas(fromBlock, toBlock);
 
     return [toBlock, monitoringDatas];
