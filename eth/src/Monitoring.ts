@@ -131,7 +131,7 @@ export class Monitoring {
   }
 }
 
-export async function getPastLogs(
+async function getPastLogs(
   web3: Web3,
   fromBlock: number,
   toBlock: number,
@@ -218,7 +218,7 @@ function decodeLog(web3: Web3, log: Log): { [key: string]: string } {
       },
     ],
     log.data,
-    log.topics
+    log.topics.slice(1)
   );
 }
 
