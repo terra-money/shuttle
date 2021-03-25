@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { Log } from 'web3-core';
 import { Contract, EventData } from 'web3-eth-contract';
 import { hexToBytes } from 'web3-utils';
 import bech32 from 'bech32';
@@ -26,7 +27,7 @@ const MAX_RETRY = 5;
 export class Monitoring {
   Web3: Web3;
 
-  EthContracts: { [asset: string]: Contract };
+  AddressAssetMap: { [address: string]: string };
   TerraAssetInfos: {
     [asset: string]: TerraAssetInfo;
   };
@@ -38,7 +39,7 @@ export class Monitoring {
     const ethContractInfos = EthContractInfos[ETH_CHAIN_ID];
     const terraAssetInfos = TerraAssetInfos[TERRA_CHAIN_ID];
 
-    this.EthContracts = {};
+    this.AddressAssetMap = {};
     this.TerraAssetInfos = {};
     for (const [asset, value] of Object.entries(ethContractInfos)) {
       if (asset === 'minter') {
@@ -62,7 +63,7 @@ export class Monitoring {
         value.contract_address
       );
 
-      this.EthContracts[asset] = contract;
+      this.AddressAssetMap[value.contract_address] = asset;
       this.TerraAssetInfos[asset] = info;
     }
   }
@@ -79,43 +80,44 @@ export class Monitoring {
     // If initial state, we start sync from latest height
     const fromBlock = lastHeight === 0 ? latestHeight : lastHeight + 1;
     const toBlock = Math.min(fromBlock + ETH_BLOCK_LOAD_UNIT, latestHeight);
-    const promises: Promise<MonitoringData[]>[] = [];
 
-    for (const [asset, contract] of Object.entries(this.EthContracts)) {
-      promises.push(
-        this.getMonitoringDatas(contract, fromBlock, toBlock, asset)
-      );
-    }
-
-    const monitoringDatas = (await Promise.all(promises)).flat();
+    const monitoringDatas = await this.getMonitoringDatas(fromBlock, toBlock);
 
     return [toBlock, monitoringDatas];
   }
 
   async getMonitoringDatas(
-    contract: Contract,
     fromBlock: number,
-    toBlock: number,
-    asset: string
+    toBlock: number
   ): Promise<MonitoringData[]> {
-    const events = await getPastEvents(contract, fromBlock, toBlock, MAX_RETRY);
-    const monitoringDatas: MonitoringData[] = events
-      .filter((event: any) => {
-        return !event['removed'];
+    const logs = await getPastLogs(
+      this.Web3,
+      fromBlock,
+      toBlock,
+      Object.keys(this.AddressAssetMap),
+      MAX_RETRY
+    );
+
+    const monitoringDatas: MonitoringData[] = logs
+      .filter((log: any) => {
+        return !log['removed'];
       })
-      .map((event: EventData) => {
-        const requested = new BigNumber(event.returnValues['amount']);
+      .map((log: Log) => {
+        const decodedData = decodeLog(this.Web3, log);
+
+        const requested = new BigNumber(decodedData['amount']);
         const fee = requested.multipliedBy(FEE_RATE);
         const amount = requested.minus(fee);
 
+        const asset = this.AddressAssetMap[log.address];
         const info = this.TerraAssetInfos[asset];
         return {
-          blockNumber: event.blockNumber,
-          txHash: event.transactionHash,
-          sender: event.returnValues['_sender'],
+          blockNumber: log.blockNumber,
+          txHash: log.transactionHash,
+          sender: decodedData['_sender'],
           to: bech32.encode(
             'terra',
-            bech32.toWords(hexToBytes(event.returnValues['_to'].slice(0, 42)))
+            bech32.toWords(hexToBytes(decodedData['_to'].slice(0, 42)))
           ),
           requested: requested.toFixed(0),
           amount: amount.toFixed(0),
@@ -126,6 +128,46 @@ export class Monitoring {
       });
 
     return monitoringDatas;
+  }
+}
+
+export async function getPastLogs(
+  web3: Web3,
+  fromBlock: number,
+  toBlock: number,
+  address: string[],
+  retry: number
+): Promise<Log[]> {
+  try {
+    return await web3.eth.getPastLogs({
+      fromBlock,
+      toBlock,
+      address,
+      topics: [
+        '0xc3599666213715dfabdf658c56a97b9adfad2cd9689690c70c79b20bc61940c9',
+      ],
+    });
+  } catch (err) {
+    console.error(err);
+    if (
+      retry > 0 &&
+      (err.message.includes('query returned more than 10000 results') ||
+        err.message.includes('invalid project id') ||
+        err.message.includes('request failed or timed out') ||
+        err.message.includes('unknown block') ||
+        err.message.includes('502 Bad Gateway') ||
+        err.message.includes('Invalid JSON RPC response') ||
+        err.message.includes('exceed maximum block range: 5000') ||
+        err.message.includes('system overloaded'))
+    ) {
+      console.error('infura errors happened. retry getPastEvents');
+
+      await BlueBird.delay(500);
+
+      return await getPastLogs(web3, fromBlock, toBlock, address, retry);
+    }
+
+    throw err;
   }
 }
 
@@ -153,48 +195,31 @@ async function getBlockNumber(web3: Web3, retry: number): Promise<number> {
   }
 }
 
-async function getPastEvents(
-  contract: Contract,
-  fromBlock: number,
-  toBlock: number,
-  retry: number
-): Promise<EventData[]> {
-  try {
-    const events = await contract.getPastEvents('Burn', {
-      fromBlock,
-      toBlock,
-    });
-    return events;
-  } catch (err) {
-    // query returned more than 10000 results error occurs sometime in
-    // Ropsten network even though it is impossible to have more than
-    // 10000 results
-    if (
-      retry > 0 &&
-      (err.message.includes('query returned more than 10000 results') ||
-        err.message.includes('invalid project id') ||
-        err.message.includes('request failed or timed out') ||
-        err.message.includes('unknown block') ||
-        err.message.includes('502 Bad Gateway') ||
-        err.message.includes('Invalid JSON RPC response') ||
-        err.message.includes('exceed maximum block range: 5000') ||
-        err.message.includes('system overloaded'))
-    ) {
-      console.error('infura errors happened. retry getPastEvents');
-
-      await BlueBird.delay(500);
-
-      const events = await getPastEvents(
-        contract,
-        fromBlock,
-        toBlock,
-        retry - 1
-      );
-      return events;
-    }
-
-    throw err;
-  }
+function decodeLog(web3: Web3, log: Log): { [key: string]: string } {
+  return web3.eth.abi.decodeLog(
+    [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: '_sender',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'bytes32',
+        name: '_to',
+        type: 'bytes32',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    log.data,
+    log.topics
+  );
 }
 
 export type TerraAssetInfo = {
