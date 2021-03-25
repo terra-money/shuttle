@@ -21,6 +21,8 @@ const KEY_QUEUE_TX = 'queue_tx';
 
 const REDIS_URL = process.env.REDIS_URL as string;
 const ETH_BLOCK_SECOND = parseInt(process.env.ETH_BLOCK_SECOND as string);
+const ETH_BLOCK_LOAD_UNIT = parseInt(process.env.ETH_BLOCK_LOAD_UNIT as string);
+
 const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
 const SLACK_NOTI_ETH_ASSET = process.env.SLACK_NOTI_ETH_ASSET;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
@@ -167,7 +169,7 @@ class Shuttle {
 
     // When catched the block height, wait 10 second
     if (newLastHeight === lastHeight) {
-      await Bluebird.delay(ETH_BLOCK_SECOND * 1000);
+      await Bluebird.delay(ETH_BLOCK_SECOND * ETH_BLOCK_LOAD_UNIT * 1000 / 2);
     }
   }
 
