@@ -321,9 +321,15 @@ class Shuttle {
 
     await Bluebird.mapSeries(relayDatas, async (data, idx) => {
       const relayData: RelayData = JSON.parse(data);
-      const txReceipt = await this.relayer.getTransactionReceipt(
-        relayData.txHash
-      );
+      const txReceipt = await this.relayer
+        .getTransactionReceipt(relayData.txHash)
+        .catch((err) => {
+          if (err.message.includes('Invalid JSON RPC response')) {
+            return null;
+          }
+
+          throw err;
+        });
 
       if (txReceipt === null) {
         if (now - relayData.createdAt > 1000 * 60) {
