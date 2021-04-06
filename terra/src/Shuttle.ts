@@ -180,7 +180,8 @@ class Shuttle {
           errorMsg.includes('invalid project id') ||
           err.message.includes('502 Bad Gateway') ||
           err.message.includes('ESOCKETTIMEDOUT') ||
-          err.message.includes('internal service failure')
+          err.message.includes('internal service failure') ||
+          err.message.includes('Invalid JSON RPC response')
         ) {
           if (this.errorCounter++ < 5) {
             // Delay 1000ms
