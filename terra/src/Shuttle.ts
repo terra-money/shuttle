@@ -58,6 +58,7 @@ class Shuttle {
 
   nonce: number;
   minterNonce: number;
+  errorCounter: number;
 
   stopOperation: boolean;
 
@@ -79,6 +80,7 @@ class Shuttle {
 
     this.nonce = 0;
     this.minterNonce = 0;
+    this.errorCounter = 0;
     this.stopOperation = false;
   }
 
@@ -178,9 +180,15 @@ class Shuttle {
           errorMsg.includes('invalid project id') ||
           err.message.includes('502 Bad Gateway') ||
           err.message.includes('ESOCKETTIMEDOUT') ||
-          err.message.includes('internal service failure')
+          err.message.includes('internal service failure') ||
+          err.message.includes('Invalid JSON RPC response')
         ) {
-          return;
+          if (this.errorCounter++ < 5) {
+            return;
+          }
+
+          // reset error counter to zero
+          this.errorCounter = 0;
         }
 
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
@@ -283,6 +291,7 @@ class Shuttle {
     await this.delAsync(KEY_LAST_TXHASH);
 
     console.info(`HEIGHT: ${newLastHeight}`);
+    this.errorCounter--;
 
     // When catch the block height, wait block time
     if (newLastHeight === lastHeight) {

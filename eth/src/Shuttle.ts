@@ -169,7 +169,7 @@ class Shuttle {
 
     // When catched the block height, wait 10 second
     if (newLastHeight === lastHeight) {
-      await Bluebird.delay(ETH_BLOCK_SECOND * ETH_BLOCK_LOAD_UNIT * 1000 / 2);
+      await Bluebird.delay((ETH_BLOCK_SECOND * ETH_BLOCK_LOAD_UNIT * 1000) / 2);
     }
   }
 
