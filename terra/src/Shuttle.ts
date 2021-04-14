@@ -181,7 +181,8 @@ class Shuttle {
           err.message.includes('502 Bad Gateway') ||
           err.message.includes('ESOCKETTIMEDOUT') ||
           err.message.includes('internal service failure') ||
-          err.message.includes('Invalid JSON RPC response')
+          err.message.includes('Invalid JSON RPC response') ||
+          err.message.includes('handle request error')
         ) {
           if (this.errorCounter++ < 5) {
             // Delay 1000ms
