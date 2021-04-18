@@ -51,7 +51,7 @@ export class Monitoring {
     this.TerraAssetMapping = {};
 
     for (const [asset, value] of Object.entries(ethContractInfos)) {
-      if (asset === "minter") {
+      if (asset === 'minter') {
         // set minter address
         this.minterAddress = value.contract_address;
 
@@ -107,7 +107,7 @@ export class Monitoring {
         ...(await Promise.all(txResult.txs.map(this.parseTx.bind(this)))).flat()
       );
 
-      totalPage = txResult.page_total;
+      totalPage = +txResult.page_total;
     } while (page++ < totalPage);
 
     return [targetHeight, monitoringDatas];
