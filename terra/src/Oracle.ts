@@ -57,9 +57,9 @@ class Oracle {
     }
 
     // when the price source is not exists,
-    // just return 1 as price
+    // just return 0 as price
     if (!(asset in this.data)) {
-      return 1;
+      return 0;
     }
 
     const data = this.data[asset];

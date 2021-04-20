@@ -77,6 +77,9 @@ const contractInfos: {
     mFB: {
       contract_address: '0x5501F4713020cf299C3C5929da549Aab3592E451',
     },
+    mCOIN: {
+      contract_address: '0x49022089e78a8D46Ec87A3AF86a1Db6c189aFA6f',
+    },
   },
   bsc_testnet: {
     minter: {
@@ -141,6 +144,9 @@ const contractInfos: {
     },
     mFB: {
       contract_address: '0x354CA25cf8eB08537f6047e9daF02Eb02222C1D5',
+    },
+    mCOIN: {
+      contract_address: '0x24fE38158A7550bEd9A451CBeA67dA4BdC920E95',
     },
   },
   ropsten: {
@@ -213,6 +219,9 @@ const contractInfos: {
     ANC: {
       contract_address: '0x93e9012b0a9DA6d5EeA352c56e22B4Ad7225fC33',
     },
+    mCOIN: {
+      contract_address: '0x807eD0f8149E66Cb74E340bbB298a28E9233181c',
+    },
   },
   mainnet: {
     minter: {
@@ -283,6 +292,9 @@ const contractInfos: {
     },
     ANC: {
       contract_address: '0x0F3ADC247E91c3c50bC08721355A41037E89Bc20',
+    },
+    mCOIN: {
+      contract_address: '0x1e25857931F75022a8814e0B0c3a371942A88437',
     },
   },
 };

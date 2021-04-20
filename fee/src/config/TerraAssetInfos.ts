@@ -141,6 +141,9 @@ const assetInfos: {
     ANC: {
       contract_address: 'terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76',
     },
+    mCOIN: {
+      contract_address: 'terra18wayjpyq28gd970qzgjfmsjj7dmgdk039duhph',
+    },
   },
 };
 
