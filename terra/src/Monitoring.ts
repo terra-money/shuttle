@@ -223,7 +223,8 @@ export class Monitoring {
     const price = await this.oracle.getPrice(asset);
 
     const fee = amount.multipliedBy(FEE_RATE);
-    const minFee = FEE_MIN_AMOUNT.dividedBy(price);
+    const minFee =
+      price == 0 ? new BigNumber(0) : FEE_MIN_AMOUNT.dividedBy(price);
 
     return fee.lt(minFee) ? minFee : fee;
   }
