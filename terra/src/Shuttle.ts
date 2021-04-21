@@ -182,7 +182,8 @@ class Shuttle {
           err.message.includes('ESOCKETTIMEDOUT') ||
           err.message.includes('internal service failure') ||
           err.message.includes('Invalid JSON RPC response') ||
-          err.message.includes('handle request error')
+          err.message.includes('handle request error') ||
+          err.message.includes('Gateway timeout')
         ) {
           if (this.errorCounter++ < 5) {
             // Delay 1000ms
