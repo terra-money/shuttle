@@ -73,6 +73,9 @@ const assetInfos: {
     ANC: {
       contract_address: 'terra1747mad58h0w4y589y3sk84r5efqdev9q4r02pc',
     },
+    mCOIN: {
+      contract_address: 'terra1qre9crlfnulcg0m68qqywqqstplgvrzywsg3am',
+    },
   },
   'columbus-4': {
     LUNA: {
