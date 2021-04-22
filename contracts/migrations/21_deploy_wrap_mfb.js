@@ -15,7 +15,9 @@ module.exports = function (deployer, network) {
     network == "mainnet" ||
     network == "ropsten" ||
     network == "bsc" ||
-    network == "bsc_testnet"
+    network == "bsc_testnet" ||
+    network == "hmy" ||
+    network == "hmy_testnet"
   ) {
     deployer.deploy(WrappedmFB, {
       gas: 5000000,

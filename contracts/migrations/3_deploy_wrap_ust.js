@@ -16,7 +16,9 @@ module.exports = function (deployer, network) {
     network == "ropsten" ||
     network == "bsc" ||
     network == "bsc_testnet" ||
-    network == "kovan"
+    network == "kovan" ||
+    network == "hmy" ||
+    network == "hmy_testnet"
   ) {
     deployer.deploy(WrappedUST, {
       gas: 5000000,
