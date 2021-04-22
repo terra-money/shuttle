@@ -132,6 +132,34 @@ module.exports = {
       skipDryRun: true,
       networkCheckTimeout: 1000000000,
     },
+    hmy_testnet: {
+      provider: () =>
+        new HDWalletProvider({
+          mnemonic: process.env.MNEMONIC,
+          providerOrUrl: `https://api.s0.b.hmny.io/`,
+          addressIndex: process.env.MNEMONIC_INDEX,
+        }),
+      network_id: 1666700000,
+      gas: 5500000,
+      confirmations: 0,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+      networkCheckTimeout: 1000000000,
+    },
+    hmy: {
+      provider: () =>
+        new HDWalletProvider({
+          mnemonic: process.env.MNEMONIC,
+          providerOrUrl: `https://api.s0.t.hmny.io/`,
+          addressIndex: process.env.MNEMONIC_INDEX,
+        }),
+      network_id: 1666600000,
+      gas: 5500000,
+      confirmations: 0,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+      networkCheckTimeout: 1000000000,
+    },
     // Useful for private networks
     // private: {
     // provider: () => new HDWalletProvider(mnemonic, `https://network.io`),

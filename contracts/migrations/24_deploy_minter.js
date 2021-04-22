@@ -6,6 +6,8 @@ const CHAIN_ID = {
   kovan: 42,
   bsc: 56,
   bsc_testnet: 97,
+  hmy: 1666600000,
+  hmy_testnet: 1666700000,
 };
 
 const SIGNERS = {
@@ -34,6 +36,8 @@ const SIGNERS = {
     "0x55C1cAd03272930D4A07873bC6bfA4b910a8d9F1",
     "0xE1354334627a9e0Fa3E6583155803ad70AF4d341",
   ],
+  hmy: [],
+  hmy_testnet: [],
 };
 module.exports = function (deployer, network) {
   if (
@@ -41,7 +45,9 @@ module.exports = function (deployer, network) {
     network == "ropsten" ||
     network == "kovan" ||
     network == "bsc" ||
-    network == "bsc_testnet"
+    network == "bsc_testnet" ||
+    network == "hmy" ||
+    network == "hmy_testnet"
   ) {
     deployer.deploy(Minter, "2", "1", SIGNERS[network], {
       gas: 1300000,
