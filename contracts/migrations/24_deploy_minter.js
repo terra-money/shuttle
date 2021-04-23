@@ -6,6 +6,8 @@ const CHAIN_ID = {
   kovan: 42,
   bsc: 56,
   bsc_testnet: 97,
+  hmy: 1666600000,
+  hmy_testnet: 1666700000,
 };
 
 const SIGNERS = {
@@ -34,14 +36,27 @@ const SIGNERS = {
     "0x55C1cAd03272930D4A07873bC6bfA4b910a8d9F1",
     "0xE1354334627a9e0Fa3E6583155803ad70AF4d341",
   ],
+  hmy: [
+    "0xfbf5e51A5B5eeeaaC2848F42EA55BF94c70d6Ec3",
+    "0xdba44a46CBDa464B5EeF34F0CF02A52EC6B542A6",
+    "0x7CBDF0A968645897aD4fd7501d0090Dc10c266ae",
+  ],
+  hmy_testnet: [
+    "0x5CdAEc988599338999bd171f1608C7e60c641226",
+    "0xf10426e32602E0fd3a942057e8E8bDBB14b87346",
+    "0x461455B0B19843F1d372EBf4B038ce6151AB5f2F",
+  ],
 };
+
 module.exports = function (deployer, network) {
   if (
     network == "mainnet" ||
     network == "ropsten" ||
     network == "kovan" ||
     network == "bsc" ||
-    network == "bsc_testnet"
+    network == "bsc_testnet" ||
+    network == "hmy" ||
+    network == "hmy_testnet"
   ) {
     deployer.deploy(Minter, "2", "1", SIGNERS[network], {
       gas: 1300000,

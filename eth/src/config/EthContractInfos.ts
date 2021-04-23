@@ -149,6 +149,142 @@ const contractInfos: {
       contract_address: '0x24fE38158A7550bEd9A451CBeA67dA4BdC920E95',
     },
   },
+  hmy_testnet: {
+    minter: {
+      contract_address: '0x2e88377Ed1A8A65F35301CEA5d8Ea4e3185B4811',
+    },
+    LUNA: {
+      contract_address: '0x7b6c03Dbd88d35c7b212154E0027ED3e37232c87',
+    },
+    UST: {
+      contract_address: '0x9536d67b73986DE88C2D261efFd3d992C0eb3Bae',
+    },
+    KRT: {
+      contract_address: '0xDf449e7c1a739cF554B1823F68AC76f36019E7e7',
+    },
+    SDT: {
+      contract_address: '0xF6C26EB1381A0A2677afCb648e14AFd2E4620425',
+    },
+    MNT: {
+      contract_address: '0x83c218de3959d1666ae497AB8445F496be26720f',
+    },
+    MIR: {
+      contract_address: '0xb9776E6dC0627Fa655B5Edba7847aDF77975bFD2',
+    },
+    mAAPL: {
+      contract_address: '0x2691C0877730bbBc099aC98404B972Ecda25Dd59',
+    },
+    mGOOGL: {
+      contract_address: '0x9D72e449d118a5d731Cd1bA61e30Bb4a43A9a089',
+    },
+    mTSLA: {
+      contract_address: '0x420F6B6Ae06883783693Af7853F9067C9Ab8A13f',
+    },
+    mNFLX: {
+      contract_address: '0x5E23D8B4822Dc334CD4d9bECAafcf843E3B56996',
+    },
+    mQQQ: {
+      contract_address: '0xBdeCaa9C409087486266F1Cf36d6cE2175876ED3',
+    },
+    mTWTR: {
+      contract_address: '0x835F366F12E53E47FD7A9A69324EecFC936482aa',
+    },
+    mMSFT: {
+      contract_address: '0xC568E95D29eaC9e3E391186D82339B26E90700e5',
+    },
+    mAMZN: {
+      contract_address: '0x0536f52Af31E5145033f6e0fBeaD4f64253f88DB',
+    },
+    mBABA: {
+      contract_address: '0xCC6A9e65fA3855c86E434aDE369e7B606a99371d',
+    },
+    mIAU: {
+      contract_address: '0x31064BbCB363e97a374EE520E1fCDD5B37Ef1Fb0',
+    },
+    mSLV: {
+      contract_address: '0xe64eb3933b9aD5e61d04D6c0Dc64D94238561c13',
+    },
+    mUSO: {
+      contract_address: '0xEDe7a36A27FE7d040E4666D7B8d0515e1EB0be4B',
+    },
+    mVIXY: {
+      contract_address: '0x23F39Ee199707dd5fD27e7B0A23E4B9E4e2eFc2f',
+    },
+    mFB: {
+      contract_address: '0x1a966a0e125526Bd0afaa1578FcE4a190a8e5E8d',
+    },
+    mCOIN: {
+      contract_address: '0x97c576c33eC3a18B2DF7a63c46B33F4C63fC5689',
+    },
+  },
+  hmy: {
+    minter: {
+      contract_address: '0x8BD0D4AB71260A8B83c795a7bfd130FB52c137D7',
+    },
+    LUNA: {
+      contract_address: '0x82Fd227cC2329f77290435B4af86b2aDB5a9402b',
+    },
+    UST: {
+      contract_address: '0xaF86497E1E53644c66b0cDd6a185Fe4559dbF00c',
+    },
+    KRT: {
+      contract_address: '0xC2f2d6A1e103230f18bC6d2249b89BF804f99026',
+    },
+    SDT: {
+      contract_address: '0xFaF1daaB8d433c1F68F1bE343788ECD8AAd08E50',
+    },
+    MNT: {
+      contract_address: '0xDef72a120CB54298177580CbdEF11EF49c8967dc',
+    },
+    MIR: {
+      contract_address: '0x5C9CDdc40cc4329d055238Cd4B9048e00e065279',
+    },
+    mAAPL: {
+      contract_address: '0x1016691eE62beF56f206c6911e5303F100D5d5f5',
+    },
+    mGOOGL: {
+      contract_address: '0x3289652bce58C209410C444dcf62BA90299bb2b9',
+    },
+    mTSLA: {
+      contract_address: '0x5Eaa64c1048d35b94A2D8fb15597Ae4F2C053046',
+    },
+    mNFLX: {
+      contract_address: '0x2534EB5229934F6046708477b73B79593d58BB8D',
+    },
+    mQQQ: {
+      contract_address: '0xD7f91694969E48B48b13f0D7c2f444dB78A0235B',
+    },
+    mTWTR: {
+      contract_address: '0x61f4C88585cBAd4597EC5412C47992ff40Ce03Ab',
+    },
+    mMSFT: {
+      contract_address: '0xB46690039637b203Df75BBcCEF62924872A2Db2C',
+    },
+    mAMZN: {
+      contract_address: '0xFd15393A2a6Cc93fB53DDF60f5213a78Db02EC23',
+    },
+    mBABA: {
+      contract_address: '0x3fFa0BB82f05e26a8d5C5fB7996Cab4683953Ca6',
+    },
+    mIAU: {
+      contract_address: '0x61DAB85648889EbC5e720FB5D908e044B3714325',
+    },
+    mSLV: {
+      contract_address: '0x4C28A9cD3e3AE78fA133036Fc1aF49b47e393fE0',
+    },
+    mUSO: {
+      contract_address: '0x5C3F794e90cA87e0DD7f45D2C454D1D6C53Ced9f',
+    },
+    mVIXY: {
+      contract_address: '0xF0555e1263Ca544ca7b6903B5f1E98e8D6D1A3dc',
+    },
+    mFB: {
+      contract_address: '0x7472D77d228001Fa0B1E8D39e61794E86da2e2BC',
+    },
+    mCOIN: {
+      contract_address: '0xaec2cCF12dE2fa262279f404519fCa63aC9e9A4E',
+    },
+  },
   ropsten: {
     minter: {
       contract_address: '0x5dFeBAFdd0079Cd6D32415bd2507B842812B8a0F',
