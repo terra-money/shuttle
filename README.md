@@ -11,12 +11,13 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
   - [Components](#components)
   - [ERC20 Contracts](#erc20-contracts)
   - [BEP20 Contracts on BSC (Binance Smart Chain)](#bep20-contracts-on-bsc-binance-smart-chain)
+  - [HRC20 Contracts on Harmony One](#hrc20-contracts-on-harmony-one)
   - [Terra Denoms and Contracts](#terra-denoms-and-contracts)
   - [Usage Instructions](#usage-instructions)
-    - [Terra => Ethereum / BSC](#terra--ethereum--bsc)
+    - [Terra => Ethereum / BSC / Harmony](#terra--ethereum--bsc--harmony)
       - [Native Assets](#native-assets)
       - [CW20 Tokens](#cw20-tokens)
-    - [Ethereum / BSC => Terra](#ethereum--bsc--terra)
+    - [Ethereum / BSC / Harmony => Terra](#ethereum--bsc--harmony--terra)
   - [Relaying Fee](#relaying-fee)
 
 ## Components
@@ -79,6 +80,32 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
 | mFB    | 0x5501F4713020cf299C3C5929da549Aab3592E451 | 0x354CA25cf8eB08537f6047e9daF02Eb02222C1D5 |
 | mCOIN  | 0x49022089e78a8D46Ec87A3AF86a1Db6c189aFA6f | 0x24fE38158A7550bEd9A451CBeA67dA4BdC920E95 |
 
+## HRC20 Contracts on Harmony One
+
+| asset  | hmy                                        | hmy-testnet                                |
+| ------ | ------------------------------------------ | ------------------------------------------ |
+| LUNA   | 0x82Fd227cC2329f77290435B4af86b2aDB5a9402b | 0x7b6c03Dbd88d35c7b212154E0027ED3e37232c87 |
+| UST    | 0xaF86497E1E53644c66b0cDd6a185Fe4559dbF00c | 0x9536d67b73986DE88C2D261efFd3d992C0eb3Bae |
+| KRT    | 0xC2f2d6A1e103230f18bC6d2249b89BF804f99026 | 0xDf449e7c1a739cF554B1823F68AC76f36019E7e7 |
+| SDT    | 0xFaF1daaB8d433c1F68F1bE343788ECD8AAd08E50 | 0xF6C26EB1381A0A2677afCb648e14AFd2E4620425 |
+| MNT    | 0xDef72a120CB54298177580CbdEF11EF49c8967dc | 0x83c218de3959d1666ae497AB8445F496be26720f |
+| MIR    | 0x5C9CDdc40cc4329d055238Cd4B9048e00e065279 | 0xb9776E6dC0627Fa655B5Edba7847aDF77975bFD2 |
+| mAAPL  | 0x1016691eE62beF56f206c6911e5303F100D5d5f5 | 0x2691C0877730bbBc099aC98404B972Ecda25Dd59 |
+| mGOOGL | 0x3289652bce58C209410C444dcf62BA90299bb2b9 | 0x9D72e449d118a5d731Cd1bA61e30Bb4a43A9a089 |
+| mTSLA  | 0x5Eaa64c1048d35b94A2D8fb15597Ae4F2C053046 | 0x420F6B6Ae06883783693Af7853F9067C9Ab8A13f |
+| mNFLX  | 0x2534EB5229934F6046708477b73B79593d58BB8D | 0x5E23D8B4822Dc334CD4d9bECAafcf843E3B56996 |
+| mQQQ   | 0xD7f91694969E48B48b13f0D7c2f444dB78A0235B | 0xBdeCaa9C409087486266F1Cf36d6cE2175876ED3 |
+| mTWTR  | 0x61f4C88585cBAd4597EC5412C47992ff40Ce03Ab | 0x835F366F12E53E47FD7A9A69324EecFC936482aa |
+| mMSFT  | 0xB46690039637b203Df75BBcCEF62924872A2Db2C | 0xC568E95D29eaC9e3E391186D82339B26E90700e5 |
+| mAMZN  | 0xFd15393A2a6Cc93fB53DDF60f5213a78Db02EC23 | 0x0536f52Af31E5145033f6e0fBeaD4f64253f88DB |
+| mBABA  | 0x3fFa0BB82f05e26a8d5C5fB7996Cab4683953Ca6 | 0xCC6A9e65fA3855c86E434aDE369e7B606a99371d |
+| mIAU   | 0x61DAB85648889EbC5e720FB5D908e044B3714325 | 0x31064BbCB363e97a374EE520E1fCDD5B37Ef1Fb0 |
+| mSLV   | 0x4C28A9cD3e3AE78fA133036Fc1aF49b47e393fE0 | 0xe64eb3933b9aD5e61d04D6c0Dc64D94238561c13 |
+| mUSO   | 0x5C3F794e90cA87e0DD7f45D2C454D1D6C53Ced9f | 0xEDe7a36A27FE7d040E4666D7B8d0515e1EB0be4B |
+| mVIXY  | 0xF0555e1263Ca544ca7b6903B5f1E98e8D6D1A3dc | 0x23F39Ee199707dd5fD27e7B0A23E4B9E4e2eFc2f |
+| mFB    | 0x7472D77d228001Fa0B1E8D39e61794E86da2e2BC | 0x1a966a0e125526Bd0afaa1578FcE4a190a8e5E8d |
+| mCOIN  | 0xaec2cCF12dE2fa262279f404519fCa63aC9e9A4E | 0x97c576c33eC3a18B2DF7a63c46B33F4C63fC5689 |
+
 ## Terra Denoms and Contracts
 
 | asset  | mainnet                                      | tequila-0004                                 |
@@ -111,7 +138,7 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
 
 **NOTE:** Only assets recognized (listed above) can be used with Shuttle. Sending an asset not mentioned in this document will result in permanent loss of funds.
 
-### Terra => Ethereum / BSC
+### Terra => Ethereum / BSC / Harmony
 
 To transfer an asset from Terra to Ethereum or BSC using Shuttle, send the asset to the Shuttle address inside a transaction whose memo field is set to the recipient address on the destination chain.
 
@@ -220,7 +247,7 @@ Example transactions:
 
   https://testnet.bscscan.com/tx/0xa05dd296b93cf46697d39fd8c9552b22d353ea4d28a0dbc5f90725166d1b3f16
 
-### Ethereum / BSC => Terra
+### Ethereum / BSC / Harmony => Terra
 
 > Shuttle waits 7 block confirmations before relaying a tx.
 
@@ -247,4 +274,5 @@ Ex)
 
 
 ## Relaying Fee
+
 Shuttle charges a fee only for transferring assets from Terra to Ethereum/BSC, and the quantity is calculated as `max($1, 0.1% * amount)`. **A transaction with tiny amount smaller than $1 value will be ignored.**
