@@ -1,15 +1,21 @@
 import {
   DynamoDBClient,
   CreateTableCommand,
+  CreateTableCommandInput,
   PutItemCommand,
+  PutItemCommandInput,
   GetItemCommand,
+  GetItemCommandInput,
   ResourceNotFoundException,
   DescribeTableCommand,
+  DescribeTableCommandInput,
   BatchGetItemCommand,
+  BatchGetItemCommandInput,
   BatchWriteItemCommand,
+  BatchWriteItemCommandInput,
+  AttributeValue,
   UpdateItemCommand,
   UpdateItemCommandInput,
-  AttributeValue,
 } from '@aws-sdk/client-dynamodb';
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
@@ -43,7 +49,7 @@ export class DynamoDB {
   }
 
   async hasTransaction(fromTxHash: string): Promise<boolean> {
-    const params = {
+    const params: GetItemCommandInput = {
       TableName: DYNAMO_TRANSACTION_TABLE_NAME,
       Key: {
         FromTxHash: { S: fromTxHash },
@@ -66,7 +72,7 @@ export class DynamoDB {
   async hasTransactions(
     fromTxHash: string[]
   ): Promise<{ [key: string]: boolean }> {
-    const params = {
+    const params: BatchGetItemCommandInput = {
       RequestItems: {
         DYNAMO_TRANSACTION_TABLE_NAME: {
           Keys: fromTxHash.map((txHash) => {
@@ -97,7 +103,7 @@ export class DynamoDB {
   }
 
   async storeTransactions(datas: TransactionData[]) {
-    const params = {
+    const params: BatchWriteItemCommandInput = {
       RequestItems: {
         DYNAMO_TRANSACTION_TABLE_NAME: datas.map((data) => {
           return {
@@ -120,7 +126,7 @@ export class DynamoDB {
   }
 
   async storeTransaction(data: TransactionData) {
-    const params = {
+    const params: PutItemCommandInput = {
       TableName: DYNAMO_TRANSACTION_TABLE_NAME,
       Item: {
         FromTxHash: { S: data.fromTxHash },
@@ -155,7 +161,9 @@ export class DynamoDB {
   }
 
   async hasTransactionTable(): Promise<boolean> {
-    const params = { TableName: DYNAMO_TRANSACTION_TABLE_NAME };
+    const params: DescribeTableCommandInput = {
+      TableName: DYNAMO_TRANSACTION_TABLE_NAME,
+    };
     return await this.client
       .send(new DescribeTableCommand(params))
       .then((res) => res.Table !== undefined)
@@ -169,7 +177,7 @@ export class DynamoDB {
   }
 
   async createTransactionTable() {
-    const params = {
+    const params: CreateTableCommandInput = {
       TableName: DYNAMO_TRANSACTION_TABLE_NAME,
       AttributeDefinitions: [
         {
@@ -209,7 +217,7 @@ export class DynamoDB {
           KeySchema: [
             {
               AttributeName: 'Sender',
-              KeyType: 'Range',
+              KeyType: 'RANGE',
             },
           ],
           Projection: {
@@ -221,7 +229,7 @@ export class DynamoDB {
           KeySchema: [
             {
               AttributeName: 'Recipient',
-              KeyType: 'Range',
+              KeyType: 'RANGE',
             },
           ],
           Projection: {
