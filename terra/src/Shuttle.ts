@@ -375,39 +375,41 @@ class Shuttle {
               idx,
               JSON.stringify(newRelayData)
             );
+
+            if (relayData.fromTxHash) {
+              await this.dynamoDB.updateToTxHash(
+                relayData.fromTxHash,
+                newRelayData.txHash
+              );
+            }
           }
 
           // Relay even though the tx info is not changed
-          await this.relayer
-            .relay(newRelayData)
-            .then(async (_) => {
-              if (replaced) {
-                // There is possibility to be not replaced because
-                // already the tx included at broadcasting
-                // so update tx hash after success
+          await this.relayer.relay(newRelayData).catch(async (err) => {
+            // Sometimes, there are possibilities
+            // that tx is found during rebroadcast
+            if (
+              err.message === 'already known' ||
+              err.message === 'replacement transaction underpriced'
+            ) {
+              // Tx is in pending state; wait
+              return;
+            } else if (err.message === 'nonce too low') {
+              // Tx is already included; delete
+              await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
+
+              // Revert toTxHash to previous one
+              if (relayData.fromTxHash) {
                 await this.dynamoDB.updateToTxHash(
-                  relayData.txHash,
-                  newRelayData.txHash
+                  relayData.fromTxHash,
+                  relayData.txHash
                 );
               }
-            })
-            .catch(async (err) => {
-              // Sometimes, there are possibilities
-              // that tx is found during rebroadcast
-              if (
-                err.message === 'already known' ||
-                err.message === 'replacement transaction underpriced'
-              ) {
-                // Tx is in pending state; wait
-                return;
-              } else if (err.message === 'nonce too low') {
-                // Tx is already included; delete
-                await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
-              } else {
-                // Unknown problem happened
-                throw err;
-              }
-            });
+            } else {
+              // Unknown problem happened
+              throw err;
+            }
+          });
         }
       } else if (txReceipt.status) {
         // tx found in block, remove it

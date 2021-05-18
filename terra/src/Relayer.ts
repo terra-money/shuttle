@@ -20,6 +20,7 @@ export interface RelayData {
   transactionConfig: TransactionConfig;
   signedTxData: string;
   txHash: string;
+  fromTxHash?: string;
   createdAt: number;
 }
 
@@ -171,6 +172,7 @@ export class Relayer {
       transactionConfig,
       signedTxData: signedTransaction.raw,
       txHash,
+      fromTxHash: monitoringData.txHash,
       createdAt: new Date().getTime(),
     };
   }
@@ -229,6 +231,7 @@ export class Relayer {
       transactionConfig,
       signedTxData: signedTransaction.raw,
       txHash,
+      fromTxHash: monitoringData.txHash,
       createdAt: new Date().getTime(),
     };
   }
