@@ -10,6 +10,7 @@ BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
 import { Monitoring, MonitoringData } from './Monitoring';
 import { Relayer, RelayData } from './Relayer';
+import { DynamoDB } from './DynamoDB';
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 
@@ -36,6 +37,8 @@ const ax = axios.create({
 class Shuttle {
   monitoring: Monitoring;
   relayer: Relayer;
+  dynamoDB: DynamoDB;
+
   getAsync: (key: string) => Promise<string | null>;
   setAsync: (key: string, val: string) => Promise<unknown>;
   llenAsync: (key: string) => Promise<number>;
@@ -68,10 +71,15 @@ class Shuttle {
 
     this.monitoring = new Monitoring();
     this.relayer = new Relayer();
+    this.dynamoDB = new DynamoDB();
     this.sequence = 0;
   }
 
   async startMonitoring() {
+    if (!this.dynamoDB.hasTransactionTable()) {
+      await this.dynamoDB.createTransactionTable();
+    }
+
     const sequence = await this.getAsync(KEY_NEXT_SEQUENCE);
     if (sequence && sequence !== '') {
       this.sequence = parseInt(sequence);
@@ -135,8 +143,18 @@ class Shuttle {
 
     // Relay to terra chain
     if (monitoringDatas.length > 0) {
+      // Batch load processed txs from the dynamoDB
+      const existingTxs = await this.dynamoDB.hasTransactions(
+        monitoringDatas.map((v) => v.txHash)
+      );
+
+      // Filter out already processed items
+      const monitoringDataAfterFilter = monitoringDatas.filter(
+        (v) => !existingTxs[v.txHash]
+      );
+
       const relayData = await this.relayer.build(
-        monitoringDatas,
+        monitoringDataAfterFilter,
         this.sequence
       );
 
@@ -153,7 +171,10 @@ class Shuttle {
           await ax
             .post(
               SLACK_WEB_HOOK,
-              this.buildSlackNotification(monitoringDatas, relayData.txHash)
+              this.buildSlackNotification(
+                monitoringDataAfterFilter,
+                relayData.txHash
+              )
             )
             .catch(() => {
               console.error('Slack Notification Error');
@@ -162,12 +183,26 @@ class Shuttle {
 
         console.info(`Relay Success: ${relayData.txHash}`);
 
-        // Do logging first and relay later
+        // Batch write transaction info
+        await this.dynamoDB.storeTransactions(
+          monitoringDataAfterFilter.map((v) => {
+            return {
+              sender: v.sender,
+              asset: v.asset,
+              amount: v.amount,
+              recipient: v.to,
+              fromTxHash: v.txHash,
+              toTxHash: relayData.txHash,
+            };
+          })
+        );
+
+        // Relay tx
         await this.relayer.relay(relayData.tx);
       } else await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
     } else await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
 
-    // When catched the block height, wait 10 second
+    // When catch the latest block height, wait 10 second
     if (newLastHeight === lastHeight) {
       await Bluebird.delay((ETH_BLOCK_SECOND * ETH_BLOCK_LOAD_UNIT * 1000) / 2);
     }

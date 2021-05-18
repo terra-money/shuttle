@@ -10,6 +10,7 @@ BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
 import { Monitoring, MonitoringData } from './Monitoring';
 import { Relayer, RelayData } from './Relayer';
+import { DynamoDB } from './DynamoDB';
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 
@@ -39,6 +40,8 @@ const ax = axios.create({
 class Shuttle {
   monitoring: Monitoring;
   relayer: Relayer;
+  dynamoDB: DynamoDB;
+
   getAsync: (key: string) => Promise<string | null>;
   setAsync: (key: string, val: string) => Promise<unknown>;
   delAsync: (key: string) => Promise<unknown>;
@@ -77,6 +80,7 @@ class Shuttle {
 
     this.monitoring = new Monitoring();
     this.relayer = new Relayer();
+    this.dynamoDB = new DynamoDB();
 
     this.nonce = 0;
     this.minterNonce = 0;
@@ -85,6 +89,10 @@ class Shuttle {
   }
 
   async startMonitoring() {
+    if (!this.dynamoDB.hasTransactionTable()) {
+      await this.dynamoDB.createTransactionTable();
+    }
+
     const nonce = await this.getAsync(KEY_NEXT_NONCE);
     if (nonce && nonce !== '') {
       this.nonce = parseInt(nonce);
@@ -232,41 +240,42 @@ class Shuttle {
     // To prevent duplicate relay, set string KEY_LAST_TXHASH.
     // When the KEY_LAST_TXHASH exists, skip relay util that txhash
     const lastTxHash = await this.getAsync(KEY_LAST_TXHASH);
-    let i = 0;
 
     // Skip to lastTxHash
-    for (; lastTxHash && i < monitoringDatas.length; i++) {
-      const monitoringData = monitoringDatas[i];
-
-      if (lastTxHash === monitoringData.txHash) {
-        i++; // start from next index
+    for (let i = 0; lastTxHash && i < monitoringDatas.length; i++) {
+      if (lastTxHash === monitoringDatas[i].txHash) {
+        // Remove processed data inclusively
+        monitoringDatas.splice(0, i + 1);
         break;
       }
     }
+
+    // Batch load processed txs from the dynamoDB
+    const existingTxs = await this.dynamoDB.hasTransactions(
+      monitoringDatas.map((v) => v.txHash)
+    );
+
+    // Filter out already processed items
+    const monitoringDataAfterFilter = monitoringDatas.filter(
+      (v) => !existingTxs[v.txHash]
+    );
 
     // load latest gas price
     const gasPrice = new BigNumber(await this.relayer.getGasPrice())
       .multipliedBy(1.2)
       .toFixed(0);
 
-    for (; i < monitoringDatas.length; i++) {
-      const monitoringData = monitoringDatas[i];
-      let relayData: RelayData;
-      if (this.monitoring.minterAddress) {
-        relayData = await this.relayer.buildMultiSig(
-          monitoringData,
-          this.monitoring.minterAddress,
-          this.nonce++,
-          this.minterNonce++,
-          gasPrice
-        );
-      } else {
-        relayData = await this.relayer.build(
-          monitoringData,
-          this.nonce++,
-          gasPrice
-        );
-      }
+    const relayDatas: RelayData[] = [];
+    for (const monitoringData of monitoringDataAfterFilter) {
+      const relayData: RelayData = this.monitoring.minterAddress
+        ? await this.relayer.buildMultiSig(
+            monitoringData,
+            this.monitoring.minterAddress,
+            this.nonce++,
+            this.minterNonce++,
+            gasPrice
+          )
+        : await this.relayer.build(monitoringData, this.nonce++, gasPrice);
 
       await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
       await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
@@ -285,15 +294,32 @@ class Shuttle {
           });
       }
 
+      relayDatas.push(relayData);
       console.info(`Relay Success: ${relayData.txHash}`);
-
-      // Do logging first and relay later
-      await this.relayer.relay(relayData);
     }
 
     // Update last_height
     await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
     await this.delAsync(KEY_LAST_TXHASH);
+
+    // Batch write transaction info
+    await this.dynamoDB.storeTransactions(
+      monitoringDataAfterFilter.map((v, i) => {
+        return {
+          sender: v.sender,
+          asset: v.asset,
+          amount: v.amount,
+          recipient: v.to,
+          fromTxHash: v.txHash,
+          toTxHash: relayDatas[i].txHash,
+        };
+      })
+    );
+
+    // Relay transaction
+    for (const relayData of relayDatas) {
+      await this.relayer.relay(relayData);
+    }
 
     console.info(`HEIGHT: ${newLastHeight}`);
     this.errorCounter--;
@@ -342,25 +368,46 @@ class Shuttle {
             targetGasPrice
           );
 
-          // change the data to new info
-          await this.lsetAsync(KEY_QUEUE_TX, idx, JSON.stringify(newRelayData));
-          await this.relayer.relay(newRelayData).catch(async (err) => {
-            // Sometimes, there are possibilities
-            // that tx is found during rebroadcast
-            if (
-              err.message === 'already known' ||
-              err.message === 'replacement transaction underpriced'
-            ) {
-              // Tx is in pending state; wait
-              return;
-            } else if (err.message === 'nonce too low') {
-              // Tx is already included; delete
-              await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
-            } else {
-              // Unknown problem happened
-              throw err;
-            }
-          });
+          const replaced = relayData.txHash !== newRelayData.txHash;
+          if (replaced) {
+            await this.lsetAsync(
+              KEY_QUEUE_TX,
+              idx,
+              JSON.stringify(newRelayData)
+            );
+          }
+
+          // Relay even though the tx info is not changed
+          await this.relayer
+            .relay(newRelayData)
+            .then(async (_) => {
+              if (replaced) {
+                // There is possibility to be not replaced because
+                // already the tx included at broadcasting
+                // so update tx hash after success
+                await this.dynamoDB.updateToTxHash(
+                  relayData.txHash,
+                  newRelayData.txHash
+                );
+              }
+            })
+            .catch(async (err) => {
+              // Sometimes, there are possibilities
+              // that tx is found during rebroadcast
+              if (
+                err.message === 'already known' ||
+                err.message === 'replacement transaction underpriced'
+              ) {
+                // Tx is in pending state; wait
+                return;
+              } else if (err.message === 'nonce too low') {
+                // Tx is already included; delete
+                await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
+              } else {
+                // Unknown problem happened
+                throw err;
+              }
+            });
         }
       } else if (txReceipt.status) {
         // tx found in block, remove it
