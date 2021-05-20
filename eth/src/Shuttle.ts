@@ -76,10 +76,6 @@ class Shuttle {
   }
 
   async startMonitoring() {
-    if (!this.dynamoDB.hasTransactionTable()) {
-      await this.dynamoDB.createTransactionTable();
-    }
-
     const sequence = await this.getAsync(KEY_NEXT_SEQUENCE);
     if (sequence && sequence !== '') {
       this.sequence = parseInt(sequence);

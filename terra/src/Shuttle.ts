@@ -89,10 +89,6 @@ class Shuttle {
   }
 
   async startMonitoring() {
-    if (!this.dynamoDB.hasTransactionTable()) {
-      await this.dynamoDB.createTransactionTable();
-    }
-
     const nonce = await this.getAsync(KEY_NEXT_NONCE);
     if (nonce && nonce !== '') {
       this.nonce = parseInt(nonce);
