@@ -1,14 +1,10 @@
 import {
   DynamoDBClient,
-  CreateTableCommand,
-  CreateTableCommandInput,
   PutItemCommand,
   PutItemCommandInput,
   GetItemCommand,
   GetItemCommandInput,
   ResourceNotFoundException,
-  DescribeTableCommand,
-  DescribeTableCommandInput,
   BatchGetItemCommand,
   BatchGetItemCommandInput,
   BatchWriteItemCommand,
@@ -75,7 +71,7 @@ export class DynamoDB {
   ): Promise<{ [key: string]: boolean }> {
     const params: BatchGetItemCommandInput = {
       RequestItems: {
-        DYNAMO_TRANSACTION_TABLE_NAME: {
+        [DYNAMO_TRANSACTION_TABLE_NAME]: {
           Keys: fromTxHash.map((txHash) => {
             return {
               ShuttleID: { S: DYNAMO_SHUTTLE_ID },
@@ -109,7 +105,7 @@ export class DynamoDB {
   async storeTransactions(datas: TransactionData[]) {
     const params: BatchWriteItemCommandInput = {
       RequestItems: {
-        DYNAMO_TRANSACTION_TABLE_NAME: datas.map((data) => {
+        [DYNAMO_TRANSACTION_TABLE_NAME]: datas.map((data) => {
           return {
             PutRequest: {
               Item: {
