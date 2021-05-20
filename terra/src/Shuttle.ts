@@ -246,75 +246,80 @@ class Shuttle {
       }
     }
 
-    // Batch load processed txs from the dynamoDB
-    const existingTxs = await this.dynamoDB.hasTransactions(
-      monitoringDatas.map((v) => v.txHash)
-    );
+    if (monitoringDatas.length > 0) {
+      // Batch load processed txs from the dynamoDB
+      const existingTxs = await this.dynamoDB.hasTransactions(
+        monitoringDatas.map((v) => v.txHash)
+      );
 
-    // Filter out already processed items
-    const monitoringDataAfterFilter = monitoringDatas.filter(
-      (v) => !existingTxs[v.txHash]
-    );
+      // Filter out already processed items
+      const monitoringDataAfterFilter = monitoringDatas.filter(
+        (v) => !existingTxs[v.txHash]
+      );
 
-    // load latest gas price
-    const gasPrice = new BigNumber(await this.relayer.getGasPrice())
-      .multipliedBy(1.2)
-      .toFixed(0);
+      // load latest gas price
+      const gasPrice = new BigNumber(await this.relayer.getGasPrice())
+        .multipliedBy(1.2)
+        .toFixed(0);
 
-    const relayDatas: RelayData[] = [];
-    for (const monitoringData of monitoringDataAfterFilter) {
-      const relayData: RelayData = this.monitoring.minterAddress
-        ? await this.relayer.buildMultiSig(
-            monitoringData,
-            this.monitoring.minterAddress,
-            this.nonce++,
-            this.minterNonce++,
-            gasPrice
-          )
-        : await this.relayer.build(monitoringData, this.nonce++, gasPrice);
+      const relayDatas: RelayData[] = [];
+      for (const monitoringData of monitoringDataAfterFilter) {
+        const relayData: RelayData = this.monitoring.minterAddress
+          ? await this.relayer.buildMultiSig(
+              monitoringData,
+              this.monitoring.minterAddress,
+              this.nonce++,
+              this.minterNonce++,
+              gasPrice
+            )
+          : await this.relayer.build(monitoringData, this.nonce++, gasPrice);
 
-      await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
-      await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
-      await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
-      await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
+        await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
+        await this.setAsync(KEY_LAST_TXHASH, monitoringData.txHash);
+        await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
+        await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
 
-      // Notify to slack
-      if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
-        await ax
-          .post(
-            SLACK_WEB_HOOK,
-            buildSlackNotification(monitoringData, relayData.txHash)
-          )
-          .catch(() => {
-            console.error('Slack Notification Error');
-          });
+        // Notify to slack
+        if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
+          await ax
+            .post(
+              SLACK_WEB_HOOK,
+              buildSlackNotification(monitoringData, relayData.txHash)
+            )
+            .catch(() => {
+              console.error('Slack Notification Error');
+            });
+        }
+
+        relayDatas.push(relayData);
+        console.info(`Relay Success: ${relayData.txHash}`);
       }
 
-      relayDatas.push(relayData);
-      console.info(`Relay Success: ${relayData.txHash}`);
-    }
+      // Update last_height
+      await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
+      await this.delAsync(KEY_LAST_TXHASH);
 
-    // Update last_height
-    await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
-    await this.delAsync(KEY_LAST_TXHASH);
+      // Batch write transaction info
+      await this.dynamoDB.storeTransactions(
+        monitoringDataAfterFilter.map((v, i) => {
+          return {
+            sender: v.sender,
+            asset: v.asset,
+            amount: v.amount,
+            recipient: v.to,
+            fromTxHash: v.txHash,
+            toTxHash: relayDatas[i].txHash,
+          };
+        })
+      );
 
-    // Batch write transaction info
-    await this.dynamoDB.storeTransactions(
-      monitoringDataAfterFilter.map((v, i) => {
-        return {
-          sender: v.sender,
-          asset: v.asset,
-          amount: v.amount,
-          recipient: v.to,
-          fromTxHash: v.txHash,
-          toTxHash: relayDatas[i].txHash,
-        };
-      })
-    );
-
-    // Relay transaction
-    for (const relayData of relayDatas) {
-      await this.relayer.relay(relayData);
+      // Relay transaction
+      for (const relayData of relayDatas) {
+        await this.relayer.relay(relayData);
+      }
+    } else {
+      await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
+      await this.delAsync(KEY_LAST_TXHASH);
     }
 
     console.info(`HEIGHT: ${newLastHeight}`);
