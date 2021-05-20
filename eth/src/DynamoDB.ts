@@ -18,11 +18,11 @@ import {
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 
-const DYNAMO_PREFIX = `ETH_SHUTTLE_${ETH_CHAIN_ID.toUpperCase()}`;
+const DYNAMO_SHUTTLE_ID = `ETH_SHUTTLE_${ETH_CHAIN_ID.toUpperCase()}`;
 const DYNAMO_ACCESS_KEY_ID = process.env.DYNAMO_ACCESS_KEY_ID as string;
 const DYNAMO_SECRET_ACCESS_KEY = process.env.DYNAMO_SECRET_ACCESS_KEY as string;
 const DYNAMO_REGION = process.env.DYNAMO_REGION as string;
-const DYNAMO_TRANSACTION_TABLE_NAME = `${DYNAMO_PREFIX}_TRANSACTION`;
+const DYNAMO_TRANSACTION_TABLE_NAME = `ShuttleTx`;
 
 export interface TransactionData {
   fromTxHash: string;
@@ -50,6 +50,7 @@ export class DynamoDB {
     const params: GetItemCommandInput = {
       TableName: DYNAMO_TRANSACTION_TABLE_NAME,
       Key: {
+        ShuttleID: { S: DYNAMO_SHUTTLE_ID },
         FromTxHash: { S: fromTxHash },
       },
       ProjectionExpression: 'FromTxHash',
@@ -74,7 +75,10 @@ export class DynamoDB {
       RequestItems: {
         DYNAMO_TRANSACTION_TABLE_NAME: {
           Keys: fromTxHash.map((txHash) => {
-            return { FromTxHash: { S: txHash } };
+            return {
+              ShuttleID: { S: DYNAMO_SHUTTLE_ID },
+              FromTxHash: { S: txHash },
+            };
           }),
           ProjectionExpression: 'FromTxHash',
         },
@@ -113,6 +117,7 @@ export class DynamoDB {
                 ToTxHash: { S: data.toTxHash },
                 Sender: { S: data.sender },
                 Recipient: { S: data.recipient },
+                ShuttleID: { S: DYNAMO_SHUTTLE_ID },
               },
             },
           };
@@ -133,6 +138,7 @@ export class DynamoDB {
         Sender: { S: data.sender },
         Recipient: { S: data.recipient },
         Amount: { S: data.amount },
+        ShuttleID: { S: DYNAMO_SHUTTLE_ID },
       },
     };
 
@@ -189,36 +195,36 @@ export class DynamoDB {
           AttributeName: 'Amount',
           AttributeType: 'S',
         },
+        {
+          AttributeName: 'ShuttleID',
+          AttributeType: 'S',
+        },
       ],
       KeySchema: [
         {
-          AttributeName: 'FromTxHash',
+          AttributeName: 'ShuttleID',
           KeyType: 'HASH',
+        },
+        {
+          AttributeName: 'FromTxHash',
+          KeyType: 'RANGE',
         },
       ],
       LocalSecondaryIndexes: [
         {
-          IndexName: 'SenderIndexer',
+          IndexName: 'ShuttleIDSenderIndexer',
           KeySchema: [
+            {
+              AttributeName: 'ShuttleID',
+              KeyType: 'HASH',
+            },
             {
               AttributeName: 'Sender',
               KeyType: 'RANGE',
             },
           ],
           Projection: {
-            ProjectionType: 'KEYS_ONLY',
-          },
-        },
-        {
-          IndexName: 'RecipientIndexer',
-          KeySchema: [
-            {
-              AttributeName: 'Recipient',
-              KeyType: 'RANGE',
-            },
-          ],
-          Projection: {
-            ProjectionType: 'KEYS_ONLY',
+            ProjectionType: 'ALL',
           },
         },
       ],
