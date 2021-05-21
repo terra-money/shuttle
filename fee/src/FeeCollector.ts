@@ -12,6 +12,7 @@ import {
   MsgSend,
   MsgExecuteContract,
   isTxError,
+  Int,
 } from '@terra-money/terra.js';
 import prompts from 'prompts';
 
@@ -136,11 +137,20 @@ export class FeeCollector {
     const fromAddr = this.Wallet.key.accAddress;
     const toAddr = this.FeeCollectorAddr;
 
-    const msgs: Msg[] = collectedFees.reduce((msgs: Msg[], [asset, amount]) => {
+    const msgs: Msg[] = [];
+    const taxRate = await this.LCDClient.treasury.taxRate();
+    for (const [asset, amount] of collectedFees) {
       const info = this.TerraAssetInfos[asset];
       if (info.denom) {
         const denom = info.denom;
-        msgs.push(new MsgSend(fromAddr, toAddr, [new Coin(denom, amount)]));
+        const beforeAmount = new Int(amount);
+        const tmpTax = new Int(beforeAmount.mul(taxRate));
+        const taxCap = new Int((await this.LCDClient.treasury.taxCap(denom)).amount);
+
+        const taxAmount = tmpTax.lt(taxCap) ? tmpTax: taxCap;
+        const afterAmount = beforeAmount.sub(taxAmount);
+
+        msgs.push(new MsgSend(fromAddr, toAddr, [new Coin(denom, afterAmount)]));
       } else if (info.contract_address) {
         const contract_address = info.contract_address;
 
@@ -158,9 +168,7 @@ export class FeeCollector {
           )
         );
       }
-
-      return msgs;
-    }, []);
+    }
 
     if (msgs.length === 0) {
       return null;
