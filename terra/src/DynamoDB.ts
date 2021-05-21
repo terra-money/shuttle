@@ -13,7 +13,6 @@ import {
   UpdateItemCommand,
   UpdateItemCommandInput,
   WriteRequest,
-  BatchGetItemInput,
   KeysAndAttributes,
 } from '@aws-sdk/client-dynamodb';
 

@@ -10,6 +10,8 @@ import {
   BatchWriteItemCommand,
   BatchWriteItemCommandInput,
   AttributeValue,
+  KeysAndAttributes,
+  WriteRequest,
 } from '@aws-sdk/client-dynamodb';
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
@@ -19,6 +21,7 @@ const DYNAMO_ACCESS_KEY_ID = process.env.DYNAMO_ACCESS_KEY_ID as string;
 const DYNAMO_SECRET_ACCESS_KEY = process.env.DYNAMO_SECRET_ACCESS_KEY as string;
 const DYNAMO_REGION = process.env.DYNAMO_REGION as string;
 const DYNAMO_TRANSACTION_TABLE_NAME = `ShuttleTx`;
+const DYNAMO_MAX_LOAD_UNIT = 100;
 
 export interface TransactionData {
   fromTxHash: string;
@@ -65,63 +68,79 @@ export class DynamoDB {
   }
 
   async hasTransactions(
-    fromTxHash: string[]
+    fromTxHashes: string[]
   ): Promise<{ [key: string]: boolean }> {
-    const params: BatchGetItemCommandInput = {
-      RequestItems: {
-        [DYNAMO_TRANSACTION_TABLE_NAME]: {
-          Keys: fromTxHash.map((txHash) => {
-            return {
-              ShuttleID: { S: DYNAMO_SHUTTLE_ID },
-              FromTxHash: { S: txHash },
-            };
-          }),
-          ProjectionExpression: 'FromTxHash',
-        },
+    if (fromTxHashes.length == 0) return {};
+
+    const outOfBoundTxHashes = fromTxHashes.splice(DYNAMO_MAX_LOAD_UNIT);
+    const outOfBoundFoundTxMap = await this.hasTransactions(outOfBoundTxHashes);
+
+    let requestItems: { [key: string]: KeysAndAttributes } = {
+      [DYNAMO_TRANSACTION_TABLE_NAME]: {
+        Keys: fromTxHashes.map((fromTxHash) => {
+          return {
+            ShuttleID: { S: DYNAMO_SHUTTLE_ID },
+            FromTxHash: { S: fromTxHash },
+          };
+        }),
+        ProjectionExpression: 'FromTxHash',
       },
     };
 
-    return await this.client
-      .send(new BatchGetItemCommand(params))
-      .then((res) => {
-        if (
-          res.Responses === undefined ||
-          res.Responses[DYNAMO_TRANSACTION_TABLE_NAME] === undefined
-        ) {
-          return {};
-        }
-        const foundTxs = res.Responses[DYNAMO_TRANSACTION_TABLE_NAME] as {
-          [key: string]: AttributeValue;
-        }[];
+    const foundTxs: {
+      [key: string]: AttributeValue;
+    }[] = [];
 
-        return Object.fromEntries(
-          foundTxs.map((v) => [v['FromTxHash'].S as string, true])
-        );
-      });
+    while (Object.keys(requestItems).length > 0) {
+      const params: BatchGetItemCommandInput = {
+        RequestItems: requestItems,
+      };
+
+      const res = await this.client.send(new BatchGetItemCommand(params));
+      if (res.Responses && res.Responses[DYNAMO_TRANSACTION_TABLE_NAME]) {
+        foundTxs.push(...res.Responses[DYNAMO_TRANSACTION_TABLE_NAME]);
+      }
+
+      requestItems = res.UnprocessedKeys ? res.UnprocessedKeys : {};
+    }
+
+    return Object.assign(
+      Object.fromEntries(
+        foundTxs.map((v) => [v['FromTxHash'].S as string, true])
+      ),
+      outOfBoundFoundTxMap
+    );
   }
 
   async storeTransactions(datas: TransactionData[]) {
-    const params: BatchWriteItemCommandInput = {
-      RequestItems: {
-        [DYNAMO_TRANSACTION_TABLE_NAME]: datas.map((data) => {
-          return {
-            PutRequest: {
-              Item: {
-                Amount: { S: data.amount },
-                Asset: { S: data.asset },
-                FromTxHash: { S: data.fromTxHash },
-                ToTxHash: { S: data.toTxHash },
-                Sender: { S: data.sender },
-                Recipient: { S: data.recipient },
-                ShuttleID: { S: DYNAMO_SHUTTLE_ID },
-              },
+    if (datas.length == 0) return;
+
+    let requestItems: { [key: string]: WriteRequest[] } = {
+      [DYNAMO_TRANSACTION_TABLE_NAME]: datas.map((data) => {
+        return {
+          PutRequest: {
+            Item: {
+              Amount: { S: data.amount },
+              Asset: { S: data.asset },
+              FromTxHash: { S: data.fromTxHash },
+              ToTxHash: { S: data.toTxHash },
+              Sender: { S: data.sender },
+              Recipient: { S: data.recipient },
+              ShuttleID: { S: DYNAMO_SHUTTLE_ID },
             },
-          };
-        }),
-      },
+          },
+        };
+      }),
     };
 
-    this.client.send(new BatchWriteItemCommand(params));
+    while (Object.keys(requestItems).length > 0) {
+      const params: BatchWriteItemCommandInput = {
+        RequestItems: requestItems,
+      };
+
+      const res = await this.client.send(new BatchWriteItemCommand(params));
+      requestItems = res.UnprocessedItems ? res.UnprocessedItems : {};
+    }
   }
 
   async storeTransaction(data: TransactionData) {
