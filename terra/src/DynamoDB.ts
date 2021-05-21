@@ -18,7 +18,10 @@ import {
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 
-const DYNAMO_SHUTTLE_ID = `TERRA_SHUTTLE_${ETH_CHAIN_ID.toUpperCase()}`;
+const DYNAMO_SHUTTLE_ID = `TERRA_SHUTTLE_${ETH_CHAIN_ID.toUpperCase().replace(
+  '-',
+  '_'
+)}`;
 const DYNAMO_ACCESS_KEY_ID = process.env.DYNAMO_ACCESS_KEY_ID as string;
 const DYNAMO_SECRET_ACCESS_KEY = process.env.DYNAMO_SECRET_ACCESS_KEY as string;
 const DYNAMO_REGION = process.env.DYNAMO_REGION as string;
