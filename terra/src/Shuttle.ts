@@ -344,9 +344,7 @@ class Shuttle {
     const relayDatas =
       (await this.lrangeAsync(KEY_QUEUE_TX, 0, Math.min(10, len))) || [];
 
-    const targetGasPrice = new BigNumber(
-      await this.relayer.getGasPrice()
-    ).multipliedBy(1.2);
+    const targetGasPrice = (await this.relayer.getGasPrice()).multipliedBy(1.2);
 
     await Bluebird.mapSeries(relayDatas, async (data, idx) => {
       const relayData: RelayData = JSON.parse(data);
@@ -378,7 +376,7 @@ class Shuttle {
             );
 
             if (relayData.fromTxHash) {
-              await this.dynamoDB.updateToTxHash(
+              await this.dynamoDB.updateReplaceTxHashes(
                 relayData.fromTxHash,
                 newRelayData.txHash
               );
@@ -398,14 +396,6 @@ class Shuttle {
             } else if (err.message === 'nonce too low') {
               // Tx is already included; delete
               await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
-
-              // Revert toTxHash to previous one
-              if (relayData.fromTxHash) {
-                await this.dynamoDB.updateToTxHash(
-                  relayData.fromTxHash,
-                  relayData.txHash
-                );
-              }
             } else {
               // Unknown problem happened
               throw err;

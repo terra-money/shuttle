@@ -171,15 +171,18 @@ export class DynamoDB {
     });
   }
 
-  async updateToTxHash(fromTxHash: string, toTxHash: string) {
+  async updateReplaceTxHashes(fromTxHash: string, toTxHash: string) {
     const params: UpdateItemCommandInput = {
       TableName: DYNAMO_TRANSACTION_TABLE_NAME,
       Key: {
         ShuttleID: { S: DYNAMO_SHUTTLE_ID },
         FromTxHash: { S: fromTxHash },
       },
-      UpdateExpression: 'SET ToTxHash = :t',
-      ExpressionAttributeValues: { ':t': { S: toTxHash } },
+      UpdateExpression: 'ADD ReplaceTxHashes :t, SET HasReplaceTxHashes = :b',
+      ExpressionAttributeValues: {
+        ':t': { SS: [toTxHash] },
+        ':b': { BOOL: true },
+      },
     };
 
     return await this.client.send(new UpdateItemCommand(params));

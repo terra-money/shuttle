@@ -270,8 +270,19 @@ export class Relayer {
     });
   }
 
-  getGasPrice(): Promise<string> {
-    return this.web3.eth.getGasPrice();
+  async getGasPrice(): Promise<BigNumber> {
+    const gasPrice = new BigNumber(await this.web3.eth.getGasPrice());
+
+    const E9 = 10e9;
+    const maxGasPrice = new BigNumber(600 * E9);
+    const minGasPrice = new BigNumber(20 * E9);
+    if (gasPrice.lt(minGasPrice)) {
+      return minGasPrice;
+    } else if (gasPrice.gt(maxGasPrice)) {
+      return maxGasPrice;
+    } else {
+      return gasPrice;
+    }
   }
 
   getTransactionReceipt(txHash: string): Promise<TransactionReceipt> {
