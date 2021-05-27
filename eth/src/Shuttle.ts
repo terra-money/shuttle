@@ -225,7 +225,7 @@ class Shuttle {
       if (tx === null) {
         if (now - relayData.createdAt > 1000 * 60) {
           // tx not found in the block for a minute,
-          await this.relayer.relay(StdTx.fromData(relayData.tx as any));
+          await this.relayer.relay(StdTx.fromData(JSON.parse(relayData.tx)));
         }
       } else {
         // tx found in a block, remove it

@@ -21,7 +21,7 @@ const TERRA_GAS_ADJUSTMENT = process.env.TERRA_GAS_ADJUSTMENT as string;
 const TERRA_DONATION = process.env.TERRA_DONATION as string;
 
 export interface RelayDataRaw {
-  tx: JSON;
+  tx: string;
   txHash: string;
   createdAt: number;
 }

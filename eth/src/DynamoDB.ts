@@ -25,6 +25,7 @@ const DYNAMO_SECRET_ACCESS_KEY = process.env.DYNAMO_SECRET_ACCESS_KEY as string;
 const DYNAMO_REGION = process.env.DYNAMO_REGION as string;
 const DYNAMO_TRANSACTION_TABLE_NAME = `ShuttleTx`;
 const DYNAMO_MAX_LOAD_UNIT = 100;
+const DYNAMO_MAX_STORE_UNIT = 100;
 
 export interface TransactionData {
   fromTxHash: string;
@@ -76,7 +77,6 @@ export class DynamoDB {
     if (fromTxHashes.length == 0) return {};
 
     const outOfBoundTxHashes = fromTxHashes.splice(DYNAMO_MAX_LOAD_UNIT);
-    const outOfBoundFoundTxMap = await this.hasTransactions(outOfBoundTxHashes);
 
     let requestItems: { [key: string]: KeysAndAttributes } = {
       [DYNAMO_TRANSACTION_TABLE_NAME]: {
@@ -107,6 +107,8 @@ export class DynamoDB {
       requestItems = res.UnprocessedKeys ? res.UnprocessedKeys : {};
     }
 
+    const outOfBoundFoundTxMap = await this.hasTransactions(outOfBoundTxHashes);
+
     return Object.assign(
       Object.fromEntries(
         foundTxs.map((v) => [v['FromTxHash'].S as string, true])
@@ -117,6 +119,8 @@ export class DynamoDB {
 
   async storeTransactions(datas: TransactionData[]) {
     if (datas.length == 0) return;
+
+    const outOfBoundDatas = datas.splice(DYNAMO_MAX_STORE_UNIT);
 
     let requestItems: { [key: string]: WriteRequest[] } = {
       [DYNAMO_TRANSACTION_TABLE_NAME]: datas.map((data) => {
@@ -144,6 +148,8 @@ export class DynamoDB {
       const res = await this.client.send(new BatchWriteItemCommand(params));
       requestItems = res.UnprocessedItems ? res.UnprocessedItems : {};
     }
+
+    await this.storeTransactions(outOfBoundDatas);
   }
 
   async storeTransaction(data: TransactionData) {
