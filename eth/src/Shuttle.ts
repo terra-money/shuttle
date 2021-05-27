@@ -5,11 +5,12 @@ import * as https from 'https';
 import { promisify } from 'util';
 import BigNumber from 'bignumber.js';
 import Bluebird from 'bluebird';
+import { StdTx } from '@terra-money/terra.js';
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
 import { Monitoring, MonitoringData } from './Monitoring';
-import { Relayer, RelayData } from './Relayer';
+import { Relayer, RelayDataRaw } from './Relayer';
 import { DynamoDB } from './DynamoDB';
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
@@ -218,13 +219,13 @@ class Shuttle {
       (await this.lrangeAsync(KEY_QUEUE_TX, 0, Math.min(10, len))) || [];
 
     await Bluebird.mapSeries(relayDatas, async (data, idx) => {
-      const relayData: RelayData = JSON.parse(data);
+      const relayData: RelayDataRaw = JSON.parse(data);
       const tx = await this.relayer.getTransaction(relayData.txHash);
 
       if (tx === null) {
         if (now - relayData.createdAt > 1000 * 60) {
           // tx not found in the block for a minute,
-          await this.relayer.relay(relayData.tx);
+          await this.relayer.relay(StdTx.fromData(relayData.tx as any));
         }
       } else {
         // tx found in a block, remove it
