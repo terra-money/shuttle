@@ -25,7 +25,7 @@ const DYNAMO_SECRET_ACCESS_KEY = process.env.DYNAMO_SECRET_ACCESS_KEY as string;
 const DYNAMO_REGION = process.env.DYNAMO_REGION as string;
 const DYNAMO_TRANSACTION_TABLE_NAME = `ShuttleTx`;
 const DYNAMO_MAX_LOAD_UNIT = 100;
-const DYNAMO_MAX_STORE_UNIT = 100;
+const DYNAMO_MAX_STORE_UNIT = 25;
 
 export interface TransactionData {
   fromTxHash: string;
