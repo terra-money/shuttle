@@ -119,6 +119,8 @@ export class DynamoDB {
   }
 
   async storeTransactions(datas: TransactionData[]) {
+    if (datas.length == 0) return;
+
     const outOfBoundDatas = datas.splice(DYNAMO_MAX_STORE_UNIT);
 
     let requestItems: { [key: string]: WriteRequest[] } = {
