@@ -58,11 +58,6 @@ export class Monitoring {
         throw 'Must provide one of denom and contract_address';
       }
 
-      const contract = new this.Web3.eth.Contract(
-        WrappedTokenAbi,
-        value.contract_address
-      );
-
       this.AddressAssetMap[value.contract_address] = asset;
       this.TerraAssetInfos[asset] = info;
     }
@@ -224,6 +219,7 @@ function decodeLog(web3: Web3, log: Log): { [key: string]: string } {
 }
 
 export type TerraAssetInfo = {
+  is_eth_asset?: boolean;
   contract_address?: string;
   denom?: string;
 };

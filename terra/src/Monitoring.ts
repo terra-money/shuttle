@@ -35,6 +35,9 @@ export class Monitoring {
   TerraAssetMapping: {
     [denom_or_address: string]: string;
   };
+  TerraAssetInfos: {
+    [asset: string]: TerraAssetInfo;
+  };
 
   constructor() {
     this.TerraTrackingAddress = TERRA_TRACKING_ADDR;
@@ -45,7 +48,7 @@ export class Monitoring {
     });
 
     const ethContractInfos = EthContractInfos[ETH_CHAIN_ID];
-    const terraAssetInfos = TerraAssetInfos[TERRA_CHAIN_ID];
+    this.TerraAssetInfos = TerraAssetInfos[TERRA_CHAIN_ID];
 
     this.EthContracts = {};
     this.TerraAssetMapping = {};
@@ -58,8 +61,7 @@ export class Monitoring {
         continue;
       }
 
-      const info = terraAssetInfos[asset];
-
+      const info = this.TerraAssetInfos[asset];
       if (info === undefined) {
         continue;
       }
@@ -171,16 +173,17 @@ export class Monitoring {
 
       if (data.value.contract in this.TerraAssetMapping) {
         const asset = this.TerraAssetMapping[data.value.contract];
+        const info = this.TerraAssetInfos[asset];
         const executeMsg = JSON.parse(
           Buffer.from(data.value.execute_msg, 'base64').toString()
         );
 
-        // Check the msg is 'transfer'
-        if ('transfer' in executeMsg) {
-          // Check the recipient is TerraTrackingAddress
+        if (!info.is_eth_asset && 'transfer' in executeMsg) {
+          // Check the msg is 'transfer' for terra asset
           const transferMsg = executeMsg['transfer'];
           const recipient = transferMsg['recipient'];
 
+          // Check the recipient is TerraTrackingAddress
           if (recipient === this.TerraTrackingAddress) {
             const blockNumber = tx.height;
             const txHash = tx.txhash;
@@ -208,6 +211,34 @@ export class Monitoring {
               });
             }
           }
+        } else if (info.is_eth_asset && 'burn' in executeMsg) {
+          // Check the msg is 'burn' for eth asset
+          const blockNumber = tx.height;
+          const txHash = tx.txhash;
+          const sender = data.value.sender;
+          const to = tx.tx.memo;
+
+          const burnMsg = executeMsg['burn'];
+          const requested = new BigNumber(burnMsg['amount']);
+
+          // Compute fee with minimum fee consideration
+          const fee = await this.computeFee(asset, requested);
+
+          // Skip logging or other actions for tiny amount transaction
+          if (requested.gt(fee)) {
+            const amount = requested.minus(fee);
+            monitoringDatas.push({
+              blockNumber,
+              txHash,
+              sender,
+              to,
+              requested: requested.toFixed(0),
+              amount: amount.toFixed(0),
+              fee: fee.toFixed(0),
+              asset,
+              contractAddr: this.EthContracts[asset],
+            });
+          }
         }
       }
     }
@@ -231,6 +262,7 @@ export class Monitoring {
 }
 
 export type TerraAssetInfo = {
+  is_eth_asset?: boolean;
   contract_address?: string;
   denom?: string;
 };
