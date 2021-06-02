@@ -70,7 +70,11 @@ export class Monitoring {
         (info.denom === undefined && info.contract_address === undefined) ||
         (info.denom !== undefined && info.contract_address !== undefined)
       ) {
-        throw 'Must provide one of denom and contract_address';
+        throw new Error('Must provide one of denom and contract_address');
+      }
+
+      if (info.denom !== undefined && info.is_eth_asset) {
+        throw new Error('Native asset is not eth asset');
       }
 
       this.EthContracts[asset] = value.contract_address;

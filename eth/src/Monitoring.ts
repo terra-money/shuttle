@@ -10,7 +10,6 @@ BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
 import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
-import WrappedTokenAbi from './config/WrappedTokenAbi';
 
 const FEE_RATE = process.env.FEE_RATE as string;
 
@@ -55,7 +54,11 @@ export class Monitoring {
         (info.denom === undefined && info.contract_address === undefined) ||
         (info.denom !== undefined && info.contract_address !== undefined)
       ) {
-        throw 'Must provide one of denom and contract_address';
+        throw new Error('Must provide one of denom and contract_address');
+      }
+
+      if (info.denom !== undefined && info.is_eth_asset) {
+        throw new Error('Native asset is not eth asset');
       }
 
       this.AddressAssetMap[value.contract_address] = asset;
