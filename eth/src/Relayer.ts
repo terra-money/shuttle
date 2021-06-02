@@ -80,7 +80,7 @@ export class Relayer {
           const denom = info.denom;
 
           msgs.push(new MsgSend(fromAddr, toAddr, [new Coin(denom, amount)]));
-        } else if (info.contract_address) {
+        } else if (info.contract_address && !info.is_eth_asset) {
           const contract_address = info.contract_address;
 
           msgs.push(
@@ -89,6 +89,22 @@ export class Relayer {
               contract_address,
               {
                 transfer: {
+                  recipient: toAddr,
+                  amount: amount,
+                },
+              },
+              []
+            )
+          );
+        } else if (info.contract_address && info.is_eth_asset) {
+          const contract_address = info.contract_address;
+
+          msgs.push(
+            new MsgExecuteContract(
+              fromAddr,
+              contract_address,
+              {
+                mint: {
                   recipient: toAddr,
                   amount: amount,
                 },
