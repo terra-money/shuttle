@@ -8,19 +8,19 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 import {IWrappedToken} from "./WrappedToken.sol";
 
-contract ShuttleVault is IWrappedToken, Context {
+contract ShuttleVault is IWrappedToken, Context, Ownable {
     using SafeERC20 for IERC20;
 
     IERC20 public token;
 
-    constructor(address _token) {
+    constructor(address _token) public {
         token = IERC20(_token);
     }
 
     function burn(uint256 _amount, bytes32 _to) public override {
         token.safeTransferFrom(_msgSender(), address(this), _amount);
 
-        emit Burn(_msgSender(), to, amount);
+        emit Burn(_msgSender(), _to, _amount);
     }
 
     function mint(address _account, uint256 _amount) public override onlyOwner {
