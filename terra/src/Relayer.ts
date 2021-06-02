@@ -144,6 +144,8 @@ export class Relayer {
     let recipient = monitoringData.to;
     if (!Web3.utils.isAddress(monitoringData.to)) {
       recipient = ETH_DONATION;
+    } else if (!monitoringData.to.startsWith('0x')) {
+      recipient = '0x' + monitoringData.to;
     }
 
     const contract = new this.web3.eth.Contract(WrappedTokenAbi);
@@ -187,6 +189,8 @@ export class Relayer {
     let recipient = monitoringData.to;
     if (!Web3.utils.isAddress(monitoringData.to)) {
       recipient = ETH_DONATION;
+    } else if (!monitoringData.to.startsWith('0x')) {
+      recipient = '0x' + monitoringData.to;
     }
 
     const contract = new this.web3.eth.Contract(MinterAbi);
