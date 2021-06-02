@@ -1,6 +1,7 @@
 const assetInfos: {
   [network: string]: {
     [asset: string]: {
+      is_eth_asset?: boolean;
       contract_address?: string;
       denom?: string;
     };

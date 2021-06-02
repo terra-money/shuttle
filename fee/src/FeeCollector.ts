@@ -82,7 +82,11 @@ export class FeeCollector {
         (info.denom === undefined && info.contract_address === undefined) ||
         (info.denom !== undefined && info.contract_address !== undefined)
       ) {
-        throw 'Must provide one of denom and contract_address';
+        throw new Error('Must provide one of denom and contract_address');
+      }
+
+      if (info.denom !== undefined && info.is_eth_asset) {
+        throw new Error('Native asset is not eth asset');
       }
 
       const contract = new this.Web3.eth.Contract(
@@ -93,6 +97,10 @@ export class FeeCollector {
       this.EthContracts[asset] = contract;
       this.TerraAssetInfos[asset] = info;
     }
+  }
+
+  isEthAsset(asset: string): boolean {
+    return this.TerraAssetInfos[asset].is_eth_asset ? true : false;
   }
 
   async getTotalSupplies(): Promise<[string, BigNumber][]> {
@@ -132,16 +140,18 @@ export class FeeCollector {
     return promises;
   }
 
-  async transfer(collectedFees: [string, string][]): Promise<string | null> {
+  async transfer(collectedFees: [string, BigNumber][]): Promise<string | null> {
     const fromAddr = this.Wallet.key.accAddress;
     const toAddr = this.FeeCollectorAddr;
 
     const msgs: Msg[] = collectedFees.reduce((msgs: Msg[], [asset, amount]) => {
       const info = this.TerraAssetInfos[asset];
+      const amountStr = amount.toFixed(0);
+
       if (info.denom) {
         const denom = info.denom;
-        msgs.push(new MsgSend(fromAddr, toAddr, [new Coin(denom, amount)]));
-      } else if (info.contract_address) {
+        msgs.push(new MsgSend(fromAddr, toAddr, [new Coin(denom, amountStr)]));
+      } else if (info.contract_address && !info.is_eth_asset) {
         const contract_address = info.contract_address;
 
         msgs.push(
@@ -151,7 +161,23 @@ export class FeeCollector {
             {
               transfer: {
                 recipient: toAddr,
-                amount,
+                amount: amountStr,
+              },
+            },
+            []
+          )
+        );
+      } else if (info.contract_address && info.is_eth_asset) {
+        const contract_address = info.contract_address;
+
+        msgs.push(
+          new MsgExecuteContract(
+            fromAddr,
+            contract_address,
+            {
+              mint: {
+                recipient: toAddr,
+                amount: amountStr,
               },
             },
             []
@@ -217,6 +243,7 @@ async function getSupply(
 }
 
 type TerraAssetInfo = {
+  is_eth_asset?: boolean;
   contract_address?: string;
   denom?: string;
 };

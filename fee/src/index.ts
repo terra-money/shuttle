@@ -12,20 +12,20 @@ async function main() {
   });
 
   const supplies = await feeCollector.getTotalSupplies();
-  const collectedFees: [string, string][] = supplies.map((supply) => {
+  const collectedFees: [string, BigNumber][] = supplies.map((supply) => {
     const asset = supply[0];
     const ethSideBalance = supply[1].div('1000000000000');
     const terraSideBalance = balanceMap[asset];
 
-    const collectedFeeAmount = terraSideBalance.gt(ethSideBalance)
-      ? terraSideBalance.minus(ethSideBalance).toFixed(0)
-      : '0';
+    const collectedFeeAmount = feeCollector.isEthAsset(asset)
+      ? ethSideBalance.minus(terraSideBalance)
+      : terraSideBalance.minus(ethSideBalance);
 
     return [asset, collectedFeeAmount];
   });
 
   const txHash = await feeCollector.transfer(
-    collectedFees.filter((fee) => fee[1] !== '0')
+    collectedFees.filter((fee) => fee[1].isPositive())
   );
 
   console.info(`TxHash: ${txHash}`);
