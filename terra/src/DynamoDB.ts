@@ -135,6 +135,7 @@ export class DynamoDB {
               Sender: { S: data.sender },
               Recipient: { S: data.recipient },
               ShuttleID: { S: DYNAMO_SHUTTLE_ID },
+              CreatedAt: { S: new Date().toISOString() },
             },
           },
         };
@@ -164,6 +165,7 @@ export class DynamoDB {
         Recipient: { S: data.recipient },
         Amount: { S: data.amount },
         ShuttleID: { S: DYNAMO_SHUTTLE_ID },
+        CreatedAt: { S: new Date().toISOString() },
       },
     };
 
