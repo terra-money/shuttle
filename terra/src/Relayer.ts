@@ -20,6 +20,7 @@ export interface RelayData {
   transactionConfig: TransactionConfig;
   signedTxData: string;
   txHash: string;
+  fromTxHash?: string;
   createdAt: number;
 }
 
@@ -143,6 +144,8 @@ export class Relayer {
     let recipient = monitoringData.to;
     if (!Web3.utils.isAddress(monitoringData.to)) {
       recipient = ETH_DONATION;
+    } else if (!monitoringData.to.startsWith('0x')) {
+      recipient = '0x' + monitoringData.to;
     }
 
     const contract = new this.web3.eth.Contract(WrappedTokenAbi);
@@ -171,6 +174,7 @@ export class Relayer {
       transactionConfig,
       signedTxData: signedTransaction.raw,
       txHash,
+      fromTxHash: monitoringData.txHash,
       createdAt: new Date().getTime(),
     };
   }
@@ -185,6 +189,8 @@ export class Relayer {
     let recipient = monitoringData.to;
     if (!Web3.utils.isAddress(monitoringData.to)) {
       recipient = ETH_DONATION;
+    } else if (!monitoringData.to.startsWith('0x')) {
+      recipient = '0x' + monitoringData.to;
     }
 
     const contract = new this.web3.eth.Contract(MinterAbi);
@@ -229,6 +235,7 @@ export class Relayer {
       transactionConfig,
       signedTxData: signedTransaction.raw,
       txHash,
+      fromTxHash: monitoringData.txHash,
       createdAt: new Date().getTime(),
     };
   }
@@ -267,8 +274,19 @@ export class Relayer {
     });
   }
 
-  getGasPrice(): Promise<string> {
-    return this.web3.eth.getGasPrice();
+  async getGasPrice(): Promise<BigNumber> {
+    const gasPrice = new BigNumber(await this.web3.eth.getGasPrice());
+
+    const E9 = 1e9;
+    const maxGasPrice = new BigNumber(600 * E9);
+    const minGasPrice = new BigNumber(20 * E9);
+    if (gasPrice.lt(minGasPrice)) {
+      return minGasPrice;
+    } else if (gasPrice.gt(maxGasPrice)) {
+      return maxGasPrice;
+    } else {
+      return gasPrice;
+    }
   }
 
   getTransactionReceipt(txHash: string): Promise<TransactionReceipt> {

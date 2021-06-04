@@ -222,6 +222,9 @@ const contractInfos: {
     mCOIN: {
       contract_address: '0x807eD0f8149E66Cb74E340bbB298a28E9233181c',
     },
+    vETH: {
+      contract_address: '0xB9C9dC335F7059446f0a33c40eE6743b44973d45',
+    },
   },
   mainnet: {
     minter: {

@@ -62,6 +62,7 @@
     "typedoc": "^0.20.28"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.16.0",
     "@terra-money/terra.js": "^1.8.0",
     "axios": "^0.21.1",
     "bech32": "^1.1.4",
