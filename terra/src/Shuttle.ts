@@ -187,11 +187,12 @@ class Shuttle {
           err.message.includes('internal service failure') ||
           err.message.includes('Invalid JSON RPC response') ||
           err.message.includes('handle request error') ||
-          err.message.includes('Gateway timeout')
+          err.message.includes('Gateway timeout') ||
+          err.message.includes('transaction underpriced')
         ) {
           if (this.errorCounter++ < 5) {
-            // Delay 1000ms
-            await Bluebird.delay(1000);
+            // Delay 5s
+            await Bluebird.delay(10 * 500);
 
             return;
           }
