@@ -96,11 +96,18 @@ export class Monitoring {
       MAX_RETRY
     );
 
+    const txHashMap: {[key: string]: boolean} = {}
     const monitoringDatas: MonitoringData[] = logs
       .filter((log: any) => {
         return !log['removed'];
       })
       .map((log: Log) => {
+        if (txHashMap[log.transactionHash]) {
+          log.transactionHash = log.transactionHash + log.logIndex;
+        } else {
+          txHashMap[log.transactionHash] = true
+        }
+
         const decodedData = decodeLog(this.Web3, log);
 
         const requested = new BigNumber(decodedData['amount']);
