@@ -103,7 +103,7 @@ export class Monitoring {
       })
       .map((log: Log) => {
         if (txHashMap[log.transactionHash]) {
-          log.transactionHash = log.transactionHash + log.logIndex;
+          log.transactionHash += `-${log.logIndex}`;
         } else {
           txHashMap[log.transactionHash] = true
         }
