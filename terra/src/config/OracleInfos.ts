@@ -95,6 +95,14 @@ const oracleInfos: {
     ticker: 'anchor-protocol',
     type: 'crypto',
   },
+  vETH: {
+    ticker: 'ethereum',
+    type: 'crypto',
+  },
+  bETH: {
+    ticker: 'ethereum',
+    type: 'crypto',
+  },
 };
 
 export = oracleInfos;

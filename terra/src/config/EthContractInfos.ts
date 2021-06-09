@@ -225,6 +225,9 @@ const contractInfos: {
     vETH: {
       contract_address: '0xB9C9dC335F7059446f0a33c40eE6743b44973d45',
     },
+    bETH: {
+      contract_address: '0xDD7e8f8047D78bB103FAb4bAc1259Da207Da3861',
+    },
   },
   mainnet: {
     minter: {
