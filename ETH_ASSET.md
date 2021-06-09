@@ -19,21 +19,21 @@ ERC20 tokens can be relayed to Terra network only when corresponding vault contr
 | asset | mainnet | ropsten                                    |
 | ----- | ------- | ------------------------------------------ |
 | vETH  |         | 0xc778417E063141139Fce010982780140Aa0cD5Ab |
-| bETH  |         |                                            |
+| bETH  |         | 0xA60100d5e12E9F83c1B04997314cf11685A618fF |
 
 ## ETH Vault Contracts
 
 | asset | mainnet | ropsten                                    |
 | ----- | ------- | ------------------------------------------ |
 | vETH  |         | 0xB9C9dC335F7059446f0a33c40eE6743b44973d45 |
-| bETH  |         |                                            |
+| bETH  |         | 0xDD7e8f8047D78bB103FAb4bAc1259Da207Da3861 |
 
 ## Terra CW20 Contracts
 
 | asset | mainnet | tequila-0004                                 |
 | ----- | ------- | -------------------------------------------- |
 | vETH  |         | terra10wtgtg7m22e9hpyhqmfj7zvapnp2uv5m44x375 |
-| bETH  |         |                                              |
+| bETH  |         | terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l |
 
 ## Usage Instructions
 
