@@ -6,6 +6,8 @@ const CHAIN_ID = {
   kovan: 42,
   bsc: 56,
   bsc_testnet: 97,
+  hmy: 1666600000,
+  hmy_testnet: 1666700000,
 };
 
 module.exports = function (deployer, network) {
@@ -14,7 +16,9 @@ module.exports = function (deployer, network) {
     network == "ropsten" ||
     network == "bsc" ||
     network == "bsc_testnet" ||
-    network == "kovan"
+    network == "kovan" ||
+    network == "hmy" ||
+    network == "hmy_testnet"
   ) {
     deployer.deploy(WrappedUST, {
       gas: 5000000,

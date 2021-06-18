@@ -149,6 +149,142 @@ const contractInfos: {
       contract_address: '0x24fE38158A7550bEd9A451CBeA67dA4BdC920E95',
     },
   },
+  hmy: {
+    minter: {
+      contract_address: '',
+    },
+    LUNA: {
+      contract_address: '',
+    },
+    UST: {
+      contract_address: '',
+    },
+    KRT: {
+      contract_address: '',
+    },
+    SDT: {
+      contract_address: '',
+    },
+    MNT: {
+      contract_address: '',
+    },
+    MIR: {
+      contract_address: '',
+    },
+    mAAPL: {
+      contract_address: '',
+    },
+    mGOOGL: {
+      contract_address: '',
+    },
+    mTSLA: {
+      contract_address: '',
+    },
+    mNFLX: {
+      contract_address: '',
+    },
+    mQQQ: {
+      contract_address: '',
+    },
+    mTWTR: {
+      contract_address: '',
+    },
+    mMSFT: {
+      contract_address: '',
+    },
+    mAMZN: {
+      contract_address: '',
+    },
+    mBABA: {
+      contract_address: '',
+    },
+    mIAU: {
+      contract_address: '',
+    },
+    mSLV: {
+      contract_address: '',
+    },
+    mUSO: {
+      contract_address: '',
+    },
+    mVIXY: {
+      contract_address: '',
+    },
+    mFB: {
+      contract_address: '',
+    },
+    mCOIN: {
+      contract_address: '',
+    },
+  },
+  hmy_testnet: {
+    minter: {
+      contract_address: '',
+    },
+    LUNA: {
+      contract_address: '',
+    },
+    UST: {
+      contract_address: '',
+    },
+    KRT: {
+      contract_address: '',
+    },
+    SDT: {
+      contract_address: '',
+    },
+    MNT: {
+      contract_address: '',
+    },
+    MIR: {
+      contract_address: '',
+    },
+    mAAPL: {
+      contract_address: '',
+    },
+    mGOOGL: {
+      contract_address: '',
+    },
+    mTSLA: {
+      contract_address: '',
+    },
+    mNFLX: {
+      contract_address: '',
+    },
+    mQQQ: {
+      contract_address: '',
+    },
+    mTWTR: {
+      contract_address: '',
+    },
+    mMSFT: {
+      contract_address: '',
+    },
+    mAMZN: {
+      contract_address: '',
+    },
+    mBABA: {
+      contract_address: '',
+    },
+    mIAU: {
+      contract_address: '',
+    },
+    mSLV: {
+      contract_address: '',
+    },
+    mUSO: {
+      contract_address: '',
+    },
+    mVIXY: {
+      contract_address: '',
+    },
+    mFB: {
+      contract_address: '',
+    },
+    mCOIN: {
+      contract_address: '',
+    },
+  },
   ropsten: {
     minter: {
       contract_address: '0x5dFeBAFdd0079Cd6D32415bd2507B842812B8a0F',
