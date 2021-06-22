@@ -8,6 +8,7 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
   - [Table of Contents](#table-of-contents)
   - [ERC20 Contracts](#erc20-contracts)
   - [BEP20 Contracts on BSC (Binance Smart Chain)](#bep20-contracts-on-bsc-binance-smart-chain)
+  - [HRC20 Contracts on Harmony](#hrc20-contracts-on-harmony)
   - [Terra Denoms and Contracts](#terra-denoms-and-contracts)
   - [Usage Instructions](#usage-instructions)
     - [Terra => Ethereum / BSC](#terra--ethereum--bsc)
@@ -19,6 +20,7 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
 
 | asset  | mainnet                                    | ropsten                                    | kovan                                      |
 | ------ | ------------------------------------------ | ------------------------------------------ | ------------------------------------------ |
+| Minter | 0x9123077acafb3d743c68418304b2a11566cc1175 | 0x5dFeBAFdd0079Cd6D32415bd2507B842812B8a0F | 0xd6c8e716f71179D9b9e0B8A513D806777E882F34 |
 | LUNA   | 0xd2877702675e6cEb975b4A1dFf9fb7BAF4C91ea9 | 0xbf51453468771D14cEbdF8856cC5D5145364Cd6F |                                            |
 | UST    | 0xa47c8bf37f92aBed4A126BDA807A7b7498661acD | 0x6cA13a4ab78dd7D657226b155873A04DB929A3A4 | 0xc5ee7115d5e05c2e07878095470b54a52b80ce74 |
 | KRT    | 0xcAAfF72A8CbBfc5Cf343BA4e26f65a257065bFF1 | 0xF0b0fB87017b644eC76644Ea0FA704BFA5f20F0E |                                            |
@@ -47,6 +49,7 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
 
 | asset  | bsc                                        | bsc-testnet                                |
 | ------ | ------------------------------------------ | ------------------------------------------ |
+| Minter | 0x65866fbdb58c13d4c81f47779c11b1bfa127641f | 0xB8C4943Ae02ab64Ea6d1f956136606F67bb0Cb56 |
 | LUNA   | 0xECCF35F941Ab67FfcAA9A1265C2fF88865caA005 | 0xA1B4Aa780713df91e9Fa0FAa415ce49756D81E3b |
 | UST    | 0x23396cF899Ca06c4472205fC903bDB4de249D6fC | 0x66BDf3Bd407A63eAB5eAF5eCE69f2D7bb403EfC9 |
 | KRT    | 0xfFBDB9BDCae97a962535479BB96cC2778D65F4dd | 0x59a870b16adE2A152815Ba0d4Fa074fc3F71A828 |
@@ -68,6 +71,13 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
 | mVIXY  | 0x92E744307694Ece235cd02E82680ec37c657D23E | 0x57986628daaDC418E09A2917D6c8b793B7dC1ACD |
 | mFB    | 0x5501F4713020cf299C3C5929da549Aab3592E451 | 0x354CA25cf8eB08537f6047e9daF02Eb02222C1D5 |
 | mCOIN  | 0x49022089e78a8D46Ec87A3AF86a1Db6c189aFA6f | 0x24fE38158A7550bEd9A451CBeA67dA4BdC920E95 |
+
+## HRC20 Contracts on Harmony
+
+| asset  | hmy | hmy-testnet                                |
+| ------ | --- | ------------------------------------------ |
+| Minter |     | 0x2bE9ad04bd28297e4b3B97097F8ae9954FEb264A |
+| UST    |     | 0x0C096AdFdA2a3Bf74e6Ca33c05eD0b472b622247 |
 
 ## Terra Denoms and Contracts
 
@@ -114,6 +124,7 @@ Use the table below to find the corresponding Shuttle address for your source an
 | `tequila-0004`       | Ethereum Testnet (Ropsten) | [terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3](https://finder.terra.money/tequila-0004/address/terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3) |
 | `tequila-0004`       | Ethereum Testnet (Kovan)   | [terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d](https://finder.terra.money/tequila-0004/address/terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d) |
 | `tequila-0004`       | BSC Testnet                | [terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r](https://finder.terra.money/tequila-0004/address/terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r) |
+| `tequila-0004`       | HMY Testnet                | [terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9](https://finder.terra.money/tequila-0004/address/terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9) |
 
 #### Native Assets
 
