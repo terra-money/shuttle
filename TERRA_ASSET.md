@@ -11,10 +11,10 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
   - [HRC20 Contracts on Harmony](#hrc20-contracts-on-harmony)
   - [Terra Denoms and Contracts](#terra-denoms-and-contracts)
   - [Usage Instructions](#usage-instructions)
-    - [Terra => Ethereum / BSC](#terra--ethereum--bsc)
+    - [Terra => Ethereum / BSC / HMY](#terra--ethereum--bsc--hmy)
       - [Native Assets](#native-assets)
       - [CW20 Tokens](#cw20-tokens)
-    - [Ethereum / BSC => Terra](#ethereum--bsc--terra)
+    - [Ethereum / BSC / HMY => Terra](#ethereum--bsc--hmy--terra)
 
 ## ERC20 Contracts
 
@@ -111,7 +111,7 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
 
 **NOTE:** Only assets recognized (listed above) can be used with Shuttle. Sending an asset not mentioned in this document will result in permanent loss of funds.
 
-### Terra => Ethereum / BSC
+### Terra => Ethereum / BSC / HMY
 
 To transfer an asset from Terra to Ethereum or BSC using Shuttle, send the asset to the Shuttle address inside a transaction whose memo field is set to the recipient address on the destination chain.
 
@@ -221,7 +221,7 @@ Example transactions:
 
   https://testnet.bscscan.com/tx/0xa05dd296b93cf46697d39fd8c9552b22d353ea4d28a0dbc5f90725166d1b3f16
 
-### Ethereum / BSC => Terra
+### Ethereum / BSC / HMY => Terra
 
 > Shuttle waits 7 block confirmations before relaying a tx.
 
