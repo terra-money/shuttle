@@ -36,8 +36,16 @@ const SIGNERS = {
     "0x55C1cAd03272930D4A07873bC6bfA4b910a8d9F1",
     "0xE1354334627a9e0Fa3E6583155803ad70AF4d341",
   ],
-  hmy: [],
-  hmy_testnet: [],
+  hmy: [
+    "0xe7796fD3600ED5c1007651e9A2c8eb00D9303fDa",
+    "0x715E1D7A68B215aA03439e4Ea37F8BDdd37AB3e8",
+    "0xf2117c1A3FdE402d722c721A3c5057f78C9F71B8",
+  ],
+  hmy_testnet: [
+    "0xEEA908c7d099c24fBF960de6D1797F42265ea6D0",
+    "0x3378C54B80D66846B65842c7281fc05Ca7A9Ad60",
+    "0xFDD43207676B6e4f99F3770f715A9e3c171312AA",
+  ],
 };
 module.exports = function (deployer, network) {
   if (

@@ -15,9 +15,7 @@ module.exports = function (deployer, network) {
     network == "mainnet" ||
     network == "ropsten" ||
     network == "bsc" ||
-    network == "bsc_testnet" ||
-    network == "hmy" ||
-    network == "hmy_testnet"
+    network == "bsc_testnet"
   ) {
     deployer.deploy(WrappedmGOOGL, {
       gas: 5000000,
