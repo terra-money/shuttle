@@ -1,15 +1,11 @@
 {
-    "inputFiles": ["./src"],
-    "mode": "file",
-    "out": "docs",
-    "includeDeclarations": true,
-    "excludeExternals": true,
-    "exclude": "**/*+(index|.spec|.e2e).ts",
-    "theme": "default",
-    "name": "Mirror Airdrop",
-    "excludeNotExported": true,
-    "excludePrivate": true,
-    "excludeProtected": true,
-    "media": "img",
-    "hideGenerator": true
-  }
+  "entryPoints": ["./src"],
+  "out": "docs",
+  "excludeExternals": true,
+  "exclude": "**/*+(index|.spec|.e2e).ts",
+  "theme": "default",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "media": "img",
+  "hideGenerator": true
+}

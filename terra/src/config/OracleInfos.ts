@@ -105,4 +105,4 @@ const oracleInfos: {
   },
 };
 
-export = oracleInfos;
+export default oracleInfos;
