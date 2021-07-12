@@ -52,10 +52,6 @@ class Oracle {
 
   // return asset price in QUOTE_TICKER quote
   async getPrice(asset: string): Promise<number> {
-    if (asset === QUOTE_TICKER) {
-      return 1;
-    }
-
     // when the price source is not exists,
     // just return 0 as price
     if (!(asset in this.data)) {
@@ -63,6 +59,10 @@ class Oracle {
     }
 
     const data = this.data[asset];
+    if (data.ticker === QUOTE_TICKER) {
+      return 1;
+    }
+
     const now = Date.now();
     if (data.price !== 0 && now < data.lastUpdated + UPDATE_INTERVAL) {
       return data.price;

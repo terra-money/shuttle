@@ -65,7 +65,7 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.16.0",
     "@terra-money/terra.js": "^1.8.0",
-    "@truffle/hdwallet-provider": "^1.2.0",
+    "@truffle/hdwallet-provider": "^1.4.1",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
     "bluebird": "^3.7.2",

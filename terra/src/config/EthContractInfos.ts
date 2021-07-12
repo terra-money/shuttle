@@ -149,7 +149,14 @@ const contractInfos: {
       contract_address: '0x24fE38158A7550bEd9A451CBeA67dA4BdC920E95',
     },
   },
-  hmy: {},
+  hmy: {
+    minter: {
+      contract_address: '0xFda6AB27C9BcDF8bAc691bC135B04e792f219e84',
+    },
+    UST: {
+      contract_address: '0x224e64ec1BDce3870a6a6c777eDd450454068FEC',
+    },
+  },
   hmy_testnet: {
     minter: {
       contract_address: '0x2bE9ad04bd28297e4b3B97097F8ae9954FEb264A',
