@@ -1,7 +1,7 @@
 # Shuttle Ethereum
 
 # How to use
-  * Udpate src/config
+  * Update src/config
   * Update .env
 
 ```
