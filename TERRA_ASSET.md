@@ -77,6 +77,7 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
 | asset  | hmy                                        | hmy-testnet                                |
 | ------ | ------------------------------------------ | ------------------------------------------ |
 | Minter | 0xFda6AB27C9BcDF8bAc691bC135B04e792f219e84 | 0x2bE9ad04bd28297e4b3B97097F8ae9954FEb264A |
+| LUNA   | 0x224e64ec1BDce3870a6a6c777eDd450454068FEC | 0xdfe87bF751D4abEb3E4926DdAa1e6736B07d8FF4 |
 | UST    | 0x224e64ec1BDce3870a6a6c777eDd450454068FEC | 0x0C096AdFdA2a3Bf74e6Ca33c05eD0b472b622247 |
 
 ## Terra Denoms and Contracts
