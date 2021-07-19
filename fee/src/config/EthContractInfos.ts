@@ -153,13 +153,19 @@ const contractInfos: {
     minter: {
       contract_address: '0xFda6AB27C9BcDF8bAc691bC135B04e792f219e84',
     },
+    LUNA: {
+      contract_address: '0x95CE547D730519A90dEF30d647F37D9E5359B6Ae',
+    },
     UST: {
-      contract_address: '0x224e64ec1BDce3870a6a6c777eDd450454068FEC'
-    }
+      contract_address: '0x224e64ec1BDce3870a6a6c777eDd450454068FEC',
+    },
   },
   hmy_testnet: {
     minter: {
       contract_address: '0x2bE9ad04bd28297e4b3B97097F8ae9954FEb264A',
+    },
+    LUNA: {
+      contract_address: '0xdfe87bF751D4abEb3E4926DdAa1e6736B07d8FF4',
     },
     UST: {
       contract_address: '0x0C096AdFdA2a3Bf74e6Ca33c05eD0b472b622247',
