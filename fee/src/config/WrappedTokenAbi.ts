@@ -402,4 +402,4 @@ const abi: AbiItem[] | AbiItem = [
   },
 ];
 
-export = abi;
+export default abi;

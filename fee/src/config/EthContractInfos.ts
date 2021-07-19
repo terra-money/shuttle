@@ -327,4 +327,4 @@ const contractInfos: {
   },
 };
 
-export = contractInfos;
+export default contractInfos;

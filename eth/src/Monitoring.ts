@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import { Log } from 'web3-core';
 import { hexToBytes } from 'web3-utils';
-import bech32 from 'bech32';
+import { bech32 } from 'bech32';
 import BigNumber from 'bignumber.js';
 import BlueBird from 'bluebird';
 

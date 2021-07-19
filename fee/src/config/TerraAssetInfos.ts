@@ -159,4 +159,4 @@ const assetInfos: {
   },
 };
 
-export = assetInfos;
+export default assetInfos;
