@@ -16,6 +16,10 @@ const ETH_URL = process.env.ETH_URL as string;
 const ETH_DONATION = process.env.ETH_DONATION as string;
 const ETH_NETWORK_NUMBER = parseInt(process.env.ETH_NETWORK_NUMBER as string);
 
+const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
+const BURNER_ADDRESS_WITHOUT_PREFIX =
+  '0000000000000000000000000000000000000000';
+
 export interface RelayData {
   transactionConfig: TransactionConfig;
   signedTxData: string;
@@ -142,7 +146,11 @@ export class Relayer {
   ): Promise<RelayData> {
     // Check the address is valid
     let recipient = monitoringData.to;
-    if (!Web3.utils.isAddress(monitoringData.to)) {
+    if (
+      !Web3.utils.isAddress(monitoringData.to) ||
+      monitoringData.to === BURNER_ADDRESS ||
+      monitoringData.to === BURNER_ADDRESS_WITHOUT_PREFIX
+    ) {
       recipient = ETH_DONATION;
     } else if (!monitoringData.to.startsWith('0x')) {
       recipient = '0x' + monitoringData.to;
