@@ -13,6 +13,9 @@ import { Relayer, RelayData } from './Relayer';
 import { DynamoDB } from './DynamoDB';
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
+const ETH_BLOCK_CONFIRMATION = parseInt(
+  process.env.ETH_BLOCK_CONFIRMATION as string
+);
 
 // skip chain-id prefix for mainnet
 const REDIS_PREFIX = 'terra_shuttle' + ETH_CHAIN_ID.replace('mainnet', '');
@@ -346,9 +349,15 @@ class Shuttle {
       (await this.lrangeAsync(KEY_QUEUE_TX, 0, Math.min(10, len))) || [];
 
     const targetGasPrice = (await this.relayer.getGasPrice()).multipliedBy(1.2);
+    const latestBlockNumber = await this.relayer.getBlockNumber();
+    const trustedBlockNumber = latestBlockNumber - ETH_BLOCK_CONFIRMATION;
 
     await Bluebird.mapSeries(relayDatas, async (data, idx) => {
       const relayData: RelayData = JSON.parse(data);
+      if (now - relayData.createdAt < 1000 * 60) {
+        return;
+      }
+
       const txReceipt = await this.relayer
         .getTransactionReceipt(relayData.txHash)
         .catch((err) => {
@@ -360,51 +369,48 @@ class Shuttle {
         });
 
       if (txReceipt === null) {
-        if (now - relayData.createdAt > 1000 * 60) {
-          // tx not found in the mempool or block,
-          // rebroadcast tx with increased gas price
-          const newRelayData = await this.relayer.increaseGasPrice(
-            relayData,
-            targetGasPrice
-          );
+        // tx not found in the mempool or block,
+        // rebroadcast tx with increased gas price
+        const newRelayData = await this.relayer.increaseGasPrice(
+          relayData,
+          targetGasPrice
+        );
 
-          const replaced = relayData.txHash !== newRelayData.txHash;
-          if (replaced) {
-            await this.lsetAsync(
-              KEY_QUEUE_TX,
-              idx,
-              JSON.stringify(newRelayData)
+        const replaced = relayData.txHash !== newRelayData.txHash;
+        if (replaced) {
+          await this.lsetAsync(KEY_QUEUE_TX, idx, JSON.stringify(newRelayData));
+
+          if (relayData.fromTxHash) {
+            await this.dynamoDB.updateReplaceTxHashes(
+              relayData.fromTxHash,
+              newRelayData.txHash
             );
-
-            if (relayData.fromTxHash) {
-              await this.dynamoDB.updateReplaceTxHashes(
-                relayData.fromTxHash,
-                newRelayData.txHash
-              );
-            }
           }
-
-          // Relay even though the tx info is not changed
-          await this.relayer.relay(newRelayData).catch(async (err) => {
-            // Sometimes, there are possibilities
-            // that tx is found during rebroadcast
-            if (
-              err.message === 'already known' ||
-              err.message === 'replacement transaction underpriced' ||
-              err.message === 'nonce too low'
-            ) {
-              // Tx is in pending state; wait
-              return;
-            } else {
-              // Unknown problem happened
-              throw err;
-            }
-          });
         }
-      } else if (txReceipt.status) {
+
+        // Relay even though the tx info is not changed
+        await this.relayer.relay(newRelayData).catch(async (err) => {
+          // Sometimes, there are possibilities
+          // that tx is found during rebroadcast
+          if (
+            err.message === 'already known' ||
+            err.message === 'replacement transaction underpriced' ||
+            err.message === 'nonce too low'
+          ) {
+            // Tx is in pending state; wait
+            return;
+          } else {
+            // Unknown problem happened
+            throw err;
+          }
+        });
+      } else if (
+        txReceipt.status &&
+        txReceipt.blockNumber <= trustedBlockNumber
+      ) {
         // tx found in block, remove it
         await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
-      } else {
+      } else if (!txReceipt.status) {
         // tx is failed; stop shuttle operations
         this.stopOperation = true;
         throw new Error(

@@ -297,6 +297,10 @@ export class Relayer {
     }
   }
 
+  getBlockNumber(): Promise<number> {
+    return this.web3.eth.getBlockNumber();
+  }
+
   getTransactionReceipt(txHash: string): Promise<TransactionReceipt> {
     return this.web3.eth.getTransactionReceipt(txHash);
   }
