@@ -394,11 +394,13 @@ class Shuttle {
           // that tx is found during rebroadcast
           if (
             err.message === 'already known' ||
-            err.message === 'replacement transaction underpriced' ||
-            err.message === 'nonce too low'
+            err.message === 'replacement transaction underpriced'
           ) {
             // Tx is in pending state; wait
             return;
+          } else if (err.message === 'nonce too low') {
+            // Tx is already included; delete
+            await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
           } else {
             // Unknown problem happened
             throw err;
