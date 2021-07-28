@@ -305,6 +305,10 @@ export class Relayer {
     return this.web3.eth.getTransactionReceipt(txHash);
   }
 
+  getTransactionCount(): Promise<number> {
+    return this.web3.eth.getTransactionCount(this.fromAddress);
+  }
+
   async generateSignatures(data: string): Promise<string[]> {
     const signatures: string[] = await Promise.all(
       this.signerAddresses.map((acc) =>

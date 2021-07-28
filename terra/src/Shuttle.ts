@@ -348,12 +348,22 @@ class Shuttle {
     const relayDatas =
       (await this.lrangeAsync(KEY_QUEUE_TX, 0, Math.min(10, len))) || [];
 
+    const nextNonce = await this.relayer.getTransactionCount();
     const targetGasPrice = (await this.relayer.getGasPrice()).multipliedBy(1.2);
     const latestBlockNumber = await this.relayer.getBlockNumber();
     const trustedBlockNumber = latestBlockNumber - ETH_BLOCK_CONFIRMATION;
 
     await Bluebird.mapSeries(relayDatas, async (data, idx) => {
       const relayData: RelayData = JSON.parse(data);
+      if (
+        relayData.transactionConfig.nonce !== undefined &&
+        relayData.transactionConfig.nonce < nextNonce
+      ) {
+        // Tx nonce already passed; delete without checking
+        await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
+        return;
+      }
+
       if (now - relayData.createdAt < 1000 * 60) {
         return;
       }
