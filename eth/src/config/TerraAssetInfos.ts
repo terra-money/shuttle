@@ -156,6 +156,10 @@ const assetInfos: {
     mCOIN: {
       contract_address: 'terra18wayjpyq28gd970qzgjfmsjj7dmgdk039duhph',
     },
+    bETH: {
+      contract_address: 'terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun',
+      is_eth_asset: true,
+    },
   },
 };
 

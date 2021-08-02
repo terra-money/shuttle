@@ -11,7 +11,17 @@ const CHAIN_ID = {
 };
 
 module.exports = function (deployer, network) {
-  if (network == "ropsten") {
+  if (network == "mainnet") {
+    deployer.deploy(
+      bETH,
+      "0x707F9118e33A9B8998beA41dd0d46f38bb963FC8",
+      {
+        gas: 2000000,
+        overwrite: false,
+        chainId: CHAIN_ID[network],
+      }
+    );
+  } else if (network == "ropsten") {
     deployer.deploy(
       bETH,
       "0xA60100d5e12E9F83c1B04997314cf11685A618fF",
