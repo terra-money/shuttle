@@ -98,7 +98,7 @@ module.exports = {
         }),
       network_id: 1, // Ethereum public network
       gas: 5500000, // Ropsten has a lower block limit than mainnet
-      gasPrice: 300000000000, // Gas price for fast confirmation of the tx
+      gasPrice: 30000000000, // Gas price for fast confirmation of the tx
       confirmations: 0, // # of confs to wait between deployments. (default: 0)
       timeoutBlocks: 200, // # of blocks before a deployment times out  (minimum/default: 50)
       skipDryRun: true, // Skip dry run before migrations? (default: false for public nets )

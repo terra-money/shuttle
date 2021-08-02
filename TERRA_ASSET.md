@@ -78,6 +78,7 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
 | asset  | hmy                                        | hmy-testnet                                |
 | ------ | ------------------------------------------ | ------------------------------------------ |
 | Minter | 0xFda6AB27C9BcDF8bAc691bC135B04e792f219e84 | 0x2bE9ad04bd28297e4b3B97097F8ae9954FEb264A |
+| LUNA   | 0x95CE547D730519A90dEF30d647F37D9E5359B6Ae | 0xdfe87bF751D4abEb3E4926DdAa1e6736B07d8FF4 |
 | UST    | 0x224e64ec1BDce3870a6a6c777eDd450454068FEC | 0x0C096AdFdA2a3Bf74e6Ca33c05eD0b472b622247 |
 
 ## Terra Denoms and Contracts
@@ -118,7 +119,7 @@ To transfer an asset from Terra to Ethereum or BSC using Shuttle, send the asset
 
 Use the table below to find the corresponding Shuttle address for your source and destination chain pair.
 
-| Source Chain (Terra) | Desination Chain           | Shuttle Address                                                                                                                              |
+| Source Chain (Terra) | Destination Chain           | Shuttle Address                                                                                                                              |
 | -------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | `columbus-4`         | Ethereum Mainnet           | [terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc](https://finder.terra.money/columbus-4/address/terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc)   |
 | `columbus-4`         | BSC Mainnet                | [terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2](https://finder.terra.money/columbus-4/address/terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2)   |

@@ -162,6 +162,10 @@ const assetInfos: {
     LOTA: {
       contract_address: 'terra1ez46kxtulsdv07538fh5ra5xj8l68mu8eg24vr',
     },
+    bETH: {
+      contract_address: 'terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun',
+      is_eth_asset: true,
+    },
   },
 };
 
