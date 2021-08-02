@@ -118,7 +118,7 @@ To transfer an asset from Terra to Ethereum or BSC using Shuttle, send the asset
 
 Use the table below to find the corresponding Shuttle address for your source and destination chain pair.
 
-| Source Chain (Terra) | Desination Chain           | Shuttle Address                                                                                                                              |
+| Source Chain (Terra) | Destination Chain           | Shuttle Address                                                                                                                              |
 | -------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | `columbus-4`         | Ethereum Mainnet           | [terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc](https://finder.terra.money/columbus-4/address/terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc)   |
 | `columbus-4`         | BSC Mainnet                | [terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2](https://finder.terra.money/columbus-4/address/terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2)   |
