@@ -216,7 +216,7 @@ class Shuttle {
     }
 
     const relayDatas =
-      (await this.lrangeAsync(KEY_QUEUE_TX, 0, Math.min(10, len))) || [];
+      (await this.lrangeAsync(KEY_QUEUE_TX, 0, Math.min(5, len))) || [];
 
     await Bluebird.mapSeries(relayDatas, async (data, idx) => {
       const relayData: RelayDataRaw = JSON.parse(data);
