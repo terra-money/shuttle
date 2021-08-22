@@ -140,7 +140,8 @@ export class Relayer {
   async relay(tx: StdTx): Promise<void> {
     const result = await this.LCDClient.tx.broadcastSync(tx);
 
-    if (isTxError(result)) {
+    // error code 19 means tx already in the mempool
+    if (isTxError(result) && result.code !== 19) {
       throw new Error(
         `Error while executing: ${result.code} - ${result.raw_log}`
       );

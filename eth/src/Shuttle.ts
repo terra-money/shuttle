@@ -226,6 +226,10 @@ class Shuttle {
         if (now - relayData.createdAt > 1000 * 60) {
           // tx not found in the block for a minute,
           await this.relayer.relay(StdTx.fromData(JSON.parse(relayData.tx)));
+
+          // reset timer
+          relayData.createdAt = now;
+          await this.lsetAsync(KEY_QUEUE_TX, idx, JSON.stringify(relayData));
         }
       } else {
         // tx found in a block, remove it
