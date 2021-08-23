@@ -82,31 +82,31 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
 
 ## Terra Denoms and Contracts
 
-| asset  | mainnet                                      | bombay-10                                 |
-| ------ | -------------------------------------------- | -------------------------------------------- |
-| LUNA   | uluna                                        | uluna                                        |
-| UST    | uusd                                         | uusd                                         |
-| KRT    | ukrw                                         | ukrw                                         |
-| SDT    | usdr                                         | usdr                                         |
-| MNT    | umnt                                         | umnt                                         |
-| MIR    | terra15gwkyepfc6xgca5t5zefzwy42uts8l2m4g40k6 | terra10llyp6v3j3her8u3ce66ragytu45kcmd9asj3u |
-| mAAPL  | terra1vxtwu4ehgzz77mnfwrntyrmgl64qjs75mpwqaz | terra16vfxm98rxlc8erj4g0sj5932dvylgmdufnugk0 |
-| mGOOGL | terra1h8arz2k547uvmpxctuwush3jzc8fun4s96qgwt | terra1qg9ugndl25567u03jrr79xur2yk9d632fke3h2 |
-| mTSLA  | terra14y5affaarufk3uscy2vr6pe6w6zqf2wpjzn5sh | terra1nslem9lgwx53rvgqwd8hgq7pepsry6yr3wsen4 |
-| mNFLX  | terra1jsxngqasf2zynj5kyh0tgq9mj3zksa5gk35j4k | terra1djnlav60utj06kk9dl7defsv8xql5qpryzvm3h |
-| mQQQ   | terra1csk6tc7pdmpr782w527hwhez6gfv632tyf72cp | terra18yx7ff8knc98p07pdkhm3u36wufaeacv47fuha |
-| mTWTR  | terra1cc3enj9qgchlrj34cnzhwuclc4vl2z3jl7tkqg | terra1ax7mhqahj6vcqnnl675nqq2g9wghzuecy923vy |
-| mMSFT  | terra1227ppwxxj3jxz8cfgq00jgnxqcny7ryenvkwj6 | terra12s2h8vlztjwu440khpc0063p34vm7nhu25w4p9 |
-| mAMZN  | terra165nd2qmrtszehcfrntlplzern7zl4ahtlhd5t2 | terra12saaecsqwxj04fn0jsv4jmdyp6gylptf5tksge |
-| mBABA  | terra1w7zgkcyt7y4zpct9dw8mw362ywvdlydnum2awa | terra15dr4ah3kha68kam7a907pje9w6z2lpjpnrkd06 |
-| mIAU   | terra15hp9pr8y4qsvqvxf3m4xeptlk7l8h60634gqec | terra19dl29dpykvzej8rg86mjqg8h63s9cqvkknpclr |
-| mSLV   | terra1kscs6uhrqwy6rx5kuw5lwpuqvm3t6j2d6uf2lp | terra1fdkfhgk433tar72t4edh6p6y9rmjulzc83ljuw |
-| mUSO   | terra1lvmx8fsagy70tv0fhmfzdw9h6s3sy4prz38ugf | terra1fucmfp8x4mpzsydjaxyv26hrkdg4vpdzdvf647 |
-| mVIXY  | terra1zp3a6q6q4953cz376906g5qfmxnlg77hx3te45 | terra1z0k7nx0vl85hwpv3e3hu2cyfkwq07fl7nqchvd |
-| mFB    | terra1mqsjugsugfprn3cvgxsrr8akkvdxv2pzc74us7 | terra14gq9wj0tt6vu0m4ec2tkkv4ln3qrtl58lgdl2c |
-| ANC    | terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76 | terra1747mad58h0w4y589y3sk84r5efqdev9q4r02pc |
-| aUST   | terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu | terra1ajt556dpzvjwl0kl5tzku3fc3p3knkg9mkv8jl |
-| mCOIN  | terra18wayjpyq28gd970qzgjfmsjj7dmgdk039duhph |                                              |
+| asset  | mainnet                                      | bombay-10                                                 |
+| ------ | -------------------------------------------- | --------------------------------------------------------- |
+| LUNA   | uluna                                        | uluna                                                     |
+| UST    | uusd                                         | uusd                                                      |
+| KRT    | ukrw                                         | ukrw                                                      |
+| SDT    | usdr                                         | usdr                                                      |
+| MNT    | umnt                                         | umnt                                                      |
+| MIR    | terra15gwkyepfc6xgca5t5zefzwy42uts8l2m4g40k6 | terra10llyp6v3j3her8u3ce66ragytu45kcmd9asj3u              |
+| mAAPL  | terra1vxtwu4ehgzz77mnfwrntyrmgl64qjs75mpwqaz | terra16vfxm98rxlc8erj4g0sj5932dvylgmdufnugk0              |
+| mGOOGL | terra1h8arz2k547uvmpxctuwush3jzc8fun4s96qgwt | terra1qg9ugndl25567u03jrr79xur2yk9d632fke3h2              |
+| mTSLA  | terra14y5affaarufk3uscy2vr6pe6w6zqf2wpjzn5sh | terra1nslem9lgwx53rvgqwd8hgq7pepsry6yr3wsen4              |
+| mNFLX  | terra1jsxngqasf2zynj5kyh0tgq9mj3zksa5gk35j4k | terra1djnlav60utj06kk9dl7defsv8xql5qpryzvm3h              |
+| mQQQ   | terra1csk6tc7pdmpr782w527hwhez6gfv632tyf72cp | terra18yx7ff8knc98p07pdkhm3u36wufaeacv47fuha              |
+| mTWTR  | terra1cc3enj9qgchlrj34cnzhwuclc4vl2z3jl7tkqg | terra1ax7mhqahj6vcqnnl675nqq2g9wghzuecy923vy              |
+| mMSFT  | terra1227ppwxxj3jxz8cfgq00jgnxqcny7ryenvkwj6 | terra12s2h8vlztjwu440khpc0063p34vm7nhu25w4p9              |
+| mAMZN  | terra165nd2qmrtszehcfrntlplzern7zl4ahtlhd5t2 | terra12saaecsqwxj04fn0jsv4jmdyp6gylptf5tksge              |
+| mBABA  | terra1w7zgkcyt7y4zpct9dw8mw362ywvdlydnum2awa | terra15dr4ah3kha68kam7a907pje9w6z2lpjpnrkd06              |
+| mIAU   | terra15hp9pr8y4qsvqvxf3m4xeptlk7l8h60634gqec | terra19dl29dpykvzej8rg86mjqg8h63s9cqvkknpclr              |
+| mSLV   | terra1kscs6uhrqwy6rx5kuw5lwpuqvm3t6j2d6uf2lp | terra1fdkfhgk433tar72t4edh6p6y9rmjulzc83ljuw              |
+| mUSO   | terra1lvmx8fsagy70tv0fhmfzdw9h6s3sy4prz38ugf | terra1fucmfp8x4mpzsydjaxyv26hrkdg4vpdzdvf647              |
+| mVIXY  | terra1zp3a6q6q4953cz376906g5qfmxnlg77hx3te45 | terra1z0k7nx0vl85hwpv3e3hu2cyfkwq07fl7nqchvd              |
+| mFB    | terra1mqsjugsugfprn3cvgxsrr8akkvdxv2pzc74us7 | terra14gq9wj0tt6vu0m4ec2tkkv4ln3qrtl58lgdl2c              |
+| ANC    | terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76 | terra1747mad58h0w4y589y3sk84r5efqdev9q4r02pc  (NOT READY) |
+| aUST   | terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu | terra1ajt556dpzvjwl0kl5tzku3fc3p3knkg9mkv8jl  (NOT READY) |
+| mCOIN  | terra18wayjpyq28gd970qzgjfmsjj7dmgdk039duhph |                                                           |
 
 ## Usage Instructions
 
@@ -118,15 +118,15 @@ To transfer an asset from Terra to Ethereum or BSC using Shuttle, send the asset
 
 Use the table below to find the corresponding Shuttle address for your source and destination chain pair.
 
-| Source Chain (Terra) | Destination Chain           | Shuttle Address                                                                                                                              |
-| -------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `columbus-4`         | Ethereum Mainnet           | [terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc](https://finder.terra.money/columbus-4/address/terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc)   |
-| `columbus-4`         | BSC Mainnet                | [terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2](https://finder.terra.money/columbus-4/address/terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2)   |
-| `columbus-4`         | HMY Mainnet                | [terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk](https://finder.terra.money/columbus-4/address/terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk)   |
-| `bombay-10`       | Ethereum Testnet (Ropsten) | [terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3](https://finder.terra.money/bombay-10/address/terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3) |
-| `bombay-10`       | Ethereum Testnet (Kovan)   | [terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d](https://finder.terra.money/bombay-10/address/terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d) |
-| `bombay-10`       | BSC Testnet                | [terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r](https://finder.terra.money/bombay-10/address/terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r) |
-| `bombay-10`       | HMY Testnet                | [terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9](https://finder.terra.money/bombay-10/address/terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9) |
+| Source Chain (Terra) | Destination Chain          | Shuttle Address                                                                                                                            |
+| -------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `columbus-4`         | Ethereum Mainnet           | [terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc](https://finder.terra.money/columbus-4/address/terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc) |
+| `columbus-4`         | BSC Mainnet                | [terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2](https://finder.terra.money/columbus-4/address/terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2) |
+| `columbus-4`         | HMY Mainnet                | [terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk](https://finder.terra.money/columbus-4/address/terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk) |
+| `bombay-10`          | Ethereum Testnet (Ropsten) | [terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3](https://finder.terra.money/bombay-10/address/terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3)  |
+| `bombay-10`          | Ethereum Testnet (Kovan)   | [terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d](https://finder.terra.money/bombay-10/address/terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d)  |
+| `bombay-10`          | BSC Testnet                | [terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r](https://finder.terra.money/bombay-10/address/terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r)  |
+| `bombay-10`          | HMY Testnet                | [terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9](https://finder.terra.money/bombay-10/address/terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9)  |
 
 #### Native Assets
 
