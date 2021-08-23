@@ -178,9 +178,7 @@ export class Monitoring {
       if (data.value.contract in this.TerraAssetMapping) {
         const asset = this.TerraAssetMapping[data.value.contract];
         const info = this.TerraAssetInfos[asset];
-        const executeMsg = JSON.parse(
-          Buffer.from(data.value.execute_msg, 'base64').toString()
-        );
+        const executeMsg = data.value.execute_msg as any;
 
         if (!info.is_eth_asset && 'transfer' in executeMsg) {
           // Check the msg is 'transfer' for terra asset

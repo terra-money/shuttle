@@ -30,7 +30,7 @@ ERC20 tokens can be relayed to Terra network only when corresponding vault contr
 
 ## Terra CW20 Contracts
 
-| asset | mainnet                                      | tequila-0004                                 |
+| asset | mainnet                                      | bombay-10                                 |
 | ----- | -------------------------------------------- | -------------------------------------------- |
 | vETH  |                                              | terra10wtgtg7m22e9hpyhqmfj7zvapnp2uv5m44x375 |
 | bETH  | terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun | terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l |
@@ -59,7 +59,7 @@ Wrapped ERC20(= CW20) assets must be sent by calling the token contract using a 
 
 **Transaction containing MsgExecuteContract**:
 
-The following transaction burn 100 vETH tokens from `terra1t849fxw7e8ney35mxemh4h3ayea4zf77dslwna` on `tequila-0004` to `0x320bc76961fb4e2a0e2e86d43d4b9d13b4985b8f` on Ethereum mainnet.
+The following transaction burn 100 vETH tokens from `terra1t849fxw7e8ney35mxemh4h3ayea4zf77dslwna` on `bombay-10` to `0x320bc76961fb4e2a0e2e86d43d4b9d13b4985b8f` on Ethereum mainnet.
 
 ```json
 {
@@ -87,7 +87,7 @@ Example transactions:
 
 - Terra Tx:
 
-  https://finder.terra.money/tequila-0004/tx/8401C73E15F6177C1ADFB006A78D678BAC487702821E4E4C1B975296B76F417A
+  https://finder.terra.money/bombay-10/tx/8401C73E15F6177C1ADFB006A78D678BAC487702821E4E4C1B975296B76F417A
 
   https://tequila-lcd.terra.dev/txs/8401C73E15F6177C1ADFB006A78D678BAC487702821E4E4C1B975296B76F417A
 
