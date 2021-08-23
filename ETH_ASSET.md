@@ -87,13 +87,13 @@ Example transactions:
 
 - Terra Tx:
 
-  https://finder.terra.money/bombay-10/tx/8401C73E15F6177C1ADFB006A78D678BAC487702821E4E4C1B975296B76F417A
+  https://finder.terra.money/bombay-10/tx/AD94692EF5A28E50A74836AFFC354C074C42D3A815D7DE2E8EB97BD0E689C333
 
-  https://tequila-lcd.terra.dev/txs/8401C73E15F6177C1ADFB006A78D678BAC487702821E4E4C1B975296B76F417A
+  https://tequila-lcd.terra.dev/txs/AD94692EF5A28E50A74836AFFC354C074C42D3A815D7DE2E8EB97BD0E689C333
 
 - Ethereum Tx:
 
-  https://ropsten.etherscan.io/tx/0x62e5d7d0ad5617ad5b9c0327db485098b7c98602ab76f56d8b6691cf20c7bc72
+  https://ropsten.etherscan.io/tx/0x56f55fb039e277bdba7ed9790d57ec85dbb86392bf34f269db980d08a4c2157d
 
 ### Ethereum => Terra
 
@@ -110,8 +110,8 @@ Ex)
 
 - Ethereum Tx:
 
-  https://ropsten.etherscan.io/tx/0x9710ac3c12b30e750a852b9b7c4492f2d56daf61fe114e655b0b3f257fa267d3
+  https://ropsten.etherscan.io/tx/0x16cea4e58318619a24cbde5d9f00f81addf0ab451c4e581da273f209566ac8c1
 
 - Terra Tx:
 
-  https://tequila.stake.id/?#/tx/BA4311659B57F80A2FF870767856C3DDCAC6B2BA0A891EDC294B804AAEFC44FE
+  https://bombay.stake.id/?#/tx/202375ABEB8E0F30F50DFFC5A3FEC3244F0D2DCE81EEC7026EC0AFA618DDBD13
