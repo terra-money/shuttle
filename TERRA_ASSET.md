@@ -82,7 +82,7 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
 
 ## Terra Denoms and Contracts
 
-| asset  | mainnet                                      | tequila-0004                                 |
+| asset  | mainnet                                      | bombay-10                                 |
 | ------ | -------------------------------------------- | -------------------------------------------- |
 | LUNA   | uluna                                        | uluna                                        |
 | UST    | uusd                                         | uusd                                         |
@@ -123,10 +123,10 @@ Use the table below to find the corresponding Shuttle address for your source an
 | `columbus-4`         | Ethereum Mainnet           | [terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc](https://finder.terra.money/columbus-4/address/terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc)   |
 | `columbus-4`         | BSC Mainnet                | [terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2](https://finder.terra.money/columbus-4/address/terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2)   |
 | `columbus-4`         | HMY Mainnet                | [terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk](https://finder.terra.money/columbus-4/address/terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk)   |
-| `tequila-0004`       | Ethereum Testnet (Ropsten) | [terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3](https://finder.terra.money/tequila-0004/address/terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3) |
-| `tequila-0004`       | Ethereum Testnet (Kovan)   | [terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d](https://finder.terra.money/tequila-0004/address/terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d) |
-| `tequila-0004`       | BSC Testnet                | [terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r](https://finder.terra.money/tequila-0004/address/terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r) |
-| `tequila-0004`       | HMY Testnet                | [terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9](https://finder.terra.money/tequila-0004/address/terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9) |
+| `bombay-10`       | Ethereum Testnet (Ropsten) | [terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3](https://finder.terra.money/bombay-10/address/terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3) |
+| `bombay-10`       | Ethereum Testnet (Kovan)   | [terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d](https://finder.terra.money/bombay-10/address/terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d) |
+| `bombay-10`       | BSC Testnet                | [terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r](https://finder.terra.money/bombay-10/address/terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r) |
+| `bombay-10`       | HMY Testnet                | [terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9](https://finder.terra.money/bombay-10/address/terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9) |
 
 #### Native Assets
 
@@ -209,7 +209,7 @@ Example transactions:
 
 - Terra Tx:
 
-  https://finder.terra.money/tequila-0004/tx/F265D79EB847ED76A7BEB467990EDCAB07D2A4F706767E36CFF5AEFB3427AAAC
+  https://finder.terra.money/bombay-10/tx/F265D79EB847ED76A7BEB467990EDCAB07D2A4F706767E36CFF5AEFB3427AAAC
 
   https://tequila-lcd.terra.dev/txs/F265D79EB847ED76A7BEB467990EDCAB07D2A4F706767E36CFF5AEFB3427AAAC
 
@@ -246,4 +246,4 @@ Ex)
 
 - Terra Tx:
 
-  https://finder.terra.money/tequila-0004/tx/AE2325AC4B5193ABD0CEB8A6708070A0D5C481264755313E23B854FF8005EFAC
+  https://finder.terra.money/bombay-10/tx/AE2325AC4B5193ABD0CEB8A6708070A0D5C481264755313E23B854FF8005EFAC
