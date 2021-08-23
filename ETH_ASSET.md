@@ -19,20 +19,20 @@ ERC20 tokens can be relayed to Terra network only when corresponding vault contr
 | asset | mainnet                                    | ropsten                                    |
 | ----- | ------------------------------------------ | ------------------------------------------ |
 | vETH  |                                            | 0xc778417E063141139Fce010982780140Aa0cD5Ab |
-| bETH  | 0x707F9118e33A9B8998beA41dd0d46f38bb963FC8 | 0xA60100d5e12E9F83c1B04997314cf11685A618fF (NOT READY) |
+| bETH  | 0x707F9118e33A9B8998beA41dd0d46f38bb963FC8 | 0xA60100d5e12E9F83c1B04997314cf11685A618fF |
 
 ## ETH Vault Contracts
 
 | asset | mainnet                                    | ropsten                                    |
 | ----- | ------------------------------------------ | ------------------------------------------ |
 | vETH  |                                            | 0xB9C9dC335F7059446f0a33c40eE6743b44973d45 |
-| bETH  | 0xF9dcf31EE6EB94AB732A43c2FbA1dC6179c98965 | 0xDD7e8f8047D78bB103FAb4bAc1259Da207Da3861 (NOT READY) |
+| bETH  | 0xF9dcf31EE6EB94AB732A43c2FbA1dC6179c98965 | 0xDD7e8f8047D78bB103FAb4bAc1259Da207Da3861 |
 
 ## Terra CW20 Contracts
 
-| asset | mainnet                                      | bombay-10                                 |
-| ----- | -------------------------------------------- | -------------------------------------------- |
-| vETH  |                                              | terra10wtgtg7m22e9hpyhqmfj7zvapnp2uv5m44x375 |
+| asset | mainnet                                      | bombay-10                                                |
+| ----- | -------------------------------------------- | -------------------------------------------------------- |
+| vETH  |                                              | terra10wtgtg7m22e9hpyhqmfj7zvapnp2uv5m44x375             |
 | bETH  | terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun | terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l (NOT READY) |
 
 ## Usage Instructions
