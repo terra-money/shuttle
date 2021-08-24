@@ -12,11 +12,23 @@ import {
   TxInfo,
 } from '@terra-money/terra.js';
 import { MonitoringData } from 'Monitoring';
+import axios from 'axios';
+import * as http from 'http';
+import * as https from 'https';
+
+const ax = axios.create({
+  httpAgent: new http.Agent({ keepAlive: true }),
+  httpsAgent: new https.Agent({ keepAlive: true }),
+  timeout: 15000,
+});
 
 const TERRA_MNEMONIC = process.env.TERRA_MNEMONIC as string;
 const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
 const TERRA_URL = process.env.TERRA_URL as string;
 const TERRA_GAS_PRICE = process.env.TERRA_GAS_PRICE as string;
+const TERRA_GAS_PRICE_END_POINT = process.env
+  .TERRA_GAS_PRICE_END_POINT as string;
+const TERRA_GAS_PRICE_DENOM = process.env.TERRA_GAS_PRICE_DENOM as string;
 const TERRA_GAS_ADJUSTMENT = process.env.TERRA_GAS_ADJUSTMENT as string;
 const TERRA_DONATION = process.env.TERRA_DONATION as string;
 
@@ -123,9 +135,16 @@ export class Relayer {
       return null;
     }
 
+    // if something wrong, pass undefined to use default gas 
+    const gasPrices = await this.loadGasPrice(
+      TERRA_GAS_PRICE_END_POINT,
+      TERRA_GAS_PRICE_DENOM
+    ).catch((_) => undefined);
+
     const tx = await this.Wallet.createAndSignTx({
       msgs,
       sequence,
+      gasPrices,
     });
 
     const txHash = await this.LCDClient.tx.hash(tx);
@@ -152,5 +171,9 @@ export class Relayer {
     return await this.LCDClient.tx.txInfo(txHash).catch(() => {
       return null; // ignore not found error
     });
+  }
+
+  async loadGasPrice(url: string, denom: string): Promise<string> {
+    return (await ax.get(url)).data[denom] + denom;
   }
 }
