@@ -133,6 +133,13 @@ export class Monitoring {
       return monitoringDatas;
     }
 
+    // check not supported msgs
+    try {
+      msg.toData();
+    } catch {
+      return monitoringDatas;
+    }
+
     const msgData = msg.toData();
     const msgType = msgData.type;
 
