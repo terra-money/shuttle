@@ -2,6 +2,7 @@ const contractInfos: {
   [network: string]: {
     [asset: string]: {
       contract_address: string;
+      token_address?: string;
     };
   };
 } = {
@@ -246,9 +247,11 @@ const contractInfos: {
     },
     vETH: {
       contract_address: '0xB9C9dC335F7059446f0a33c40eE6743b44973d45',
+      token_address: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
     },
     bETH: {
       contract_address: '0xDD7e8f8047D78bB103FAb4bAc1259Da207Da3861',
+      token_address: '0xA60100d5e12E9F83c1B04997314cf11685A618fF',
     },
   },
   mainnet: {
@@ -326,6 +329,7 @@ const contractInfos: {
     },
     bETH: {
       contract_address: '0xF9dcf31EE6EB94AB732A43c2FbA1dC6179c98965',
+      token_address: '0x707F9118e33A9B8998beA41dd0d46f38bb963FC8',
     },
   },
 };

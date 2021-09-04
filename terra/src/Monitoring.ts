@@ -32,6 +32,7 @@ export class Monitoring {
 
   minterAddress?: string;
   EthContracts: { [asset: string]: string };
+  TokenContracts: { [asset: string]: string };
   TerraAssetMapping: {
     [denom_or_address: string]: string;
   };
@@ -51,6 +52,7 @@ export class Monitoring {
     this.TerraAssetInfos = TerraAssetInfos[TERRA_CHAIN_ID];
 
     this.EthContracts = {};
+    this.TokenContracts = {};
     this.TerraAssetMapping = {};
 
     for (const [asset, value] of Object.entries(ethContractInfos)) {
@@ -78,6 +80,8 @@ export class Monitoring {
       }
 
       this.EthContracts[asset] = value.contract_address;
+      this.TokenContracts[asset] =
+        value.token_address || value.contract_address;
       this.TerraAssetMapping[info.denom || info.contract_address || ''] = asset;
     }
   }
@@ -144,7 +148,7 @@ export class Monitoring {
         const blockNumber = tx.height;
         const txHash = tx.txhash;
         const sender = data.value.from_address;
-        const to = tx.tx.memo;
+        const to = tx.tx.memo.startsWith('0x') ? tx.tx.memo : '0x' + tx.tx.memo;
 
         for (const coin of data.value.amount) {
           if (coin.denom in this.TerraAssetMapping) {
@@ -167,6 +171,7 @@ export class Monitoring {
                 fee: fee.toFixed(0),
                 asset,
                 contractAddr: this.EthContracts[asset],
+                tokenAddr: this.TokenContracts[asset],
               });
             }
           }
@@ -192,7 +197,9 @@ export class Monitoring {
             const blockNumber = tx.height;
             const txHash = tx.txhash;
             const sender = data.value.sender;
-            const to = tx.tx.memo;
+            const to = tx.tx.memo.startsWith('0x')
+              ? tx.tx.memo
+              : '0x' + tx.tx.memo;
 
             const requested = new BigNumber(transferMsg['amount']);
 
@@ -212,6 +219,7 @@ export class Monitoring {
                 fee: fee.toFixed(0),
                 asset,
                 contractAddr: this.EthContracts[asset],
+                tokenAddr: this.TokenContracts[asset],
               });
             }
           }
@@ -220,8 +228,9 @@ export class Monitoring {
           const blockNumber = tx.height;
           const txHash = tx.txhash;
           const sender = data.value.sender;
-          const to = tx.tx.memo;
-
+          const to = tx.tx.memo.startsWith('0x')
+            ? tx.tx.memo
+            : '0x' + tx.tx.memo;
           const burnMsg = executeMsg['burn'];
           const requested = new BigNumber(burnMsg['amount']);
 
@@ -241,6 +250,7 @@ export class Monitoring {
               fee: fee.toFixed(0),
               asset,
               contractAddr: this.EthContracts[asset],
+              tokenAddr: this.TokenContracts[asset],
             });
           }
         }
@@ -284,4 +294,5 @@ export type MonitoringData = {
 
   // eth side data for relayer
   contractAddr: string;
+  tokenAddr: string;
 };

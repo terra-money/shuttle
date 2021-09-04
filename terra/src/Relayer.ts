@@ -17,8 +17,6 @@ const ETH_DONATION = process.env.ETH_DONATION as string;
 const ETH_NETWORK_NUMBER = parseInt(process.env.ETH_NETWORK_NUMBER as string);
 
 const BURNER_ADDRESS = '0x0000000000000000000000000000000000000000';
-const BURNER_ADDRESS_WITHOUT_PREFIX =
-  '0000000000000000000000000000000000000000';
 
 export interface RelayData {
   transactionConfig: TransactionConfig;
@@ -149,11 +147,9 @@ export class Relayer {
     if (
       !Web3.utils.isAddress(monitoringData.to) ||
       monitoringData.to === BURNER_ADDRESS ||
-      monitoringData.to === BURNER_ADDRESS_WITHOUT_PREFIX
+      monitoringData.to === monitoringData.tokenAddr
     ) {
       recipient = ETH_DONATION;
-    } else if (!monitoringData.to.startsWith('0x')) {
-      recipient = '0x' + monitoringData.to;
     }
 
     const contract = new this.web3.eth.Contract(WrappedTokenAbi);
@@ -195,10 +191,12 @@ export class Relayer {
     gasPrice: string
   ): Promise<RelayData> {
     let recipient = monitoringData.to;
-    if (!Web3.utils.isAddress(monitoringData.to)) {
+    if (
+      !Web3.utils.isAddress(monitoringData.to) ||
+      monitoringData.to === BURNER_ADDRESS ||
+      monitoringData.to === monitoringData.tokenAddr
+    ) {
       recipient = ETH_DONATION;
-    } else if (!monitoringData.to.startsWith('0x')) {
-      recipient = '0x' + monitoringData.to;
     }
 
     const contract = new this.web3.eth.Contract(MinterAbi);
