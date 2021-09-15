@@ -39,7 +39,9 @@ export class FeeCollector {
   LCDClient: LCDClient;
   FeeCollectorAddr: AccAddress;
 
-  EthContracts: { [asset: string]: Contract };
+  EthContracts: {
+    [asset: string]: { contract: Contract; vault_address?: string };
+  };
   TerraAssetInfos: {
     [asset: string]: TerraAssetInfo;
   };
@@ -90,12 +92,22 @@ export class FeeCollector {
         throw new Error('Native asset is not eth asset');
       }
 
-      const contract = new this.Web3.eth.Contract(
-        WrappedTokenAbi,
-        value.contract_address
-      );
+      let contract: Contract;
+      let vault_address: string | undefined;
+      if (value.token_address) {
+        vault_address = value.contract_address;
+        contract = new this.Web3.eth.Contract(
+          WrappedTokenAbi,
+          value.token_address
+        );
+      } else {
+        contract = new this.Web3.eth.Contract(
+          WrappedTokenAbi,
+          value.contract_address
+        );
+      }
 
-      this.EthContracts[asset] = contract;
+      this.EthContracts[asset] = { contract, vault_address };
       this.TerraAssetInfos[asset] = info;
     }
   }
@@ -106,10 +118,12 @@ export class FeeCollector {
 
   async getTotalSupplies(): Promise<[string, BigNumber][]> {
     const promises: [string, BigNumber][] = [];
-    for (const [asset, contract] of Object.entries(this.EthContracts)) {
+    for (const [asset, { contract, vault_address }] of Object.entries(
+      this.EthContracts
+    )) {
       promises.push([
         asset,
-        new BigNumber(await getSupply(contract, MAX_RETRY)),
+        new BigNumber(await getSupply(MAX_RETRY, contract, vault_address)),
       ]);
     }
 
@@ -122,20 +136,36 @@ export class FeeCollector {
 
     const promises: [string, BigNumber][] = [];
     for (const [asset, info] of Object.entries(this.TerraAssetInfos)) {
+      let amount: BigNumber;
+
       if (info.contract_address !== undefined) {
         const contract_address = info.contract_address as string;
-        const res: BalanceResponse = await this.LCDClient.wasm.contractQuery(
-          contract_address,
-          { balance: { address: shuttleAddress } }
-        );
 
-        promises.push([asset, new BigNumber(res.balance)]);
+        if (info.is_eth_asset) {
+          const res: TokenInfoResponse =
+            await this.LCDClient.wasm.contractQuery(contract_address, {
+              token_info: {},
+            });
+
+          amount = new BigNumber(res.total_supply);
+        } else {
+          const res: BalanceResponse = await this.LCDClient.wasm.contractQuery(
+            contract_address,
+            { balance: { address: shuttleAddress } }
+          );
+
+          amount = new BigNumber(res.balance);
+        }
       } else if (info.denom !== undefined) {
         const denom = info.denom as string;
-        const amount = (balance.get(denom) || new Coin(info.denom, 0)).amount;
-
-        promises.push([asset, new BigNumber(amount.toString())]);
+        amount = new BigNumber(
+          (balance.get(denom) || new Coin(info.denom, 0)).amount.toString()
+        );
+      } else {
+        throw new Error(`not supported ${asset}`);
       }
+
+      promises.push([asset, amount]);
     }
 
     return promises;
@@ -231,27 +261,32 @@ export class FeeCollector {
 }
 
 async function getSupply(
+  retry: number,
   contract: Contract,
-  retry: number
+  vault_address?: string
 ): Promise<BigNumber> {
-  return contract.methods
-    .totalSupply()
-    .call()
-    .catch(async (err: any) => {
-      if (
-        retry > 0 &&
-        (err.message.includes('invalid project id') ||
-          err.message.includes('request failed or timed out') ||
-          err.message.includes('Invalid JSON RPC response'))
-      ) {
-        console.error('infura errors happened. retry getSupply');
+  let method: any;
+  if (vault_address) {
+    method = contract.methods.balanceOf(vault_address);
+  } else {
+    method = contract.methods.totalSupply();
+  }
 
-        await BlueBird.delay(500);
-        return getSupply(contract, retry - 1);
-      }
+  return method.call().catch(async (err: any) => {
+    if (
+      retry > 0 &&
+      (err.message.includes('invalid project id') ||
+        err.message.includes('request failed or timed out') ||
+        err.message.includes('Invalid JSON RPC response'))
+    ) {
+      console.error('infura errors happened. retry getSupply');
 
-      throw err;
-    });
+      await BlueBird.delay(500);
+      return getSupply(retry - 1, contract, vault_address);
+    }
+
+    throw err;
+  });
 }
 
 type TerraAssetInfo = {
@@ -262,4 +297,11 @@ type TerraAssetInfo = {
 
 type BalanceResponse = {
   balance: string;
+};
+
+type TokenInfoResponse = {
+  name: string;
+  symbol: string;
+  decimals: number;
+  total_supply: string;
 };
