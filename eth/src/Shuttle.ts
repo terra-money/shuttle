@@ -5,7 +5,7 @@ import * as https from 'https';
 import { promisify } from 'util';
 import BigNumber from 'bignumber.js';
 import Bluebird from 'bluebird';
-import { StdTx } from '@terra-money/terra.js';
+import { Tx } from '@terra-money/terra.js';
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
@@ -225,7 +225,7 @@ class Shuttle {
       if (tx === null) {
         if (now - relayData.createdAt > 1000 * 60) {
           // tx not found in the block for a minute,
-          await this.relayer.relay(StdTx.fromData(JSON.parse(relayData.tx)));
+          await this.relayer.relay(Tx.fromData(JSON.parse(relayData.tx)));
 
           // reset timer
           relayData.createdAt = now;

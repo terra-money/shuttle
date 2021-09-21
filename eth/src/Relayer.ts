@@ -8,7 +8,7 @@ import {
   AccAddress,
   isTxError,
   Coin,
-  StdTx,
+  Tx,
   TxInfo,
 } from '@terra-money/terra.js';
 import { MonitoringData } from 'Monitoring';
@@ -39,7 +39,7 @@ export interface RelayDataRaw {
 }
 
 export interface RelayData {
-  tx: StdTx;
+  tx: Tx;
   txHash: string;
   createdAt: number;
 }
@@ -156,7 +156,7 @@ export class Relayer {
     };
   }
 
-  async relay(tx: StdTx): Promise<void> {
+  async relay(tx: Tx): Promise<void> {
     const result = await this.LCDClient.tx.broadcastSync(tx);
 
     // error code 19 means tx already in the mempool

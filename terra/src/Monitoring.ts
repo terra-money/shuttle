@@ -4,6 +4,7 @@ import {
   MsgSend,
   MsgExecuteContract,
   TxInfo,
+  TxSearchResult,
 } from '@terra-money/terra.js';
 import EthContractInfos from './config/EthContractInfos';
 import TerraAssetInfos from './config/TerraAssetInfos';
@@ -99,22 +100,20 @@ export class Monitoring {
     const limit = TERRA_TXS_LOAD_UNIT;
     const monitoringDatas: MonitoringData[] = [];
 
-    let page = 1;
-    let totalPage = 1;
-
+    let offset: string | null = null;
     do {
-      const txResult = await this.LCDClient.tx.search({
-        'tx.height': targetHeight,
-        page,
-        limit,
+      const txResult: TxSearchResult = await this.LCDClient.tx.search({
+        events: [{ key: 'tx.height', value: targetHeight.toFixed() }],
+        'pagination.limit': limit.toFixed(),
+        'pagination.offset': offset ?? undefined,
       });
 
       monitoringDatas.push(
         ...(await Promise.all(txResult.txs.map(this.parseTx.bind(this)))).flat()
       );
 
-      totalPage = +txResult.page_total;
-    } while (page++ < totalPage);
+      offset = txResult.pagination.next_key;
+    } while (offset != null);
 
     return [targetHeight, monitoringDatas];
   }
@@ -128,25 +127,25 @@ export class Monitoring {
     }
 
     // Only cares first message
-    const msg = tx.tx.msg[0];
+    const msg = tx.tx.body.messages[0];
     if (msg === undefined) {
       return monitoringDatas;
     }
 
     const msgData = msg.toData();
-    const msgType = msgData.type;
+    const msgType = msgData['@type'];
 
-    if (msgType === 'bank/MsgSend') {
+    if (msgType === '/cosmos.bank.v1beta1.MsgSend') {
       const data: MsgSend.Data = msgData as MsgSend.Data;
 
       // Check a recipient is TerraTrackingAddress
-      if (data.value.to_address === this.TerraTrackingAddress) {
+      if (data.to_address === this.TerraTrackingAddress) {
         const blockNumber = tx.height;
         const txHash = tx.txhash;
-        const sender = data.value.from_address;
-        const to = tx.tx.memo;
+        const sender = data.from_address;
+        const to = tx.tx.body.memo ?? '';
 
-        for (const coin of data.value.amount) {
+        for (const coin of data.amount) {
           if (coin.denom in this.TerraAssetMapping) {
             const asset = this.TerraAssetMapping[coin.denom];
             const requested = new BigNumber(coin.amount);
@@ -172,13 +171,13 @@ export class Monitoring {
           }
         }
       }
-    } else if (msgType === 'wasm/MsgExecuteContract') {
+    } else if (msgType === '/terra.wasm.v1beta1.MsgExecuteContract') {
       const data: MsgExecuteContract.Data = msgData as MsgExecuteContract.Data;
 
-      if (data.value.contract in this.TerraAssetMapping) {
-        const asset = this.TerraAssetMapping[data.value.contract];
+      if (data.contract in this.TerraAssetMapping) {
+        const asset = this.TerraAssetMapping[data.contract];
         const info = this.TerraAssetInfos[asset];
-        const executeMsg = data.value.execute_msg as any;
+        const executeMsg = data.execute_msg as any;
 
         if (!info.is_eth_asset && 'transfer' in executeMsg) {
           // Check the msg is 'transfer' for terra asset
@@ -189,8 +188,8 @@ export class Monitoring {
           if (recipient === this.TerraTrackingAddress) {
             const blockNumber = tx.height;
             const txHash = tx.txhash;
-            const sender = data.value.sender;
-            const to = tx.tx.memo;
+            const sender = data.sender;
+            const to = tx.tx.body.memo ?? '';
 
             const requested = new BigNumber(transferMsg['amount']);
 
@@ -217,8 +216,8 @@ export class Monitoring {
           // Check the msg is 'burn' for eth asset
           const blockNumber = tx.height;
           const txHash = tx.txhash;
-          const sender = data.value.sender;
-          const to = tx.tx.memo;
+          const sender = data.sender;
+          const to = tx.tx.body.memo ?? '';
 
           const burnMsg = executeMsg['burn'];
           const requested = new BigNumber(burnMsg['amount']);

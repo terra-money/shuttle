@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.16.0",
-    "@terra-money/terra.js": "^2.0.4",
+    "@terra-money/terra.js": "^2.1.0",
     "axios": "^0.21.1",
     "bech32": "^2.0.0",
     "bignumber.js": "^9.0.1",
