@@ -100,20 +100,21 @@ export class Monitoring {
     const limit = TERRA_TXS_LOAD_UNIT;
     const monitoringDatas: MonitoringData[] = [];
 
-    let offset: string | null = null;
+    let page = 0;
+    let totalPage = 0;
     do {
       const txResult: TxSearchResult = await this.LCDClient.tx.search({
         events: [{ key: 'tx.height', value: targetHeight.toFixed() }],
         'pagination.limit': limit.toFixed(),
-        'pagination.offset': offset ?? undefined,
+        'pagination.offset': (page * limit).toFixed(),
       });
 
       monitoringDatas.push(
         ...(await Promise.all(txResult.txs.map(this.parseTx.bind(this)))).flat()
       );
 
-      offset = txResult.pagination.next_key;
-    } while (offset != null);
+      totalPage = txResult.pagination.total / limit;
+    } while (++page < totalPage);
 
     return [targetHeight, monitoringDatas];
   }
