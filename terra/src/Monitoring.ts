@@ -123,7 +123,7 @@ export class Monitoring {
     const monitoringDatas: MonitoringData[] = [];
 
     // Skip when tx is failed
-    if (tx.code !== undefined) {
+    if (tx.code !== undefined && tx.code !== 0) {
       return monitoringDatas;
     }
 
