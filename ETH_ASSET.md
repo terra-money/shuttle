@@ -30,10 +30,10 @@ ERC20 tokens can be relayed to Terra network only when corresponding vault contr
 
 ## Terra CW20 Contracts
 
-| asset | mainnet                                      | bombay-12                                                |
-| ----- | -------------------------------------------- | -------------------------------------------------------- |
-| vETH  |                                              | terra10wtgtg7m22e9hpyhqmfj7zvapnp2uv5m44x375             |
-| bETH  | terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun | terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l (NOT READY) |
+| asset | mainnet                                      | bombay-12                                    |
+| ----- | -------------------------------------------- | -------------------------------------------- |
+| vETH  |                                              | terra10wtgtg7m22e9hpyhqmfj7zvapnp2uv5m44x375 |
+| bETH  | terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun | terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l |
 
 ## Usage Instructions
 
