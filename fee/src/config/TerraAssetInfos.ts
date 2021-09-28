@@ -7,7 +7,7 @@ const assetInfos: {
     };
   };
 } = {
-  'bombay-11': {
+  'bombay-12': {
     LUNA: {
       denom: 'uluna',
     },
