@@ -86,7 +86,7 @@ const assetInfos: {
       is_eth_asset: true,
     },
   },
-  'columbus-4': {
+  'columbus-5': {
     LUNA: {
       denom: 'uluna',
     },

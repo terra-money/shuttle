@@ -120,9 +120,9 @@ Use the table below to find the corresponding Shuttle address for your source an
 
 | Source Chain (Terra) | Destination Chain          | Shuttle Address                                                                                                                            |
 | -------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `columbus-4`         | Ethereum Mainnet           | [terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc](https://finder.terra.money/columbus-4/address/terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc) |
-| `columbus-4`         | BSC Mainnet                | [terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2](https://finder.terra.money/columbus-4/address/terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2) |
-| `columbus-4`         | HMY Mainnet                | [terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk](https://finder.terra.money/columbus-4/address/terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk) |
+| `columbus-5`         | Ethereum Mainnet           | [terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc](https://finder.terra.money/columbus-5/address/terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc) |
+| `columbus-5`         | BSC Mainnet                | [terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2](https://finder.terra.money/columbus-5/address/terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2) |
+| `columbus-5`         | HMY Mainnet                | [terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk](https://finder.terra.money/columbus-5/address/terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk) |
 | `bombay-12`          | Ethereum Testnet (Ropsten) | [terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3](https://finder.terra.money/bombay-12/address/terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3)  |
 | `bombay-12`          | Ethereum Testnet (Kovan)   | [terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d](https://finder.terra.money/bombay-12/address/terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d)  |
 | `bombay-12`          | BSC Testnet                | [terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r](https://finder.terra.money/bombay-12/address/terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r)  |
@@ -134,7 +134,7 @@ To transfer native Terra assets such as LUNA, UST, KRT, etc. create a `MsgSend` 
 
 **Example Transaction containing `MsgSend`:**
 
-The following `StdTx` sends 100 LUNA from `terra1rk6tvacasnnyssfnn00zl7wz43pjnpn7vayqv6` on `columbus-4` to `0x320BC76961fB4e2A0e2E86D43d4b9D13B4985b8f` on Ethereum mainnet through the mainnet Shuttle.
+The following `StdTx` sends 100 LUNA from `terra1rk6tvacasnnyssfnn00zl7wz43pjnpn7vayqv6` on `columbus-5` to `0x320BC76961fB4e2A0e2E86D43d4b9D13B4985b8f` on Ethereum mainnet through the mainnet Shuttle.
 
 ```json
 {
@@ -181,7 +181,7 @@ The recipient must be set to the appropriate Shuttle address for source/destinat
 
 **Transaction containing MsgExecuteContract**:
 
-The following transaction send 100 MIR tokens from `terra1rk6tvacasnnyssfnn00zl7wz43pjnpn7vayqv6` on `columbus-4` to `0x320BC76961fB4e2A0e2E86D43d4b9D13B4985b8f` on Ethereum mainnet.
+The following transaction send 100 MIR tokens from `terra1rk6tvacasnnyssfnn00zl7wz43pjnpn7vayqv6` on `columbus-5` to `0x320BC76961fB4e2A0e2E86D43d4b9D13B4985b8f` on Ethereum mainnet.
 
 ```json
 {
@@ -209,20 +209,14 @@ Example transactions:
 
 - Terra Tx:
 
-  https://finder.terra.money/bombay-12/tx/8C7FA0A14472AA75E9117AB500901F83EF93730EC512CF43E03AD6374DC25975
+  https://finder.terra.money/bombay-12/tx/7A8E305C57B1E076A07AF9F317A4E8E9C62EB7231265FA753CC7C2CAC9E49A1C
 
-  https://bombay-lcd.terra.dev/txs/8C7FA0A14472AA75E9117AB500901F83EF93730EC512CF43E03AD6374DC25975
+  https://bombay-lcd.terra.dev/txs/7A8E305C57B1E076A07AF9F317A4E8E9C62EB7231265FA753CC7C2CAC9E49A1C
 
 - Ethereum Tx:
 
-  https://ropsten.etherscan.io/tx/0xe396fcf652429d6909d87057494b7836c5bbd7a7fed998d5e1b43f82eff0c80b
+  https://ropsten.etherscan.io/tx/0x95cc3913087e59921bf38007c70c2cb7025fdac5c456d5a972842a05a2688f9f
   
-  https://kovan.etherscan.io/tx/0x4cd79666c63427fda738b7d1741050c48a430ec4e06aa7699a69cd56f32ed2d4
-
-- BSC Tx:
-
-  https://testnet.bscscan.com/tx/0xa05dd296b93cf46697d39fd8c9552b22d353ea4d28a0dbc5f90725166d1b3f16
-
 ### Ethereum / BSC / HMY => Terra
 
 > Shuttle waits 7 block confirmations before relaying a tx.
@@ -236,14 +230,8 @@ Ex)
 
 - Ethereum Tx:
 
-  https://ropsten.etherscan.io/tx/0xfb81d0b8dbd7742a516a7b8c2ac3b146c1c43b2992a64cb33b006b7c66eafa85
-
-  https://kovan.etherscan.io/tx/0x352852aa113f22147c4582790639c2b34b8c6f29eb5b0e8d54c360e83a74a148
-
-- BSC Tx:
-
-  https://testnet.bscscan.com/tx/0xae92ac95b5143886df56bfe76cb521ec52f8bbdefe20a01164e2fa8c00944e37
+  https://ropsten.etherscan.io/tx/0xa19ec8011d2f94b72e91e1597265b99f5152d6c10b7b8551bf395b1677de6930
 
 - Terra Tx:
 
-  https://finder.terra.money/bombay-12/tx/992F679C0B6E77E4D02B7857641F1BAED039744D307422C04B1C0DD98E54835C
+  https://finder.terra.money/bombay-12/tx/DC2966C917BBA6C4FCCAE5A6B52466924D554C67BC8965B4D689E8B64487C53C
