@@ -118,7 +118,7 @@ export class FeeCollector {
 
   async getBalances(): Promise<[string, BigNumber][]> {
     const shuttleAddress = this.Wallet.key.accAddress;
-    const balance = await this.LCDClient.bank.balance(shuttleAddress);
+    const [balance, _] = await this.LCDClient.bank.balance(shuttleAddress);
 
     const promises: [string, BigNumber][] = [];
     for (const [asset, info] of Object.entries(this.TerraAssetInfos)) {
