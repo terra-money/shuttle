@@ -87,13 +87,13 @@ Example transactions:
 
 - Terra Tx:
 
-  https://finder.terra.money/bombay-12/tx/AD94692EF5A28E50A74836AFFC354C074C42D3A815D7DE2E8EB97BD0E689C333
+  https://finder.terra.money/bombay-12/tx/9B25831560D88B021C97496B63D0B849112945F81AFE1FE0023F4F1B25FD51DC
 
-  https://bombay-lcd.terra.dev/txs/AD94692EF5A28E50A74836AFFC354C074C42D3A815D7DE2E8EB97BD0E689C333
+  https://bombay-lcd.terra.dev/txs/9B25831560D88B021C97496B63D0B849112945F81AFE1FE0023F4F1B25FD51DC
 
 - Ethereum Tx:
 
-  https://ropsten.etherscan.io/tx/0x56f55fb039e277bdba7ed9790d57ec85dbb86392bf34f269db980d08a4c2157d
+  https://ropsten.etherscan.io/tx/0x348e30304506b05ac4c3b42670cd568b4d6d630e3e6816803e92e462df41b10e
 
 ### Ethereum => Terra
 
@@ -110,8 +110,8 @@ Ex)
 
 - Ethereum Tx:
 
-  https://ropsten.etherscan.io/tx/0x16cea4e58318619a24cbde5d9f00f81addf0ab451c4e581da273f209566ac8c1
+  https://ropsten.etherscan.io/tx/0x8c0142615f290369d7dd7c95c105ca40368fc3b64db97c7523427ab13ce86236
 
 - Terra Tx:
 
-  https://bombay.stake.id/?#/tx/202375ABEB8E0F30F50DFFC5A3FEC3244F0D2DCE81EEC7026EC0AFA618DDBD13
+  https://finder.terra.money/bombay-12/tx/53E4270D0C87AA663E524973FB26614A5601013D22EE292096514702C1622B82
