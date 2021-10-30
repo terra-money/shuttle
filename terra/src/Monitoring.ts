@@ -32,7 +32,9 @@ export class Monitoring {
   TerraTrackingAddress: AccAddress;
 
   minterAddress?: string;
-  EthContracts: { [asset: string]: string };
+  EthContracts: {
+    [asset: string]: { contract_address: string; black_list: string[] };
+  };
   TerraAssetMapping: {
     [denom_or_address: string]: string;
   };
@@ -78,7 +80,10 @@ export class Monitoring {
         throw new Error('Native asset is not eth asset');
       }
 
-      this.EthContracts[asset] = value.contract_address;
+      this.EthContracts[asset] = {
+        contract_address: value.contract_address,
+        black_list: [value.contract_address, ...(value.black_list ?? [])],
+      };
       this.TerraAssetMapping[info.denom || info.contract_address || ''] = asset;
     }
   }
@@ -166,7 +171,8 @@ export class Monitoring {
                 amount: amount.toFixed(0),
                 fee: fee.toFixed(0),
                 asset,
-                contractAddr: this.EthContracts[asset],
+                contractAddr: this.EthContracts[asset].contract_address,
+                blackList: this.EthContracts[asset].black_list,
               });
             }
           }
@@ -209,7 +215,8 @@ export class Monitoring {
                 amount: amount.toFixed(0),
                 fee: fee.toFixed(0),
                 asset,
-                contractAddr: this.EthContracts[asset],
+                contractAddr: this.EthContracts[asset].contract_address,
+                blackList: this.EthContracts[asset].black_list,
               });
             }
           }
@@ -238,7 +245,8 @@ export class Monitoring {
               amount: amount.toFixed(0),
               fee: fee.toFixed(0),
               asset,
-              contractAddr: this.EthContracts[asset],
+              contractAddr: this.EthContracts[asset].contract_address,
+              blackList: this.EthContracts[asset].black_list,
             });
           }
         }
@@ -282,4 +290,5 @@ export type MonitoringData = {
 
   // eth side data for relayer
   contractAddr: string;
+  blackList: string[];
 };
