@@ -328,7 +328,7 @@ const contractInfos: {
     },
     bETH: {
       contract_address: '0xF9dcf31EE6EB94AB732A43c2FbA1dC6179c98965',
-      black_list: ['0xF9dcf31EE6EB94AB732A43c2FbA1dC6179c98965'],
+      black_list: ['0x707F9118e33A9B8998beA41dd0d46f38bb963FC8'],
     },
   },
 };
