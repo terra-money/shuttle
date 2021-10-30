@@ -156,6 +156,11 @@ export class Relayer {
       recipient = '0x' + monitoringData.to;
     }
 
+    // prevent sending to token address
+    if (monitoringData.blackList.includes(monitoringData.to)) {
+      recipient = ETH_DONATION;
+    }
+
     const contract = new this.web3.eth.Contract(WrappedTokenAbi);
     const contractAddr = monitoringData.contractAddr;
 
