@@ -123,7 +123,7 @@ class Shuttle {
             relayData = await this.relayer.transferOwnershipMultiSig(
               minterAddress,
               this.monitoring.minterAddress as string,
-              tokenContractAddr,
+              tokenContractAddr.contract_address,
               this.nonce++,
               this.minterNonce++,
               gasPrice
@@ -131,7 +131,7 @@ class Shuttle {
           } else {
             relayData = await this.relayer.transferOwnership(
               this.monitoring.minterAddress as string,
-              tokenContractAddr,
+              tokenContractAddr.contract_address,
               this.nonce++,
               gasPrice
             );
