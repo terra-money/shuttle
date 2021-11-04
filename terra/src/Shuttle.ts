@@ -177,14 +177,11 @@ class Shuttle {
       }
 
       await this.process().catch(async (err) => {
-        const errorMsg =
-          err instanceof Error ? err.toString() : JSON.stringify(err);
-
-        console.error(`Process failed: ${errorMsg}`);
+        console.error(`Process failed: ${err}`);
 
         // ignore invalid project id error
         if (
-          errorMsg.includes('invalid project id') ||
+          err.message.includes('invalid project id') ||
           err.message.includes('502 Bad Gateway') ||
           err.message.includes('ESOCKETTIMEDOUT') ||
           err.message.includes('internal service failure') ||
@@ -205,6 +202,9 @@ class Shuttle {
         }
 
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
+          const errorMsg =
+            err instanceof Error ? err.toString() : JSON.stringify(err);
+
           await ax
             .post(SLACK_WEB_HOOK, {
               text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`,
@@ -404,7 +404,9 @@ class Shuttle {
           // that tx is found during rebroadcast
           if (
             err.message === 'already known' ||
-            err.message === 'replacement transaction underpriced'
+            err.message === 'replacement transaction underpriced' ||
+            err.message === 'known transaction' ||
+            err.message === 'transaction already finalized'
           ) {
             // Tx is in pending state; wait
             return;
