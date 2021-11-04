@@ -65,7 +65,10 @@ export class Monitoring {
     }
   }
 
-  async load(lastHeight: number, missingTxHashes: string[]): Promise<[number, MonitoringData[]]> {
+  async load(
+    lastHeight: number,
+    missingTxHashes: string[]
+  ): Promise<[number, MonitoringData[]]> {
     const latestHeight =
       (await getBlockNumber(this.Web3, MAX_RETRY)) - ETH_BLOCK_CONFIRMATION;
 
@@ -79,7 +82,11 @@ export class Monitoring {
     const toBlock = Math.min(fromBlock + ETH_BLOCK_LOAD_UNIT, latestHeight);
 
     console.info(`Loading From: ${fromBlock}, To: ${toBlock}`);
-    const monitoringDatas = await this.getMonitoringDatas(fromBlock, toBlock, missingTxHashes);
+    const monitoringDatas = await this.getMonitoringDatas(
+      fromBlock,
+      toBlock,
+      missingTxHashes
+    );
 
     return [toBlock, monitoringDatas];
   }
@@ -190,11 +197,12 @@ async function getPastLogs(
         err.message.includes('502 Bad Gateway') ||
         err.message.includes('Invalid JSON RPC response') ||
         err.message.includes('exceed maximum block range: 5000') ||
-        err.message.includes('system overloaded'))
+        err.message.includes('system overloaded') ||
+        err.message.includes('403 Forbidden'))
     ) {
       console.error('infura errors happened. retry getPastEvents');
 
-      await BlueBird.delay(500);
+      await BlueBird.delay(5000);
 
       return await getPastLogs(web3, fromBlock, toBlock, address, retry);
     }

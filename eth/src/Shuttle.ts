@@ -97,17 +97,18 @@ class Shuttle {
 
     while (!shutdown) {
       await this.process().catch(async (err) => {
-        const errorMsg =
-          err instanceof Error ? err.toString() : JSON.stringify(err);
-        console.error(`Process failed: ${errorMsg}`);
+        console.error(`Process failed: ${err}`);
 
         // ignore invalid project id error
-        if (errorMsg.includes('invalid project id')) {
+        if (err.message.includes('invalid project id')) {
           return;
         }
 
         // notify to slack
         if (SLACK_WEB_HOOK !== undefined && SLACK_WEB_HOOK !== '') {
+          const errorMsg =
+            err instanceof Error ? err.toString() : JSON.stringify(err);
+
           await ax
             .post(SLACK_WEB_HOOK, {
               text: `[${SLACK_NOTI_NETWORK}] Problem Happened: ${errorMsg} '<!channel>'`,
@@ -209,7 +210,7 @@ class Shuttle {
   }
 
   async loadMissingTxHashes(): Promise<string[]> {
-    const len = await this.llenAsync(KEY_QUEUE_TX);
+    const len = await this.llenAsync(KEY_QUEUE_MISSING_TX);
     if (len === 0) {
       return [];
     }
