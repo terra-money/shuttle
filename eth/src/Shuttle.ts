@@ -20,6 +20,7 @@ const REDIS_PREFIX = 'eth_shuttle' + ETH_CHAIN_ID.replace('mainnet', '');
 const KEY_LAST_HEIGHT = 'last_height';
 const KEY_NEXT_SEQUENCE = 'next_sequence';
 const KEY_QUEUE_TX = 'queue_tx';
+const KEY_QUEUE_MISSING_TX = 'queue_missing_tx';
 
 const REDIS_URL = process.env.REDIS_URL as string;
 const ETH_BLOCK_SECOND = parseInt(process.env.ETH_BLOCK_SECOND as string);
@@ -134,8 +135,10 @@ class Shuttle {
     await this.checkTxQueue();
 
     const lastHeight = parseInt((await this.getAsync(KEY_LAST_HEIGHT)) || '0');
+    const missingTxHashes = await this.loadMissingTxHashes();
     const [newLastHeight, monitoringDatas] = await this.monitoring.load(
-      lastHeight
+      lastHeight,
+      missingTxHashes
     );
 
     // Relay to terra chain
@@ -203,6 +206,15 @@ class Shuttle {
     if (newLastHeight === lastHeight) {
       await Bluebird.delay((ETH_BLOCK_SECOND * ETH_BLOCK_LOAD_UNIT * 1000) / 2);
     }
+  }
+
+  async loadMissingTxHashes(): Promise<string[]> {
+    const len = await this.llenAsync(KEY_QUEUE_TX);
+    if (len === 0) {
+      return [];
+    }
+
+    return (await this.lrangeAsync(KEY_QUEUE_TX, 0, Math.min(5, len))) || [];
   }
 
   async checkTxQueue() {

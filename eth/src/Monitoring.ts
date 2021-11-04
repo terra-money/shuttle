@@ -65,7 +65,7 @@ export class Monitoring {
     }
   }
 
-  async load(lastHeight: number): Promise<[number, MonitoringData[]]> {
+  async load(lastHeight: number, missingTxHashes: string[]): Promise<[number, MonitoringData[]]> {
     const latestHeight =
       (await getBlockNumber(this.Web3, MAX_RETRY)) - ETH_BLOCK_CONFIRMATION;
 
@@ -79,14 +79,15 @@ export class Monitoring {
     const toBlock = Math.min(fromBlock + ETH_BLOCK_LOAD_UNIT, latestHeight);
 
     console.info(`Loading From: ${fromBlock}, To: ${toBlock}`);
-    const monitoringDatas = await this.getMonitoringDatas(fromBlock, toBlock);
+    const monitoringDatas = await this.getMonitoringDatas(fromBlock, toBlock, missingTxHashes);
 
     return [toBlock, monitoringDatas];
   }
 
   async getMonitoringDatas(
     fromBlock: number,
-    toBlock: number
+    toBlock: number,
+    missingTxHashes: string[]
   ): Promise<MonitoringData[]> {
     const logs = await getPastLogs(
       this.Web3,
@@ -96,7 +97,11 @@ export class Monitoring {
       MAX_RETRY
     );
 
-    const txHashMap: {[key: string]: boolean} = {}
+    // append missing tx logs
+    const missingLogs = await this.getTransactionLogs(missingTxHashes);
+    logs.push(...missingLogs);
+
+    const txHashMap: { [key: string]: boolean } = {};
     const monitoringDatas: MonitoringData[] = logs
       .filter((log: any) => {
         return !log['removed'];
@@ -105,7 +110,7 @@ export class Monitoring {
         if (txHashMap[log.transactionHash]) {
           log.transactionHash += `-${log.logIndex}`;
         } else {
-          txHashMap[log.transactionHash] = true
+          txHashMap[log.transactionHash] = true;
         }
 
         const decodedData = decodeLog(this.Web3, log);
@@ -133,6 +138,28 @@ export class Monitoring {
       });
 
     return monitoringDatas;
+  }
+
+  async getTransactionLogs(transactionHashes: string[]): Promise<Log[]> {
+    const logs: Log[] = [];
+    for (const transactionHash of transactionHashes) {
+      const txReceipt = await this.Web3.eth.getTransactionReceipt(
+        transactionHash
+      );
+
+      for (const log of txReceipt.logs) {
+        if (
+          log.address in this.AddressAssetMap &&
+          log.topics[0] ===
+            '0xc3599666213715dfabdf658c56a97b9adfad2cd9689690c70c79b20bc61940c9'
+        ) {
+          logs.push(log);
+          break;
+        }
+      }
+    }
+
+    return logs;
   }
 }
 
