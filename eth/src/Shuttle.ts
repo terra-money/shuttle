@@ -55,6 +55,11 @@ class Shuttle {
     count: number,
     val: string
   ) => Promise<number | undefined>;
+  ltrimAsync: (
+    key: string,
+    start: number,
+    stop: number
+  ) => Promise<'OK' | undefined>;
   rpushAsync: (key: string, value: string) => Promise<unknown>;
 
   sequence: number;
@@ -69,6 +74,7 @@ class Shuttle {
     this.lsetAsync = promisify(redisClient.lset).bind(redisClient);
     this.lrangeAsync = promisify(redisClient.lrange).bind(redisClient);
     this.lremAsync = promisify(redisClient.lrem).bind(redisClient);
+    this.ltrimAsync = promisify(redisClient.ltrim).bind(redisClient);
     this.rpushAsync = promisify(redisClient.rpush).bind(redisClient);
 
     this.monitoring = new Monitoring();
@@ -215,7 +221,9 @@ class Shuttle {
       return [];
     }
 
-    return (await this.lrangeAsync(KEY_QUEUE_TX, 0, Math.min(5, len))) || [];
+    const txHashes = await this.lrangeAsync(KEY_QUEUE_TX, 0, Math.min(5, len));
+    await this.ltrimAsync(KEY_QUEUE_MISSING_TX, 0, Math.min(5, len));
+    return txHashes || [];
   }
 
   async checkTxQueue() {
