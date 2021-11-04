@@ -221,8 +221,8 @@ class Shuttle {
       return [];
     }
 
-    const txHashes = await this.lrangeAsync(KEY_QUEUE_MISSING_TX, 1, Math.min(5, len));
-    await this.ltrimAsync(KEY_QUEUE_MISSING_TX, 0, Math.min(5, len));
+    const txHashes = await this.lrangeAsync(KEY_QUEUE_MISSING_TX, 0, Math.min(5, len));
+    await this.ltrimAsync(KEY_QUEUE_MISSING_TX, Math.min(5, len), -1);
     return txHashes || [];
   }
 
