@@ -139,6 +139,90 @@ export class Relayer {
     };
   }
 
+  async addSignerMultiSig(
+    contractAddr: string,
+    signerAddr: string,
+    nonce: number,
+    minterNonce: number,
+    gasPrice: string
+  ): Promise<RelayData> {
+    const contract = new this.web3.eth.Contract(MinterAbi);
+
+    const signData = this.web3.utils.soliditySha3(
+      minterNonce.toString(),
+      signerAddr
+    ) as string;
+
+    const signatures = await this.generateSignatures(signData);
+    const data = contract.methods.addSigner(signerAddr, signatures).encodeABI();
+
+    const transactionConfig: TransactionConfig = {
+      from: this.fromAddress,
+      to: contractAddr,
+      value: '0',
+      gas: 200000,
+      gasPrice,
+      data,
+      nonce,
+      chainId: ETH_NETWORK_NUMBER,
+    };
+
+    const signedTransaction = await this.web3.eth.signTransaction(
+      transactionConfig
+    );
+    const txHash = this.web3.utils.sha3(signedTransaction.raw) as string;
+
+    return {
+      transactionConfig,
+      signedTxData: signedTransaction.raw,
+      txHash,
+      createdAt: new Date().getTime(),
+    };
+  }
+
+  async removeSignerMultiSig(
+    contractAddr: string,
+    signerAddr: string,
+    nonce: number,
+    minterNonce: number,
+    gasPrice: string
+  ): Promise<RelayData> {
+    const contract = new this.web3.eth.Contract(MinterAbi);
+
+    const signData = this.web3.utils.soliditySha3(
+      minterNonce.toString(),
+      signerAddr
+    ) as string;
+
+    const signatures = await this.generateSignatures(signData);
+    const data = contract.methods
+      .removeSigner(signerAddr, signatures)
+      .encodeABI();
+
+    const transactionConfig: TransactionConfig = {
+      from: this.fromAddress,
+      to: contractAddr,
+      value: '0',
+      gas: 200000,
+      gasPrice,
+      data,
+      nonce,
+      chainId: ETH_NETWORK_NUMBER,
+    };
+
+    const signedTransaction = await this.web3.eth.signTransaction(
+      transactionConfig
+    );
+    const txHash = this.web3.utils.sha3(signedTransaction.raw) as string;
+
+    return {
+      transactionConfig,
+      signedTxData: signedTransaction.raw,
+      txHash,
+      createdAt: new Date().getTime(),
+    };
+  }
+
   async build(
     monitoringData: MonitoringData,
     nonce: number,

@@ -18,32 +18,32 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
 
 ## ERC20 Contracts
 
-| asset  | mainnet                                    | ropsten                                    | kovan                                      |
-| ------ | ------------------------------------------ | ------------------------------------------ | ------------------------------------------ |
-| Minter | 0x9123077acafb3d743c68418304b2a11566cc1175 | 0x5dFeBAFdd0079Cd6D32415bd2507B842812B8a0F | 0xd6c8e716f71179D9b9e0B8A513D806777E882F34 |
-| LUNA   | 0xd2877702675e6cEb975b4A1dFf9fb7BAF4C91ea9 | 0xbf51453468771D14cEbdF8856cC5D5145364Cd6F |                                            |
-| UST    | 0xa47c8bf37f92aBed4A126BDA807A7b7498661acD | 0x6cA13a4ab78dd7D657226b155873A04DB929A3A4 | 0xc5ee7115d5e05c2e07878095470b54a52b80ce74 |
-| KRT    | 0xcAAfF72A8CbBfc5Cf343BA4e26f65a257065bFF1 | 0xF0b0fB87017b644eC76644Ea0FA704BFA5f20F0E |                                            |
-| SDT    | 0x676Ad1b33ae6423c6618C1AEcf53BAa29cf39EE5 | 0x1d805d8660Ae73E3624AECAa34ca5FcF8E26E0a5 |                                            |
-| MNT    | 0x156B36ec68FdBF84a925230BA96cb1Ca4c4bdE45 | 0x51e7f3ED326719a1469EbD7E68B8AB963d64eBA6 |                                            |
-| MIR    | 0x09a3EcAFa817268f77BE1283176B946C4ff2E608 | 0xDAdC10D2dAC9E111835d4423670573Ae45714e7C |                                            |
-| mAAPL  | 0xd36932143F6eBDEDD872D5Fb0651f4B72Fd15a84 | 0xDAE57D13b42325562963C1E47E615eE25924635C |                                            |
-| mGOOGL | 0x59A921Db27Dd6d4d974745B7FfC5c33932653442 | 0x58E3ba48E036341EF8Bbe0bF49caA9731Cc5C42B |                                            |
-| mTSLA  | 0x21cA39943E91d704678F5D00b6616650F066fD63 | 0x2a445f4dA6Ea8845c594446b250ad535373bb7e4 |                                            |
-| mNFLX  | 0xC8d674114bac90148d11D3C1d33C61835a0F9DCD | 0x1EA12ca0Ac017EfFE87ddF4c648a1a5359E850FA |                                            |
-| mQQQ   | 0x13B02c8dE71680e71F0820c996E4bE43c2F57d15 | 0xE1d4509C539D9C3f1E01CeE22e7a79BF77348Ef3 |                                            |
-| mTWTR  | 0xEdb0414627E6f1e3F082DE65cD4F9C693D78CCA9 | 0x0c9149d38AD1eBE71c50Bd04E0Ba4F999884C961 |                                            |
-| mMSFT  | 0x41BbEDd7286dAab5910a1f15d12CBda839852BD7 | 0x0736644C0257048861bAa72b6b234514c6b52655 |                                            |
-| mAMZN  | 0x0cae9e4d663793c2a2A0b211c1Cf4bBca2B9cAa7 | 0x3210BC26eB5427D0FC19dE7AB272b3BB3e4bC4b0 |                                            |
-| mBABA  | 0x56aA298a19C93c6801FDde870fA63EF75Cc0aF72 | 0xF44c4C095E586B5a7Ba8AA0B2A8Dfad693d396b6 |                                            |
-| mIAU   | 0x1d350417d9787E000cc1b95d70E9536DcD91F373 | 0x51eD1489e3D311496592056608dD6cf025C03525 |                                            |
-| mSLV   | 0x9d1555d8cB3C846Bb4f7D5B1B1080872c3166676 | 0xECBe84E79bb26a7FF2474AA1b58d2696A9b5F58F |                                            |
-| mUSO   | 0x31c63146a635EB7465e5853020b39713AC356991 | 0xDF00833C87bEfA3aF5634d81BE18E9DEf2F9C7c0 |                                            |
-| mVIXY  | 0xf72FCd9DCF0190923Fadd44811E240Ef4533fc86 | 0xC1629641Cdb2D636Ae220fb759264306902c4AC0 |                                            |
-| mFB    | 0x0e99cC0535BB6251F6679Fa6E65d6d3b430e840B | 0x0Add4875eBcbD2306921e12133feB562E1cc82b4 |                                            |
-| ANC    | 0x0F3ADC247E91c3c50bC08721355A41037E89Bc20 | 0x93e9012b0a9DA6d5EeA352c56e22B4Ad7225fC33 |                                            |
-| aUST   | 0xa8De3e3c934e2A1BB08B010104CcaBBD4D6293ab | 0x006479f75D6622AE6a21BE17C7F555B94c672342 |                                            |
-| mCOIN  | 0x1e25857931F75022a8814e0B0c3a371942A88437 | 0x807eD0f8149E66Cb74E340bbB298a28E9233181c |                                            |
+| asset  | mainnet                                    | ropsten                                                 |
+| ------ | ------------------------------------------ | ------------------------------------------------------- |
+| Minter | 0x9123077acafb3d743c68418304b2a11566cc1175 | 0x5dFeBAFdd0079Cd6D32415bd2507B842812B8a0F              |
+| LUNA   | 0xd2877702675e6cEb975b4A1dFf9fb7BAF4C91ea9 | 0xbf51453468771D14cEbdF8856cC5D5145364Cd6F              |
+| UST    | 0xa47c8bf37f92aBed4A126BDA807A7b7498661acD | 0x6cA13a4ab78dd7D657226b155873A04DB929A3A4              |
+| KRT    | 0xcAAfF72A8CbBfc5Cf343BA4e26f65a257065bFF1 | 0xF0b0fB87017b644eC76644Ea0FA704BFA5f20F0E (deprecated) |
+| SDT    | 0x676Ad1b33ae6423c6618C1AEcf53BAa29cf39EE5 | 0x1d805d8660Ae73E3624AECAa34ca5FcF8E26E0a5 (deprecated) |
+| MNT    | 0x156B36ec68FdBF84a925230BA96cb1Ca4c4bdE45 | 0x51e7f3ED326719a1469EbD7E68B8AB963d64eBA6 (deprecated) |
+| MIR    | 0x09a3EcAFa817268f77BE1283176B946C4ff2E608 | 0xDAdC10D2dAC9E111835d4423670573Ae45714e7C (deprecated) |
+| mAAPL  | 0xd36932143F6eBDEDD872D5Fb0651f4B72Fd15a84 | 0xDAE57D13b42325562963C1E47E615eE25924635C (deprecated) |
+| mGOOGL | 0x59A921Db27Dd6d4d974745B7FfC5c33932653442 | 0x58E3ba48E036341EF8Bbe0bF49caA9731Cc5C42B (deprecated) |
+| mTSLA  | 0x21cA39943E91d704678F5D00b6616650F066fD63 | 0x2a445f4dA6Ea8845c594446b250ad535373bb7e4 (deprecated) |
+| mNFLX  | 0xC8d674114bac90148d11D3C1d33C61835a0F9DCD | 0x1EA12ca0Ac017EfFE87ddF4c648a1a5359E850FA (deprecated) |
+| mQQQ   | 0x13B02c8dE71680e71F0820c996E4bE43c2F57d15 | 0xE1d4509C539D9C3f1E01CeE22e7a79BF77348Ef3 (deprecated) |
+| mTWTR  | 0xEdb0414627E6f1e3F082DE65cD4F9C693D78CCA9 | 0x0c9149d38AD1eBE71c50Bd04E0Ba4F999884C961 (deprecated) |
+| mMSFT  | 0x41BbEDd7286dAab5910a1f15d12CBda839852BD7 | 0x0736644C0257048861bAa72b6b234514c6b52655 (deprecated) |
+| mAMZN  | 0x0cae9e4d663793c2a2A0b211c1Cf4bBca2B9cAa7 | 0x3210BC26eB5427D0FC19dE7AB272b3BB3e4bC4b0 (deprecated) |
+| mBABA  | 0x56aA298a19C93c6801FDde870fA63EF75Cc0aF72 | 0xF44c4C095E586B5a7Ba8AA0B2A8Dfad693d396b6 (deprecated) |
+| mIAU   | 0x1d350417d9787E000cc1b95d70E9536DcD91F373 | 0x51eD1489e3D311496592056608dD6cf025C03525 (deprecated) |
+| mSLV   | 0x9d1555d8cB3C846Bb4f7D5B1B1080872c3166676 | 0xECBe84E79bb26a7FF2474AA1b58d2696A9b5F58F (deprecated) |
+| mUSO   | 0x31c63146a635EB7465e5853020b39713AC356991 | 0xDF00833C87bEfA3aF5634d81BE18E9DEf2F9C7c0 (deprecated) |
+| mVIXY  | 0xf72FCd9DCF0190923Fadd44811E240Ef4533fc86 | 0xC1629641Cdb2D636Ae220fb759264306902c4AC0 (deprecated) |
+| mFB    | 0x0e99cC0535BB6251F6679Fa6E65d6d3b430e840B | 0x0Add4875eBcbD2306921e12133feB562E1cc82b4 (deprecated) |
+| ANC    | 0x0F3ADC247E91c3c50bC08721355A41037E89Bc20 | 0x93e9012b0a9DA6d5EeA352c56e22B4Ad7225fC33 (deprecated) |
+| aUST   | 0xa8De3e3c934e2A1BB08B010104CcaBBD4D6293ab | 0x006479f75D6622AE6a21BE17C7F555B94c672342 (deprecated) |
+| mCOIN  | 0x1e25857931F75022a8814e0B0c3a371942A88437 | 0x807eD0f8149E66Cb74E340bbB298a28E9233181c (deprecated) |
 
 ## BEP20 Contracts on BSC (Binance Smart Chain)
 
@@ -82,31 +82,31 @@ CW20 or Terra native tokens can be relayed to Ethereum/BSC networks.
 
 ## Terra Denoms and Contracts
 
-| asset  | mainnet                                      | bombay-12                                                 |
-| ------ | -------------------------------------------- | --------------------------------------------------------- |
-| LUNA   | uluna                                        | uluna                                                     |
-| UST    | uusd                                         | uusd                                                      |
-| KRT    | ukrw                                         | ukrw                                                      |
-| SDT    | usdr                                         | usdr                                                      |
-| MNT    | umnt                                         | umnt                                                      |
-| MIR    | terra15gwkyepfc6xgca5t5zefzwy42uts8l2m4g40k6 | terra10llyp6v3j3her8u3ce66ragytu45kcmd9asj3u              |
-| mAAPL  | terra1vxtwu4ehgzz77mnfwrntyrmgl64qjs75mpwqaz | terra16vfxm98rxlc8erj4g0sj5932dvylgmdufnugk0              |
-| mGOOGL | terra1h8arz2k547uvmpxctuwush3jzc8fun4s96qgwt | terra1qg9ugndl25567u03jrr79xur2yk9d632fke3h2              |
-| mTSLA  | terra14y5affaarufk3uscy2vr6pe6w6zqf2wpjzn5sh | terra1nslem9lgwx53rvgqwd8hgq7pepsry6yr3wsen4              |
-| mNFLX  | terra1jsxngqasf2zynj5kyh0tgq9mj3zksa5gk35j4k | terra1djnlav60utj06kk9dl7defsv8xql5qpryzvm3h              |
-| mQQQ   | terra1csk6tc7pdmpr782w527hwhez6gfv632tyf72cp | terra18yx7ff8knc98p07pdkhm3u36wufaeacv47fuha              |
-| mTWTR  | terra1cc3enj9qgchlrj34cnzhwuclc4vl2z3jl7tkqg | terra1ax7mhqahj6vcqnnl675nqq2g9wghzuecy923vy              |
-| mMSFT  | terra1227ppwxxj3jxz8cfgq00jgnxqcny7ryenvkwj6 | terra12s2h8vlztjwu440khpc0063p34vm7nhu25w4p9              |
-| mAMZN  | terra165nd2qmrtszehcfrntlplzern7zl4ahtlhd5t2 | terra12saaecsqwxj04fn0jsv4jmdyp6gylptf5tksge              |
-| mBABA  | terra1w7zgkcyt7y4zpct9dw8mw362ywvdlydnum2awa | terra15dr4ah3kha68kam7a907pje9w6z2lpjpnrkd06              |
-| mIAU   | terra15hp9pr8y4qsvqvxf3m4xeptlk7l8h60634gqec | terra19dl29dpykvzej8rg86mjqg8h63s9cqvkknpclr              |
-| mSLV   | terra1kscs6uhrqwy6rx5kuw5lwpuqvm3t6j2d6uf2lp | terra1fdkfhgk433tar72t4edh6p6y9rmjulzc83ljuw              |
-| mUSO   | terra1lvmx8fsagy70tv0fhmfzdw9h6s3sy4prz38ugf | terra1fucmfp8x4mpzsydjaxyv26hrkdg4vpdzdvf647              |
-| mVIXY  | terra1zp3a6q6q4953cz376906g5qfmxnlg77hx3te45 | terra1z0k7nx0vl85hwpv3e3hu2cyfkwq07fl7nqchvd              |
-| mFB    | terra1mqsjugsugfprn3cvgxsrr8akkvdxv2pzc74us7 | terra14gq9wj0tt6vu0m4ec2tkkv4ln3qrtl58lgdl2c              |
-| ANC    | terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76 | terra1747mad58h0w4y589y3sk84r5efqdev9q4r02pc  (NOT READY) |
-| aUST   | terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu | terra1ajt556dpzvjwl0kl5tzku3fc3p3knkg9mkv8jl  (NOT READY) |
-| mCOIN  | terra18wayjpyq28gd970qzgjfmsjj7dmgdk039duhph |                                                           |
+| asset  | mainnet                                      | bombay-12                                    |
+| ------ | -------------------------------------------- | -------------------------------------------- |
+| LUNA   | uluna                                        | uluna                                        |
+| UST    | uusd                                         | uusd                                         |
+| KRT    | ukrw                                         | ukrw                                         |
+| SDT    | usdr                                         | usdr                                         |
+| MNT    | umnt                                         | umnt                                         |
+| MIR    | terra15gwkyepfc6xgca5t5zefzwy42uts8l2m4g40k6 | terra10llyp6v3j3her8u3ce66ragytu45kcmd9asj3u |
+| mAAPL  | terra1vxtwu4ehgzz77mnfwrntyrmgl64qjs75mpwqaz | terra16vfxm98rxlc8erj4g0sj5932dvylgmdufnugk0 |
+| mGOOGL | terra1h8arz2k547uvmpxctuwush3jzc8fun4s96qgwt | terra1qg9ugndl25567u03jrr79xur2yk9d632fke3h2 |
+| mTSLA  | terra14y5affaarufk3uscy2vr6pe6w6zqf2wpjzn5sh | terra1nslem9lgwx53rvgqwd8hgq7pepsry6yr3wsen4 |
+| mNFLX  | terra1jsxngqasf2zynj5kyh0tgq9mj3zksa5gk35j4k | terra1djnlav60utj06kk9dl7defsv8xql5qpryzvm3h |
+| mQQQ   | terra1csk6tc7pdmpr782w527hwhez6gfv632tyf72cp | terra18yx7ff8knc98p07pdkhm3u36wufaeacv47fuha |
+| mTWTR  | terra1cc3enj9qgchlrj34cnzhwuclc4vl2z3jl7tkqg | terra1ax7mhqahj6vcqnnl675nqq2g9wghzuecy923vy |
+| mMSFT  | terra1227ppwxxj3jxz8cfgq00jgnxqcny7ryenvkwj6 | terra12s2h8vlztjwu440khpc0063p34vm7nhu25w4p9 |
+| mAMZN  | terra165nd2qmrtszehcfrntlplzern7zl4ahtlhd5t2 | terra12saaecsqwxj04fn0jsv4jmdyp6gylptf5tksge |
+| mBABA  | terra1w7zgkcyt7y4zpct9dw8mw362ywvdlydnum2awa | terra15dr4ah3kha68kam7a907pje9w6z2lpjpnrkd06 |
+| mIAU   | terra15hp9pr8y4qsvqvxf3m4xeptlk7l8h60634gqec | terra19dl29dpykvzej8rg86mjqg8h63s9cqvkknpclr |
+| mSLV   | terra1kscs6uhrqwy6rx5kuw5lwpuqvm3t6j2d6uf2lp | terra1fdkfhgk433tar72t4edh6p6y9rmjulzc83ljuw |
+| mUSO   | terra1lvmx8fsagy70tv0fhmfzdw9h6s3sy4prz38ugf | terra1fucmfp8x4mpzsydjaxyv26hrkdg4vpdzdvf647 |
+| mVIXY  | terra1zp3a6q6q4953cz376906g5qfmxnlg77hx3te45 | terra1z0k7nx0vl85hwpv3e3hu2cyfkwq07fl7nqchvd |
+| mFB    | terra1mqsjugsugfprn3cvgxsrr8akkvdxv2pzc74us7 | terra14gq9wj0tt6vu0m4ec2tkkv4ln3qrtl58lgdl2c |
+| ANC    | terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76 | terra1747mad58h0w4y589y3sk84r5efqdev9q4r02pc |
+| aUST   | terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu | terra1ajt556dpzvjwl0kl5tzku3fc3p3knkg9mkv8jl |
+| mCOIN  | terra18wayjpyq28gd970qzgjfmsjj7dmgdk039duhph |                                              |
 
 ## Usage Instructions
 
@@ -118,15 +118,14 @@ To transfer an asset from Terra to Ethereum or BSC using Shuttle, send the asset
 
 Use the table below to find the corresponding Shuttle address for your source and destination chain pair.
 
-| Source Chain (Terra) | Destination Chain          | Shuttle Address                                                                                                                            |
-| -------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `columbus-5`         | Ethereum Mainnet           | [terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc](https://finder.terra.money/columbus-5/address/terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc) |
-| `columbus-5`         | BSC Mainnet                | [terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2](https://finder.terra.money/columbus-5/address/terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2) |
-| `columbus-5`         | HMY Mainnet                | [terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk](https://finder.terra.money/columbus-5/address/terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk) |
-| `bombay-12`          | Ethereum Testnet (Ropsten) | [terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3](https://finder.terra.money/bombay-12/address/terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3)  |
-| `bombay-12`          | Ethereum Testnet (Kovan)   | [terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d](https://finder.terra.money/bombay-12/address/terra15jndnz2twkku7eaeha4wfwlvya6t0k50ay0m4d)  |
-| `bombay-12`          | BSC Testnet                | [terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r](https://finder.terra.money/bombay-12/address/terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r)  |
-| `bombay-12`          | HMY Testnet                | [terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9](https://finder.terra.money/bombay-12/address/terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9)  |
+| Source Chain (Terra) | Destination Chain | Shuttle Address                                                                                                                            |
+| -------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `columbus-5`         | Ethereum Mainnet  | [terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc](https://finder.terra.money/columbus-5/address/terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc) |
+| `columbus-5`         | BSC Mainnet       | [terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2](https://finder.terra.money/columbus-5/address/terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2) |
+| `columbus-5`         | HMY Mainnet       | [terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk](https://finder.terra.money/columbus-5/address/terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk) |
+| `bombay-12`          | Ethereum Testnet  | [terra1skc56hrrg92zj8xxj6lyjlt2l2m8q8sf832sqm](https://finder.terra.money/bombay-12/address/terra1skc56hrrg92zj8xxj6lyjlt2l2m8q8sf832sqm)  |
+| `bombay-12`          | BSC Testnet       | [terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r](https://finder.terra.money/bombay-12/address/terra1paav7jul3dzwzv78j0k59glmevttnkfgmgzv2r)  |
+| `bombay-12`          | HMY Testnet       | [terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9](https://finder.terra.money/bombay-12/address/terra1nrmn0klu4st0qdg4w0wcktnsu5lwfneqlgw5w9)  |
 
 #### Native Assets
 
