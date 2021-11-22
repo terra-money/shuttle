@@ -204,7 +204,7 @@ async function getPastLogs(
 
       await BlueBird.delay(5000);
 
-      return await getPastLogs(web3, fromBlock, toBlock, address, retry);
+      return await getPastLogs(web3, fromBlock, toBlock, address, retry - 1);
     }
 
     throw err;
