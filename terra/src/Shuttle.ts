@@ -261,6 +261,17 @@ class Shuttle {
         (v) => !existingTxs[v.txHash]
       );
 
+      // Fee whitelist for EthAnchor addresses
+      for (const index in monitoringDataAfterFilter) {
+        const data = monitoringDataAfterFilter[index];
+        if (await this.dynamoDB.isEthAnchorAddress(data.to)) {
+          data.amount = data.requested;
+          data.fee = '0';
+
+          monitoringDataAfterFilter[index] = data;
+        }
+      }
+
       // load latest gas price
       const gasPrice = new BigNumber(await this.relayer.getGasPrice())
         .multipliedBy(1.2)
