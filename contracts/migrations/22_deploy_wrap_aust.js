@@ -11,7 +11,7 @@ const CHAIN_ID = {
 };
 
 module.exports = function (deployer, network) {
-  if (network == "mainnet" || network == "ropsten") {
+  if (network == "mainnet" || network == "ropsten" || network == "hmy" || network == "hmy_testnet") {
     deployer.deploy(WrappedaUST, {
       gas: 5000000,
       overwrite: false,
