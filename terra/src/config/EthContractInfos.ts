@@ -95,6 +95,9 @@ const contractInfos: {
     UST: {
       contract_address: '0x224e64ec1BDce3870a6a6c777eDd450454068FEC',
     },
+    aUST: {
+      contract_address: '4d9d9653367fd731df8412c74ada3e1c9694124a',
+    },
   },
   hmy_testnet: {
     minter: {
@@ -105,9 +108,6 @@ const contractInfos: {
     },
     UST: {
       contract_address: '0x0C096AdFdA2a3Bf74e6Ca33c05eD0b472b622247',
-    },
-    aUST: {
-      contract_address: '4d9d9653367fd731df8412c74ada3e1c9694124a',
     },
   },
   ropsten: {
