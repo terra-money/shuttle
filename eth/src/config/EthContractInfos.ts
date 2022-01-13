@@ -123,10 +123,6 @@ const contractInfos: {
     aUST: {
       contract_address: '0x006479f75D6622AE6a21BE17C7F555B94c672342',
     },
-    bETH: {
-      contract_address: '0xDD7e8f8047D78bB103FAb4bAc1259Da207Da3861',
-      black_list: ['0xA60100d5e12E9F83c1B04997314cf11685A618fF'],
-    },
   },
   mainnet: {
     minter: {
