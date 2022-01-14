@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.4.1"
+    "@openzeppelin/contracts": "^4.4.2"
   },
   "devDependencies": {
     "@truffle/hdwallet-provider": "^1.4.0",
