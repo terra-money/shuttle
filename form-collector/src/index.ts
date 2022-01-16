@@ -1,3 +1,4 @@
+require('dotenv').config();
 import Express from 'express';
 import { promisify } from 'util';
 import redis from 'redis';
