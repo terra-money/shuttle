@@ -1,7 +1,9 @@
 require('dotenv').config();
+
 import Express from 'express';
-import { promisify } from 'util';
+import BodyParser from 'body-parser';
 import redis from 'redis';
+import { promisify } from 'util';
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 const REDIS_URL = process.env.REDIS_URL as string;
@@ -23,13 +25,16 @@ const lremAsync: (
 );
 
 const app = Express();
+const jsonParser = BodyParser.json();
 
-app.post('/recover', async (req, res) => {
-  const { txhash } = req.body;
+app.post('/recover', jsonParser, async (req, res) => {
+  if (req.body && req.body['txhash']) {
+    const { txhash } = req.body;
 
-  if (validate_txhash(txhash)) {
-    await lremAsync(KEY_QUEUE_MISSING_TX, 1, txhash);
-    await rpushAsync(KEY_QUEUE_MISSING_TX, txhash);
+    if (validate_txhash(txhash)) {
+      await lremAsync(KEY_QUEUE_MISSING_TX, 1, txhash);
+      await rpushAsync(KEY_QUEUE_MISSING_TX, txhash);
+    }
   }
 
   res.end();
