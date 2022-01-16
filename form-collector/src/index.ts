@@ -4,6 +4,7 @@ import redis from 'redis';
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 const REDIS_URL = process.env.REDIS_URL as string;
+const LISTEN_PORT = process.env.LISTEN_PORT as string;
 
 const REDIS_PREFIX = 'eth_shuttle' + ETH_CHAIN_ID.replace('mainnet', '');
 const KEY_QUEUE_MISSING_TX = 'queue_missing_tx';
@@ -31,6 +32,11 @@ app.post('/recover', async (req, res) => {
   }
 
   res.end();
+});
+
+const port = parseInt(LISTEN_PORT);
+app.listen(port, '0.0.0.0', () => {
+  console.info(`form-collector app listening on port ${port}`);
 });
 
 function validate_txhash(addr: string): boolean {
