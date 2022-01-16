@@ -153,11 +153,11 @@ export class Monitoring {
   async getTransactionLogs(transactionHashes: string[]): Promise<Log[]> {
     const logs: Log[] = [];
     for (const transactionHash of transactionHashes) {
-      const txReceipt = await this.Web3.eth.getTransactionReceipt(
+      const txReceipt: any = await this.Web3.eth.getTransactionReceipt(
         transactionHash
       );
 
-      if (txReceipt.logs) {
+      if (txReceipt && txReceipt.status && txReceipt.logs) {
         for (const log of txReceipt.logs) {
           if (
             log.address in this.AddressAssetMap &&
