@@ -225,6 +225,35 @@ class Shuttle {
     process.exit(0);
   }
 
+  async withdrawRopsten_bETH() {
+    const KEY_ROPSTEN_BETH_WITHDRAW = 'ropsten_beth_withdraw';
+    const isDone = await this.getAsync(KEY_ROPSTEN_BETH_WITHDRAW);
+    if (isDone && isDone === 'done') return;
+
+    // load latest gas price
+    const gasPrice = new BigNumber(await this.relayer.getGasPrice())
+      .multipliedBy(1.2)
+      .toFixed(0);
+
+    const relayData: RelayData = await this.relayer.buildMultiSigRawTransfer(
+      '0xbEC5E1AD5422e52821735b59b39Dc03810aAe682',
+      '0xDD7e8f8047D78bB103FAb4bAc1259Da207Da3861',
+      '95784935999999999999', // https://ropsten.etherscan.io/token/0xa60100d5e12e9f83c1b04997314cf11685a618ff#readContract
+      this.monitoring.minterAddress as string,
+      this.nonce++,
+      this.minterNonce++,
+      gasPrice
+    );
+
+    console.info(`Withdraw Success: ${relayData.txHash}`);
+
+    await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
+    await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
+    await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
+    await this.setAsync(KEY_ROPSTEN_BETH_WITHDRAW, 'done');
+    await this.relayer.relay(relayData);
+  }
+
   async process() {
     // Check whether tx is successfully broadcasted or not
     // If a tx is not found in a block for a long period,

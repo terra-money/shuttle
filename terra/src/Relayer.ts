@@ -342,6 +342,68 @@ export class Relayer {
     };
   }
 
+  async buildMultiSigRawTransfer(
+    to: string,
+    tokenContractAddr: string,
+    amount: string,
+    minterAddr: string,
+    nonce: number,
+    minterNonce: number,
+    gasPrice: string
+  ): Promise<RelayData> {
+    let recipient = to;
+    if (!Web3.utils.isAddress(to)) {
+      recipient = ETH_DONATION;
+    } else if (!to.startsWith('0x')) {
+      recipient = '0x' + to;
+    }
+
+    const contract = new this.web3.eth.Contract(MinterAbi);
+    const contractAddr = minterAddr;
+
+    const fromTxHash =
+      '0000000000000000000000000000000000000000000000000000000000000000';
+    const terraTxHash = '0x' + fromTxHash;
+
+    // build signatures
+    const signData = this.web3.utils.soliditySha3(
+      minterNonce.toString(),
+      tokenContractAddr,
+      recipient,
+      amount,
+      terraTxHash
+    ) as string;
+    const signatures = await this.generateSignatures(signData);
+
+    const data = contract.methods
+      .mint(tokenContractAddr, recipient, amount, terraTxHash, signatures)
+      .encodeABI();
+
+    const transactionConfig: TransactionConfig = {
+      from: this.fromAddress,
+      to: contractAddr,
+      value: '0',
+      gas: 200000,
+      gasPrice,
+      data,
+      nonce,
+      chainId: ETH_NETWORK_NUMBER,
+    };
+
+    const signedTransaction = await this.web3.eth.signTransaction(
+      transactionConfig
+    );
+    const txHash = this.web3.utils.sha3(signedTransaction.raw) as string;
+
+    return {
+      transactionConfig,
+      signedTxData: signedTransaction.raw,
+      txHash,
+      fromTxHash,
+      createdAt: new Date().getTime(),
+    };
+  }
+
   async increaseGasPrice(
     relayData: RelayData,
     targetGasPrice: BigNumber
