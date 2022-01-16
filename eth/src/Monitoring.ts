@@ -106,6 +106,9 @@ export class Monitoring {
 
     // append missing tx logs
     const missingLogs = await this.getTransactionLogs(missingTxHashes);
+    missingLogs.filter((log: Log) => {
+      return log.blockNumber < fromBlock;
+    });
     logs.push(...missingLogs);
 
     const txHashMap: { [key: string]: boolean } = {};
@@ -154,14 +157,16 @@ export class Monitoring {
         transactionHash
       );
 
-      for (const log of txReceipt.logs) {
-        if (
-          log.address in this.AddressAssetMap &&
-          log.topics[0] ===
-            '0xc3599666213715dfabdf658c56a97b9adfad2cd9689690c70c79b20bc61940c9'
-        ) {
-          logs.push(log);
-          break;
+      if (txReceipt.logs) {
+        for (const log of txReceipt.logs) {
+          if (
+            log.address in this.AddressAssetMap &&
+            log.topics[0] ===
+              '0xc3599666213715dfabdf658c56a97b9adfad2cd9689690c70c79b20bc61940c9'
+          ) {
+            logs.push(log);
+            break;
+          }
         }
       }
     }

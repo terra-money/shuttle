@@ -1,0 +1,11 @@
+{
+    "entryPoints": ["./src"],
+    "out": "docs",
+    "excludeExternals": true,
+    "exclude": "**/*+(index|.spec|.e2e).ts",
+    "theme": "default",
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "media": "img",
+    "hideGenerator": true
+  }
