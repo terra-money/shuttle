@@ -197,10 +197,6 @@ const contractInfos: {
     mCOIN: {
       contract_address: '0x1e25857931F75022a8814e0B0c3a371942A88437',
     },
-    bETH: {
-      contract_address: '0xF9dcf31EE6EB94AB732A43c2FbA1dC6179c98965',
-      black_list: ['0x707F9118e33A9B8998beA41dd0d46f38bb963FC8'],
-    },
   },
 };
 
