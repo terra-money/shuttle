@@ -77,14 +77,6 @@ const assetInfos: {
     mCOIN: {
       contract_address: 'terra1qre9crlfnulcg0m68qqywqqstplgvrzywsg3am',
     },
-    vETH: {
-      contract_address: 'terra10wtgtg7m22e9hpyhqmfj7zvapnp2uv5m44x375',
-      is_eth_asset: true,
-    },
-    bETH: {
-      contract_address: 'terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l',
-      is_eth_asset: true,
-    },
   },
   'columbus-5': {
     LUNA: {
@@ -155,10 +147,6 @@ const assetInfos: {
     },
     mCOIN: {
       contract_address: 'terra18wayjpyq28gd970qzgjfmsjj7dmgdk039duhph',
-    },
-    bETH: {
-      contract_address: 'terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun',
-      is_eth_asset: true,
     },
   },
 };
