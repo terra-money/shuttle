@@ -225,9 +225,9 @@ class Shuttle {
     process.exit(0);
   }
 
-  async withdrawRopsten_bETH() {
-    const KEY_ROPSTEN_BETH_WITHDRAW = 'ropsten_beth_withdraw';
-    const isDone = await this.getAsync(KEY_ROPSTEN_BETH_WITHDRAW);
+  async withdrawMainnet_bETH() {
+    const KEY_MAINNET_BETH_WITHDRAW = 'mainnet_beth_withdraw';
+    const isDone = await this.getAsync(KEY_MAINNET_BETH_WITHDRAW);
     if (isDone && isDone === 'done') return;
 
     // load latest gas price
@@ -237,8 +237,8 @@ class Shuttle {
 
     const relayData: RelayData = await this.relayer.buildMultiSigRawTransfer(
       '0xbEC5E1AD5422e52821735b59b39Dc03810aAe682',
-      '0xDD7e8f8047D78bB103FAb4bAc1259Da207Da3861',
-      '95784935999999999999', // https://ropsten.etherscan.io/token/0xa60100d5e12e9f83c1b04997314cf11685a618ff#readContract
+      '0xF9dcf31EE6EB94AB732A43c2FbA1dC6179c98965',
+      '181613048190270541997550', // https://etherscan.io/token/0x707f9118e33a9b8998bea41dd0d46f38bb963fc8?a=0xF9dcf31EE6EB94AB732A43c2FbA1dC6179c98965#readContract
       this.monitoring.minterAddress as string,
       this.nonce++,
       this.minterNonce++,
@@ -250,7 +250,7 @@ class Shuttle {
     await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
     await this.setAsync(KEY_NEXT_NONCE, this.nonce.toString());
     await this.setAsync(KEY_NEXT_MINTER_NONCE, this.minterNonce.toString());
-    await this.setAsync(KEY_ROPSTEN_BETH_WITHDRAW, 'done');
+    await this.setAsync(KEY_MAINNET_BETH_WITHDRAW, 'done');
     await this.relayer.relay(relayData);
   }
 

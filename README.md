@@ -11,6 +11,9 @@ Shuttle is a Terra-Ethereum bridge. Currently only allows Terra assets to be sen
   - [Implementations](#implementations)
   - [Components](#components)
   - [Relaying Fee](#relaying-fee)
+  - [How to add tokens?](#how-to-add-tokens)
+    - [Terra token support](#terra-token-support)
+    - [Ethereum token support](#ethereum-token-support)
 
 ## Implementations
 
@@ -33,6 +36,4 @@ Shuttle charges a fee only for transferring assets from Terra to Ethereum/BSC, a
 2. [Ethereum] Transfer ownership to proper minter address (minter address can be found in [here](TERRA_ASSET.md#erc20-contracts))
 
 ### Ethereum token support
-1. [Ethereum] Deploy ShuttleVault contract like [vETH](contracts/vETH.sol) or [bETH](contracts/bETH.sol) with your ERC20 token address
-2. [Ethereum] Transfer ownership to proper minter address (minter address can be found in [here](TERRA_ASSET.md#erc20-contracts))
-3. [Terra] Deploy cw20 token contract by setting minter to tracking address (tracking address can be found in [here](TERRA_ASSET.md#terra--ethereum--bsc--hmy))
+DEPRECATED
