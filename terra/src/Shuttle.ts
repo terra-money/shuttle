@@ -35,6 +35,7 @@ const SLACK_NOTI_ETH_ASSET = process.env.SLACK_NOTI_ETH_ASSET;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 
 const FEE_RATE = new BigNumber(process.env.FEE_RATE as string);
+const FEE_MIN_AMOUNT = new BigNumber(process.env.FEE_MIN_AMOUNT as string);
 
 const ax = axios.create({
   httpAgent: new http.Agent({ keepAlive: true }),
@@ -297,14 +298,15 @@ class Shuttle {
         const data = monitoringDataAfterFilter[index];
         if (await this.dynamoDB.isEthAnchorAddress(data.to)) {
           const requested = new BigNumber(data.requested);
-          const fee = new BigNumber(data.fee);
+          const fee = await this.monitoring.computeFee(
+            data.asset,
+            requested,
+            new BigNumber(2.5)
+          );
 
-          if (fee.eq(requested.multipliedBy(FEE_RATE))) {
-            const newFee = fee.multipliedBy(2.5);
-            data.amount = requested.minus(newFee).toFixed();
-            data.fee = newFee.toFixed();
-            monitoringDataAfterFilter[index] = data;
-          }
+          data.amount = requested.minus(fee).toFixed();
+          data.fee = fee.toFixed();
+          monitoringDataAfterFilter[index] = data;
         }
       }
 

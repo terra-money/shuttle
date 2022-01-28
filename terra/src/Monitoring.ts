@@ -157,7 +157,11 @@ export class Monitoring {
             const requested = new BigNumber(coin.amount);
 
             // Compute fee with minimum fee consideration
-            const fee = await this.computeFee(asset, requested);
+            const fee = await this.computeFee(
+              asset,
+              requested,
+              new BigNumber(1)
+            );
 
             // Skip logging or other actions for tiny amount transaction
             if (requested.gt(fee)) {
@@ -201,7 +205,11 @@ export class Monitoring {
             const requested = new BigNumber(transferMsg['amount']);
 
             // Compute fee with minimum fee consideration
-            const fee = await this.computeFee(asset, requested);
+            const fee = await this.computeFee(
+              asset,
+              requested,
+              new BigNumber(1)
+            );
 
             // Skip logging or other actions for tiny amount transaction
             if (requested.gt(fee)) {
@@ -231,7 +239,7 @@ export class Monitoring {
           const requested = new BigNumber(burnMsg['amount']);
 
           // Compute fee with minimum fee consideration
-          const fee = await this.computeFee(asset, requested);
+          const fee = await this.computeFee(asset, requested, new BigNumber(1));
 
           // Skip logging or other actions for tiny amount transaction
           if (requested.gt(fee)) {
@@ -256,14 +264,18 @@ export class Monitoring {
     return monitoringDatas;
   }
 
-  async computeFee(asset: string, amount: BigNumber): Promise<BigNumber> {
+  async computeFee(
+    asset: string,
+    amount: BigNumber,
+    multiplyRatio: BigNumber
+  ): Promise<BigNumber> {
     if (FEE_MIN_AMOUNT.isZero() && FEE_RATE.isZero()) {
       return new BigNumber(0);
     }
 
     const price = await this.oracle.getPrice(asset);
 
-    const fee = amount.multipliedBy(FEE_RATE);
+    const fee = amount.multipliedBy(FEE_RATE).multipliedBy(multiplyRatio);
     const minFee =
       price == 0 ? new BigNumber(0) : FEE_MIN_AMOUNT.dividedBy(price);
 
