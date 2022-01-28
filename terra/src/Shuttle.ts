@@ -304,8 +304,8 @@ class Shuttle {
             new BigNumber(2.5)
           );
 
-          data.amount = requested.minus(fee).toFixed();
-          data.fee = fee.toFixed();
+          data.amount = requested.minus(fee).toFixed(0);
+          data.fee = fee.toFixed(0);
           monitoringDataAfterFilter[index] = data;
         }
       }
