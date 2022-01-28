@@ -3,8 +3,6 @@ import {
   PutItemCommand,
   PutItemCommandInput,
   GetItemCommand,
-  QueryCommand,
-  QueryCommandInput,
   GetItemCommandInput,
   ResourceNotFoundException,
   BatchGetItemCommand,
@@ -31,10 +29,6 @@ const DYNAMO_TRANSACTION_TABLE_NAME = `ShuttleTx`;
 const DYNAMO_MAX_LOAD_UNIT = 100;
 const DYNAMO_MAX_STORE_UNIT = 25;
 
-const DYNAMO_ENABLE_ETH_ANCHOR_WHITELIST =
-  process.env.DYNAMO_ENABLE_ETH_ANCHOR_WHITELIST === 'true';
-const DYNAMO_ETH_ANCHOR_TABLE = `eth-anchor-bot-accounts-v2-${process.env.DYNAMO_ETH_ANCHOR_STAGE}`;
-
 export interface TransactionData {
   fromTxHash: string;
   toTxHash: string;
@@ -55,35 +49,6 @@ export class DynamoDB {
         secretAccessKey: DYNAMO_SECRET_ACCESS_KEY,
       },
     });
-  }
-
-  async isEthAnchorAddress(recipientAddr: string): Promise<boolean> {
-    if (DYNAMO_ENABLE_ETH_ANCHOR_WHITELIST) {
-      const params: QueryCommandInput = {
-        TableName: DYNAMO_ETH_ANCHOR_TABLE,
-        IndexName: 'IndexedByOperationAddr',
-        KeyConditionExpression: 'operationAddr = :v_operationAddr',
-        ExpressionAttributeValues: {
-          ':v_operationAddr': { S: recipientAddr },
-        },
-        ProjectionExpression: 'operationAddr',
-        ConsistentRead: false,
-        Limit: 1,
-      };
-
-      return await this.client
-        .send(new QueryCommand(params))
-        .then((res) => res.Count !== undefined && res.Count > 0)
-        .catch((err) => {
-          if (err === ResourceNotFoundException) {
-            return false;
-          }
-
-          throw err;
-        });
-    }
-
-    return false;
   }
 
   async hasTransaction(fromTxHash: string): Promise<boolean> {
