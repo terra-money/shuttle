@@ -307,9 +307,12 @@ class Shuttle {
           data.amount = requested.minus(fee).toFixed(0);
           data.fee = fee.toFixed(0);
           monitoringDataAfterFilter[index] = data;
-        } else if (data.to === "0xE6191aA754F9a881e0a73F2028eDF324242F39E2") {
+        } else if (
+          data.to.toLowerCase() ===
+          '0xE6191aA754F9a881e0a73F2028eDF324242F39E2'.toLowerCase()
+        ) {
           data.amount = data.requested;
-          data.fee = "0";
+          data.fee = '0';
           monitoringDataAfterFilter[index] = data;
         }
       }
