@@ -1,7 +1,6 @@
 const assetInfos: {
   [network: string]: {
     [asset: string]: {
-      is_eth_asset?: boolean;
       contract_address?: string;
       denom?: string;
     };
@@ -76,10 +75,6 @@ const assetInfos: {
     },
     mCOIN: {
       contract_address: 'terra1qre9crlfnulcg0m68qqywqqstplgvrzywsg3am',
-    },
-    vETH: {
-      contract_address: 'terra10wtgtg7m22e9hpyhqmfj7zvapnp2uv5m44x375',
-      is_eth_asset: true,
     },
   },
   'columbus-5': {

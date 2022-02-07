@@ -86,10 +86,6 @@ export class FeeCollector {
         throw new Error('Must provide one of denom and contract_address');
       }
 
-      if (info.denom !== undefined && info.is_eth_asset) {
-        throw new Error('Native asset is not eth asset');
-      }
-
       const contract = new this.Web3.eth.Contract(
         WrappedTokenAbi,
         value.contract_address
@@ -98,10 +94,6 @@ export class FeeCollector {
       this.EthContracts[asset] = contract;
       this.TerraAssetInfos[asset] = info;
     }
-  }
-
-  isEthAsset(asset: string): boolean {
-    return this.TerraAssetInfos[asset].is_eth_asset ? true : false;
   }
 
   async getTotalSupplies(): Promise<[string, BigNumber][]> {
@@ -165,7 +157,7 @@ export class FeeCollector {
         msgs.push(
           new MsgSend(fromAddr, toAddr, [new Coin(denom, afterAmount)])
         );
-      } else if (info.contract_address && !info.is_eth_asset) {
+      } else if (info.contract_address) {
         const contract_address = info.contract_address;
 
         msgs.push(
@@ -174,22 +166,6 @@ export class FeeCollector {
             contract_address,
             {
               transfer: {
-                recipient: toAddr,
-                amount: amountStr,
-              },
-            },
-            []
-          )
-        );
-      } else if (info.contract_address && info.is_eth_asset) {
-        const contract_address = info.contract_address;
-
-        msgs.push(
-          new MsgExecuteContract(
-            fromAddr,
-            contract_address,
-            {
-              mint: {
                 recipient: toAddr,
                 amount: amountStr,
               },
@@ -255,7 +231,6 @@ async function getSupply(
 }
 
 type TerraAssetInfo = {
-  is_eth_asset?: boolean;
   contract_address?: string;
   denom?: string;
 };

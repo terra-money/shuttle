@@ -2,6 +2,7 @@ const contractInfos: {
   [network: string]: {
     [asset: string]: {
       contract_address: string;
+      migration_amount?: string;
       black_list?: string[];
     };
   };
@@ -12,9 +13,11 @@ const contractInfos: {
     },
     LUNA: {
       contract_address: '0xECCF35F941Ab67FfcAA9A1265C2fF88865caA005',
+      migration_amount: '670000000000000000000', // 670.000,000,000,000,000,000
     },
     UST: {
       contract_address: '0x23396cF899Ca06c4472205fC903bDB4de249D6fC',
+      migration_amount: '2400000000000000000000000', // 2,400,000.000,000,000,000,000,000
     },
     KRT: {
       contract_address: '0xfFBDB9BDCae97a962535479BB96cC2778D65F4dd',
@@ -130,9 +133,11 @@ const contractInfos: {
     },
     LUNA: {
       contract_address: '0xd2877702675e6cEb975b4A1dFf9fb7BAF4C91ea9',
+      migration_amount: '580000000000000000000000', // 580,000.000,000,000,000,000,000
     },
     UST: {
       contract_address: '0xa47c8bf37f92aBed4A126BDA807A7b7498661acD',
+      migration_amount: '72000000000000000000000000', // 72,000,000.000,000,000,000,000,000
     },
     KRT: {
       contract_address: '0xcAAfF72A8CbBfc5Cf343BA4e26f65a257065bFF1',

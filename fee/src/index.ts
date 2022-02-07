@@ -17,9 +17,7 @@ async function main() {
     const ethSideBalance = supply[1].div('1000000000000');
     const terraSideBalance = balanceMap[asset];
 
-    const collectedFeeAmount = feeCollector.isEthAsset(asset)
-      ? ethSideBalance.minus(terraSideBalance)
-      : terraSideBalance.minus(ethSideBalance);
+    const collectedFeeAmount = terraSideBalance.minus(ethSideBalance);
 
     return [asset, collectedFeeAmount];
   });
