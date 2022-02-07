@@ -39,7 +39,7 @@ export class FeeCollector {
   LCDClient: LCDClient;
   FeeCollectorAddr: AccAddress;
 
-  EthContracts: { [asset: string]: Contract };
+  EthContractInfos: { [asset: string]: EthereumContractInfo };
   TerraAssetInfos: {
     [asset: string]: TerraAssetInfo;
   };
@@ -66,7 +66,7 @@ export class FeeCollector {
     const ethContractInfos = EthContractInfos[ETH_CHAIN_ID];
     const terraAssetInfos = TerraAssetInfos[TERRA_CHAIN_ID];
 
-    this.EthContracts = {};
+    this.EthContractInfos = {};
     this.TerraAssetInfos = {};
 
     for (const [asset, value] of Object.entries(ethContractInfos)) {
@@ -91,17 +91,22 @@ export class FeeCollector {
         value.contract_address
       );
 
-      this.EthContracts[asset] = contract;
+      this.EthContractInfos[asset] = {
+        contract,
+        migration_amount: new BigNumber(value.migration_amount || 0),
+      };
       this.TerraAssetInfos[asset] = info;
     }
   }
 
   async getTotalSupplies(): Promise<[string, BigNumber][]> {
     const promises: [string, BigNumber][] = [];
-    for (const [asset, contract] of Object.entries(this.EthContracts)) {
+    for (const [asset, contractInfo] of Object.entries(this.EthContractInfos)) {
       promises.push([
         asset,
-        new BigNumber(await getSupply(contract, MAX_RETRY)),
+        new BigNumber(await getSupply(contractInfo.contract, MAX_RETRY)).minus(
+          contractInfo.migration_amount
+        ),
       ]);
     }
 
@@ -229,6 +234,11 @@ async function getSupply(
       throw err;
     });
 }
+
+type EthereumContractInfo = {
+  contract: Contract;
+  migration_amount: BigNumber;
+};
 
 type TerraAssetInfo = {
   contract_address?: string;
