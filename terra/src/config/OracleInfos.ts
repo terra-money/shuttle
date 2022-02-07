@@ -84,8 +84,8 @@ const oracleInfos: {
     type: 'stock',
   },
   aUST: {
-    ticker: 'USD',
-    type: 'forex',
+    ticker: 'anchorust',
+    type: 'crypto',
   },
   mFB: {
     ticker: 'FB',
