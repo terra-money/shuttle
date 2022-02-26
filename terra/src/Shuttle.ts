@@ -34,8 +34,9 @@ const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
 const SLACK_NOTI_ETH_ASSET = process.env.SLACK_NOTI_ETH_ASSET;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 
-const FEE_RATE = new BigNumber(process.env.FEE_RATE as string);
-const FEE_MIN_AMOUNT = new BigNumber(process.env.FEE_MIN_AMOUNT as string);
+const FEE_WHITELIST: string[] = (process.env.FEE_WHITELIST as string)
+  .split(',')
+  .map((s) => s.toLocaleLowerCase());
 
 const ax = axios.create({
   httpAgent: new http.Agent({ keepAlive: true }),
@@ -307,10 +308,7 @@ class Shuttle {
           data.amount = requested.minus(fee).toFixed(0);
           data.fee = fee.toFixed(0);
           monitoringDataAfterFilter[index] = data;
-        } else if (
-          data.to.toLowerCase() ===
-          '0xE6191aA754F9a881e0a73F2028eDF324242F39E2'.toLowerCase()
-        ) {
+        } else if (FEE_WHITELIST.includes(data.to.toLocaleLowerCase())) {
           data.amount = data.requested;
           data.fee = '0';
           monitoringDataAfterFilter[index] = data;
