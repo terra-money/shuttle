@@ -34,7 +34,7 @@ const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
 const SLACK_NOTI_ETH_ASSET = process.env.SLACK_NOTI_ETH_ASSET;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 
-const FEE_WHITELIST: string[] = (process.env.FEE_WHITELIST as string)
+const FEE_WHITELIST: string[] = (process.env.FEE_WHITELIST || "")
   .split(',')
   .map((s) => s.toLocaleLowerCase());
 
