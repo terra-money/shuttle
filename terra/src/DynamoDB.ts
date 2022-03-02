@@ -58,7 +58,7 @@ export class DynamoDB {
   }
 
   async isEthAnchorAddress(recipientAddr: string): Promise<boolean> {
-    if (DYNAMO_ENABLE_ETH_ANCHOR_WHITELIST) {
+    if (recipientAddr !== "" && DYNAMO_ENABLE_ETH_ANCHOR_WHITELIST) {
       const params: QueryCommandInput = {
         TableName: DYNAMO_ETH_ANCHOR_TABLE,
         IndexName: 'IndexedByOperationAddr',
