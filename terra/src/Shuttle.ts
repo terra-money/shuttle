@@ -34,7 +34,7 @@ const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
 const SLACK_NOTI_ETH_ASSET = process.env.SLACK_NOTI_ETH_ASSET;
 const SLACK_WEB_HOOK = process.env.SLACK_WEB_HOOK;
 
-const FEE_WHITELIST: string[] = (process.env.FEE_WHITELIST || "")
+const FEE_WHITELIST: string[] = (process.env.FEE_WHITELIST || '')
   .split(',')
   .map((s) => s.toLocaleLowerCase());
 
@@ -181,10 +181,13 @@ class Shuttle {
       }
 
       await this.process().catch(async (err) => {
-        console.error(`Process failed: ${err}`);
+        console.error(`Process failed: `, err);
 
         // ignore invalid project id error
         if (
+          err.message.includes('internal error') ||
+          err.message.includes('invalid project id') ||
+          err.message.includes('503 Service Temporarily') ||
           err.message.includes('invalid project id') ||
           err.message.includes('502 Bad Gateway') ||
           err.message.includes('ESOCKETTIMEDOUT') ||
@@ -192,9 +195,13 @@ class Shuttle {
           err.message.includes('Invalid JSON RPC response') ||
           err.message.includes('handle request error') ||
           err.message.includes('Gateway timeout') ||
-          err.message.includes('transaction underpriced')
+          err.message.includes('transaction underpriced') ||
+          err.message.includes('insufficient funds for gas') ||
+          err.message.includes('missing trie node') ||
+          err.message.includes('no node alive') ||
+          err.message.includes('too many requests')
         ) {
-          if (this.errorCounter++ < 5) {
+          if (this.errorCounter++ < 20) {
             // Delay 5s
             await Bluebird.delay(10 * 500);
 

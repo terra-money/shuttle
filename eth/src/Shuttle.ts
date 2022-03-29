@@ -97,10 +97,10 @@ class Shuttle {
 
     while (!shutdown) {
       await this.process().catch(async (err) => {
-        console.error(`Process failed: ${err}`);
+        console.error(`Process failed:`, err);
 
         // ignore invalid project id error
-        if (err.message.includes('invalid project id')) {
+        if (err.message.includes('invalid project id') || err.message.includes('too many requests')) {
           return;
         }
 
