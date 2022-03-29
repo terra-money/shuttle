@@ -77,7 +77,7 @@ class Oracle {
 
       return price;
     } catch (err) {
-      console.error(`Failed to load oracle price for ${asset}: ${err}`);
+      console.error(`Failed to load oracle price for ${asset}`, err);
       return data.price;
     }
   }

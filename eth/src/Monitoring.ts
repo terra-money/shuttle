@@ -195,6 +195,7 @@ async function getPastLogs(
     console.error(err);
     if (
       retry > 0 &&
+      err instanceof Error &&
       (err.message.includes('query returned more than 10000 results') ||
         err.message.includes('invalid project id') ||
         err.message.includes('request failed or timed out') ||
@@ -223,6 +224,7 @@ async function getBlockNumber(web3: Web3, retry: number): Promise<number> {
   } catch (err) {
     if (
       retry > 0 &&
+      err instanceof Error &&
       (err.message.includes('invalid project id') ||
         err.message.includes('request failed or timed out') ||
         err.message.includes('502 Bad Gateway') ||
