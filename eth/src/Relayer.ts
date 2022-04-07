@@ -135,11 +135,11 @@ export class Relayer {
       return null;
     }
 
-    // if something wrong, pass undefined to use default gas 
+    // if something wrong, pass undefined to use default gas
     const gasPrices = await this.loadGasPrice(
       TERRA_GAS_PRICE_END_POINT,
       TERRA_GAS_PRICE_DENOM
-    ).catch((_) => undefined);
+    ).catch(() => undefined);
 
     const tx = await this.Wallet.createAndSignTx({
       msgs,

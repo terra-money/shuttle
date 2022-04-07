@@ -1,15 +1,15 @@
 {
   "name": "@terra-money/shuttle-contracts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "dependencies": {
     "@openzeppelin/contracts": "^4.4.2"
   },
   "devDependencies": {
-    "@truffle/hdwallet-provider": "^1.4.0",
+    "@truffle/hdwallet-provider": "^2.0.4",
     "chai": "^4.3.4",
-    "dotenv": "^8.2.0",
+    "dotenv": "^16.0.0",
     "node-fetch": ">=3.1.1",
     "truffle": "^5.3.8",
     "truffle-plugin-verify": "^0.5.8"
