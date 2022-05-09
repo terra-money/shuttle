@@ -58,6 +58,7 @@ class Shuttle {
   rpushAsync: (key: string, value: string) => Promise<unknown>;
 
   sequence: number;
+  errorCounter: number;
 
   constructor() {
     // Redis setup
@@ -75,6 +76,7 @@ class Shuttle {
     this.relayer = new Relayer();
     this.dynamoDB = new DynamoDB();
     this.sequence = 0;
+    this.errorCounter = 0;
   }
 
   async startMonitoring() {
@@ -100,8 +102,26 @@ class Shuttle {
         console.error(`Process failed:`, err);
 
         // ignore invalid project id error
-        if (err.message.includes('invalid project id') || err.message.includes('too many requests')) {
+        if (
+          err.message.includes('invalid project id') ||
+          err.message.includes('too many requests')
+        ) {
           return;
+        }
+
+        if (
+          err.message.includes('Request failed with status code 400') ||
+          err.message.includes('account sequence mismatch')
+        ) {
+          if (this.errorCounter++ < 20) {
+            // Delay 5s
+            await Bluebird.delay(5 * 1000);
+
+            return;
+          }
+
+          // reset error counter to zero
+          this.errorCounter = 0;
         }
 
         // notify to slack
@@ -144,7 +164,6 @@ class Shuttle {
 
     // Relay to terra chain
     if (monitoringDatas.length > 0) {
-      
       // Clear missing tx hashes
       await this.clearMissingTxHashes(missingTxHashes);
 
