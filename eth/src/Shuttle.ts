@@ -167,7 +167,13 @@ class Shuttle {
         // Increase sequence number, only when tx is broadcasted
         this.sequence++;
 
-        await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(relayData));
+        const raw: RelayDataRaw = {
+          tx: JSON.stringify(relayData.tx.toData()),
+          createdAt: relayData.createdAt,
+          txHash: relayData.txHash,
+        };
+
+        await this.rpushAsync(KEY_QUEUE_TX, JSON.stringify(raw));
         await this.setAsync(KEY_NEXT_SEQUENCE, this.sequence.toString());
         await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
 
