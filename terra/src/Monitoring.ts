@@ -88,6 +88,13 @@ export class Monitoring {
     }
   }
 
+  async loadTx(txhash: string): Promise<MonitoringData[]> {
+    const txInfo: TxInfo = await this.LCDClient.tx.txInfo(txhash);
+    const monitoringDatas = await this.parseTx(txInfo);
+
+    return monitoringDatas;
+  }
+
   // load and process a single block
   async load(lastHeight: number): Promise<[number, MonitoringData[]]> {
     const latestHeight =
