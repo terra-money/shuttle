@@ -232,6 +232,8 @@ class Shuttle {
       } else await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
     } else await this.setAsync(KEY_LAST_HEIGHT, newLastHeight.toString());
 
+    this.errorCounter--;
+
     // When catch the latest block height, wait 10 second
     if (newLastHeight === lastHeight) {
       await Bluebird.delay((ETH_BLOCK_SECOND * ETH_BLOCK_LOAD_UNIT * 1000) / 2);

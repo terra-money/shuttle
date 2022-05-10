@@ -203,7 +203,7 @@ class Shuttle {
         ) {
           if (this.errorCounter++ < 20) {
             // Delay 5s
-            await Bluebird.delay(10 * 500);
+            await Bluebird.delay(5 * 1000);
 
             return;
           }
