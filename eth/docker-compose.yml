@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+ dynamodb-local:
+   command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+   image: "amazon/dynamodb-local:latest"
+   container_name: dynamodb-local
+   ports:
+     - "8000:8000"
+   volumes:
+     - "./docker/dynamodb:/home/dynamodblocal/data"
+   working_dir: /home/dynamodblocal
+ app-node:
+   build: .
+   depends_on:
+     - dynamodb-local
+   container_name: shuttle-eth
+   environment:
+     DYNAMO_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
+     DYNAMO_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+     DYNAMO_ENDPOINT: 'http://dynamodb-local:8000'
+     REDIS_URL: 'redis://redis:6379'
+ redis:
+   image: "redis"
+   container_name: redis
+   ports:
+     - 6379:6379
