@@ -15,6 +15,7 @@ services:
      - dynamodb-local
    container_name: shuttle-eth
    environment:
+     USE_DEFAULT_CRED_PROVIDER: false
      DYNAMO_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
      DYNAMO_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
      DYNAMO_ENDPOINT: 'http://dynamodb-local:8000'
