@@ -40,7 +40,17 @@ export class DynamoDB {
   client: DynamoDBClient;
 
   constructor() {
-    this.client = new DynamoDBClient({
+    this.client = this.createDynamoDBClient();
+  }
+
+  createDynamoDBClient(): DynamoDBClient {
+    // we don't need to set any of this for an aws service it has a region and a role already
+    // the aws sdk already knows to look for the default env vars
+    if (process.env.USE_DEFAULT_CRED_PROVIDER === 'true') {
+      return new DynamoDBClient({ region: process.env.AWS_REGION });
+    }
+    return new DynamoDBClient({
+      endpoint: process.env.DYNAMO_ENDPOINT,
       region: DYNAMO_REGION,
       credentials: {
         accessKeyId: DYNAMO_ACCESS_KEY_ID,
