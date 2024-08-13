@@ -25,6 +25,7 @@ const KEY_QUEUE_MISSING_TX = 'queue_missing_tx';
 const REDIS_URL = process.env.REDIS_URL as string;
 const ETH_BLOCK_SECOND = parseInt(process.env.ETH_BLOCK_SECOND as string);
 const ETH_BLOCK_LOAD_UNIT = parseInt(process.env.ETH_BLOCK_LOAD_UNIT as string);
+const ETH_START_FROM = (process.env.ETH_START_FROM as string) || '0';
 
 const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
 const SLACK_NOTI_ETH_ASSET = process.env.SLACK_NOTI_ETH_ASSET;
@@ -155,7 +156,9 @@ class Shuttle {
     // rebroadcast the tx with same sequence.
     await this.checkTxQueue();
 
-    const lastHeight = parseInt((await this.getAsync(KEY_LAST_HEIGHT)) || '0');
+    const lastHeight = parseInt(
+      (await this.getAsync(KEY_LAST_HEIGHT)) || ETH_START_FROM
+    );
     const missingTxHashes = await this.loadMissingTxHashes();
     const [newLastHeight, monitoringDatas] = await this.monitoring.load(
       lastHeight,
