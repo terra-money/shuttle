@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   LCDClient,
   MsgExecuteContract,

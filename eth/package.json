@@ -1,12 +1,12 @@
 {
   "name": "@terra-money/shuttle-eth",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Ether side shuttle implementation to relay tx on the Terra Blockchain",
   "engines": {
     "node": ">=16"
   },
   "scripts": {
-    "start": "ts-node ./src/index.ts",
+    "start": "tsx ./src/index.ts",
     "test": "jest",
     "prettier": "prettier --write ./src/**/*.ts",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
@@ -63,6 +63,7 @@
     "bluebird": "^3.7.2",
     "dotenv": "^16.0.0",
     "redis": "^3.0.2",
+    "tsx": "^4.17.0",
     "typescript": "^4.3.4",
     "web3": "^1.3.0",
     "web3-eth-contract": "^1.3.0",
