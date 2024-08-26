@@ -11,6 +11,8 @@ import {
   Coin,
   Tx,
   TxInfo,
+  Fee,
+  Coins,
 } from '@terra-money/terra.js';
 import { MonitoringData } from 'Monitoring';
 import axios from 'axios';
@@ -32,6 +34,12 @@ const TERRA_GAS_PRICE_END_POINT = process.env
 const TERRA_GAS_PRICE_DENOM = process.env.TERRA_GAS_PRICE_DENOM as string;
 const TERRA_GAS_ADJUSTMENT = process.env.TERRA_GAS_ADJUSTMENT as string;
 const TERRA_DONATION = process.env.TERRA_DONATION as string;
+const TERRA_TAX_RATE = parseFloat(
+  (process.env.TERRA_TAX_RATE as string) || '0'
+);
+const TERRA_SEND_GAS = parseInt(
+  (process.env.TERRA_SEND_GAS as string) || '1000000'
+);
 
 export interface RelayDataRaw {
   tx: string;
@@ -56,6 +64,7 @@ export class Relayer {
       chainID: TERRA_CHAIN_ID,
       gasPrices: TERRA_GAS_PRICE,
       gasAdjustment: TERRA_GAS_ADJUSTMENT,
+      isClassic: false,
     });
 
     this.Wallet = new Wallet(
@@ -72,6 +81,7 @@ export class Relayer {
     monitoringDatas: MonitoringData[],
     sequence: number
   ): Promise<RelayData | null> {
+    let amount, denom;
     const msgs: Msg[] = monitoringDatas.reduce(
       (msgs: Msg[], data: MonitoringData) => {
         const fromAddr = this.Wallet.key.accAddress;
@@ -86,11 +96,11 @@ export class Relayer {
           return msgs;
         }
 
-        const amount = data.amount.slice(0, data.amount.length - 12);
+        amount = data.amount.slice(0, data.amount.length - 12);
         const info = data.terraAssetInfo;
 
         if (info.denom) {
-          const denom = info.denom;
+          denom = info.denom;
 
           msgs.push(new MsgSend(fromAddr, toAddr, [new Coin(denom, amount)]));
         } else if (info.contract_address && !info.is_eth_asset) {
@@ -137,15 +147,23 @@ export class Relayer {
     }
 
     // if something wrong, pass undefined to use default gas
-    const gasPrices = await this.loadGasPrice(
-      TERRA_GAS_PRICE_END_POINT,
-      TERRA_GAS_PRICE_DENOM
-    ).catch(() => undefined);
+    // const gasPrices = await this.loadGasPrice(
+    //   TERRA_GAS_PRICE_END_POINT,
+    //   TERRA_GAS_PRICE_DENOM
+    // ).catch(() => undefined);
+
+    let fees = Coins.fromString(TERRA_GAS_PRICE)
+      .mul(TERRA_SEND_GAS)
+      .toIntCeilCoins();
+    const tax = new Coins([new Coin(denom, amount)])
+      .mul(TERRA_TAX_RATE)
+      .toIntCeilCoins();
+    fees = fees.add(tax);
 
     const tx = await this.Wallet.createAndSignTx({
       msgs,
       sequence,
-      gasPrices,
+      fee: new Fee(TERRA_SEND_GAS, fees),
     });
 
     const txHash = await this.LCDClient.tx.hash(tx);
