@@ -81,12 +81,7 @@ class Shuttle {
   }
 
   async startMonitoring() {
-    const sequence = await this.getAsync(KEY_NEXT_SEQUENCE);
-    if (sequence && sequence !== '') {
-      this.sequence = parseInt(sequence);
-    } else {
-      this.sequence = await this.relayer.loadSequence();
-    }
+    this.sequence = await this.relayer.loadSequence();
 
     // Graceful shutdown
     let shutdown = false;
