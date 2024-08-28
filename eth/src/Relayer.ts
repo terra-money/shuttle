@@ -81,7 +81,7 @@ export class Relayer {
     monitoringDatas: MonitoringData[],
     sequence: number
   ): Promise<RelayData | null> {
-    let amount, denom;
+    let tax: Coins = new Coins([]);
     const msgs: Msg[] = monitoringDatas.reduce(
       (msgs: Msg[], data: MonitoringData) => {
         const fromAddr = this.Wallet.key.accAddress;
@@ -96,12 +96,16 @@ export class Relayer {
           return msgs;
         }
 
-        amount = data.amount.slice(0, data.amount.length - 12);
+        const amount = data.amount.slice(0, data.amount.length - 12);
         const info = data.terraAssetInfo;
 
         if (info.denom) {
-          denom = info.denom;
-
+          const denom = info.denom;
+          tax = tax.add(
+            new Coins([new Coin(denom, amount)])
+              .mul(TERRA_TAX_RATE)
+              .toIntCeilCoins()
+          );
           msgs.push(new MsgSend(fromAddr, toAddr, [new Coin(denom, amount)]));
         } else if (info.contract_address && !info.is_eth_asset) {
           const contract_address = info.contract_address;
@@ -154,9 +158,6 @@ export class Relayer {
 
     let fees = Coins.fromString(TERRA_GAS_PRICE)
       .mul(TERRA_SEND_GAS)
-      .toIntCeilCoins();
-    const tax = new Coins([new Coin(denom, amount)])
-      .mul(TERRA_TAX_RATE)
       .toIntCeilCoins();
     fees = fees.add(tax);
 
