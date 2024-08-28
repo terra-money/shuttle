@@ -273,6 +273,7 @@ class Shuttle {
 
       if (tx === null) {
         if (now - relayData.createdAt > 1000 * 60) {
+          console.log('[re-submit tx]', relayData.tx, relayData.txHash);
           // tx not found in the block for a minute,
           await this.relayer.relay(Tx.fromData(JSON.parse(relayData.tx)));
 
